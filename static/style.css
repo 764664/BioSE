@@ -1,0 +1,110 @@
+body {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+a:hover {
+    text-decoration: none;
+}
+p {
+    margin-bottom: 5px;
+}
+.label {
+    margin: 0 2px;
+    font-size: 100%;
+}
+nav.navbar {
+    height: 50px;
+}
+.title {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+.author {
+    font-size: 12px;
+    margin-bottom: 0;
+}
+.metainfo {
+    font-size: 12px;
+    margin-bottom: 0;
+}
+/*.searchfield {
+    width: 50%;
+    margin: 0 auto;
+}*/
+#main {
+    width: 90%;
+    text-align: center;
+    padding-top: 20px;
+}
+.pagination {
+    margin-top: 10px;
+}
+.searchfield {
+    display: inline-block;
+    padding-top: 12px;
+}
+.score {
+    display: inline;
+}
+#num_results {
+    margin-left: 10px;
+}
+.list-group-item {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+/*.paperlist {
+    height: calc(100% - 130px);
+    overflow: auto;
+}*/
+/* apple colors */
+[class*='-dark'] {
+    background-color:#02243C;
+    color:#f0f0f0;
+}
+[class*='-light'] {
+    background-color:#f9f9f9;
+    color:#999;
+}
+[class*='-blue'] {
+    background-color:#5195ce;
+    color:#fff;
+}
+[class*='-apple'] {
+    background-color:#005DB3;
+    color:#f8f8f8;
+}
+[class*='-gray'] {
+    background-color:#e6e6e6;
+    color:#666;
+}
+[class*='-green'] {
+    background-color:#5BC236;
+    color:#fff;
+}
+
+/* hover and active */
+[class*='-dark']:hover,[class*='-dark']:focus {
+    background-color:#12254d;
+    color:#fff;
+}
+[class*='-light']:hover,[class*='-light']:active {
+    background-color:#eeeeee;
+    color:#fff;
+}
+[class*='-blue']:hover,[class*='-blue']:active {
+    background-color:#62a6df;
+    color:#fff;
+}
+[class*='-apple']:hover,[class*='-apple']:active {
+    background-color:#116ec4;
+    color:#fff;
+}
+[class*='-gray']:hover,[class*='-gray']:active {
+    background-color:#d5d5d5;
+    color:#fff;
+}
+[class*='-green']:hover,[class*='-green']:active {
+    background-color:#6cd347;
+    color:#fff;
+}
