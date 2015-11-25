@@ -1,4 +1,4 @@
-from flask import Flask, current_app, redirect, g
+from flask import Flask, current_app, redirect, g, abort
 from paper_processor import PaperProcessor
 import json
 import logging
@@ -32,8 +32,8 @@ def hello_world():
 
 @app.route('/basic_search/<keyword>/<int:page>')
 def basic_search(keyword, page):
-    search = Search(keyword=keyword)
-    search.save()
+    search = SearchLog.create(keyword=keyword)
+    SearchTerm.get_or_create(keyword = keyword)
     if keyword in results:
         query_result = results[keyword]
     else:
@@ -57,36 +57,48 @@ def basic_search(keyword, page):
     return return_value
 
 
-@app.route('/jump/<int:searchid>/<int:paperid>')
-def jump(searchid, paperid):
-    if searchid in search_id_to_results:
-        query = search_id_to_results[searchid]
-        page = round(paperid/RESULTS_PER_PAGE) + 1
+@app.route('/jump/<int:search_id>/<int:paper_id>')
+def jump(search_id, paper_id):
+    if search_id in search_id_to_results:
+        query = search_id_to_results[search_id]
+        try:
+            search_term_text = SearchLog.get(SearchLog.id == search_id).keyword
+            local_search_term = SearchTerm.get(SearchTerm.keyword == search_term_text)
+        except DoesNotExist:
+            logging.error("Search log doesn't exist.")
+        page = math.floor(paper_id/RESULTS_PER_PAGE) + 1
         for i in range(
                 (page-1)*RESULTS_PER_PAGE,
                 min(len(query.papers_array), page*RESULTS_PER_PAGE)):
-            print(i)
-            visit = Visit(
-                search=searchid,
-                title=query.papers_array[i]["Title"],
-            )
-            if "Year" in query.papers_array[i]:
-                visit.year = query.papers_array[i]["Year"]
-            if "Citations" in query.papers_array[i]:
-                visit.cications = query.papers_array[i]["Citations"]
-            if "Journal" in query.papers_array[i]:
-                visit.journal = query.papers_array[i]["Journal"]
-            if "LastAuthor" in query.papers_array[i]:
-                visit.last_author = query.papers_array[i]["LastAuthor"]
-            if "Author" in query.papers_array[i]:
-                visit.authors = query.papers_array[i]["Author"]
-            if paperid == i:
-                visit.score = 1
-            else:
-                visit.score = 0
-            visit.save()
+            logging.info("Processing paperid {} i {} title {}".format(paper_id, i, query.papers_array[i]["Title"]))
+            local_paper, created = Paper.get_or_create(title = query.papers_array[i]["Title"])
+            if created:
+                logging.info("Created No.{} title {}".format(i, query.papers_array[i]["Title"]))
+            if created:
+                if "Year" in query.papers_array[i]:
+                    local_paper.year = query.papers_array[i]["Year"]
+                if "Citations" in query.papers_array[i]:
+                    local_paper.citations = query.papers_array[i]["Citations"]
+                if "Journal" in query.papers_array[i]:
+                    local_paper.journal = query.papers_array[i]["Journal"]
+                if "LastAuthor" in query.papers_array[i]:
+                    local_paper.last_author = query.papers_array[i]["LastAuthor"]
+                if "Author" in query.papers_array[i]:
+                    local_paper.authors = query.papers_array[i]["Author"]
+                if "Journal_IF" in query.papers_array[i]:
+                    local_paper.journal_if = query.papers_array[i]["Journal_IF"]
+                if paper_id == i:
+                    local_paper.score = 1
+                else:
+                    local_paper.score = 0
+                local_paper.save()
+            print(local_search_term)
+            click, created = Click.get_or_create(search_term = local_search_term, paper = local_paper)
+            if paper_id == i:
+                click.click_count += 1
+                click.save()
         return redirect(
-            query.papers_array[paperid]["URL"]
+            query.papers_array[paper_id]["URL"]
         )
     else:
         abort(404)

@@ -4,6 +4,10 @@ import subprocess
 import re
 import logging
 import sys
+from db import *
+from sklearn import svm
+import pickle
+import math
 
 NUM_OF_DOCUMENTS = 500
 
@@ -13,13 +17,17 @@ class PaperProcessor:
         self.keyword = keyword
         self.papers = {}
         self.failure_pubmed = 0
+        self.papers_array = []
+
         self.get_pubmed()
         # self.get_google_scholar()
-        self.truncate_for_display()
+        #self.truncate_for_display()
+        self.add_missing_info()
         self.find_exact_match()
-        self.papers_array = []
+        self.ranking()
         self.generate_papers_array()
         self.num_papers = len(self.papers_array)
+
 
     def basic_search(self, string):
         url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
@@ -82,7 +90,7 @@ class PaperProcessor:
                                 one_item["Year"] = int(i.text[:4])
                             except Exception:
                                 one_item["Year"] = 2000
-                        if i.attrib["Name"] == "Source":
+                        if i.attrib["Name"] == "FullJournalName":
                             one_item["Journal"] = i.text
                         if i.attrib["Name"] == "LastAuthor":
                             one_item["LastAuthor"] = i.text
@@ -172,7 +180,8 @@ class PaperProcessor:
                                 added_item["Journal"] = m.group(3)
         for paper in papers_local:
             if paper["Title"] in self.papers:
-                self.papers[paper["Title"]]["Score"] += paper["Score"]
+                self.papers[paper["Title"]]["Score"] = (self.papers[paper["Title"]]["Score"] + paper["Score"]) / \
+                                                       math.sqrt(1+self.papers[paper["Title"]]["Score"] * paper["Score"])
                 self.papers[paper["Title"]]["Citations"] = paper["Citations"]
                 self.papers[paper["Title"]]["Citations_URL"] = \
                     paper["Citations_URL"]
@@ -187,9 +196,11 @@ class PaperProcessor:
         for title, paper in self.papers.items():
             try:
                 if ":" in paper["Title"]:
+                    # Keyword is in title
                     if self.keyword.lower() in \
                             paper["Title"].split(":")[0].lower():
                         paper["Score"] += 1
+                        # Keyword equals to title
                         if paper["Title"].split(":")[0].lower().rstrip() == \
                                 self.keyword.lower():
                             paper["Score"] += 2
@@ -212,3 +223,82 @@ class PaperProcessor:
         self.papers_array.reverse()
         for index, paper in enumerate(self.papers_array):
             paper["ID"] = index
+
+    def add_missing_info(self):
+        self.add_journal_if()
+
+    def add_journal_if(self):
+         for k,v in self.papers.items():
+            try:
+                stripped_journal_name = re.sub('[\W_]+', '', v["Journal"].upper())
+                v["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
+            except DoesNotExist:
+                try:
+                    v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[12])).impact_factor
+                except DoesNotExist:
+                    pass
+
+
+    def ranking(self):
+        model = self.check_model()
+        if model:
+            clf = model[0]
+            number_clicks = model[1]
+            paper_keys = self.papers.keys()
+            maximum_ml_score = -1
+            for k,v in self.papers.items():
+                if "Journal_IF" in v and "Year" in v:
+                    x = [[v["Year"], v["Journal_IF"]]]
+                    score_ml = clf.predict(x)[0]
+                    v["Score_ML"] = score_ml
+                    if score_ml > maximum_ml_score:
+                        maximum_ml_score = score_ml
+                    weight = 1 - math.pow(0.5, 0.1*number_clicks)
+                    v["Weight"] = weight
+            for k,v in self.papers.items():
+                if "Score_ML" in v:
+                    v["Score_ML"] *= 1 / maximum_ml_score
+                    logging.debug("{}: {}".format(v["Title"], v["Score_ML"]))
+                    v["Score"] = v["Score"]*(1-v["Weight"]) + v["Score_ML"]*v["Weight"]
+        else:
+            pass
+
+    def check_model(self):
+        try:
+            search_term = SearchTerm.get(SearchTerm.keyword == self.keyword)
+            model = Model.get(Model.search_term == search_term)
+            if datetime.datetime.now() - model.last_modified > datetime.timedelta(days = 1):
+                new_model = self.train_model()
+                if new_model:
+                    model.model = pickle.dumps(new_model)
+                    model.last_modified = datetime.datetime.now()
+                    model.save()
+                return new_model
+            else:
+                return pickle.loads(model.model)
+        except DoesNotExist:
+            new_model = self.train_model()
+            if new_model:
+                Model.create(
+                    search_term = SearchTerm.get(SearchTerm.keyword == self.keyword),
+                    model = pickle.dumps(new_model)
+                )
+            return new_model
+
+    def train_model(self):
+        x, y = [], []
+        #clicks = SearchTerm.get(SearchTerm.keyword == self.keyword).clicks
+        clicks = Click.select(Paper, Click).join(Paper).switch(Click).join(SearchTerm).where(SearchTerm.keyword == self.keyword)
+        if clicks.count() == 0:
+            return False
+        for click in clicks:
+            x.append(
+                [
+                    click.paper.year,
+                    click.paper.journal_if
+                ]
+            )
+            y.append(click.click_count)
+        clf = svm.SVR(kernel="rbf")
+        clf.fit(x, y)
+        return [clf, sum(y)]

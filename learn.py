@@ -20,13 +20,13 @@ def add_missing_info():
             print("Continue")
             continue
         if item.journal:
-            item.journalif = 2
+            item.journal_if = 2
             if item.journal.upper() in journalif:
-                item.journalif = journalif[item.journal.upper()]
+                item.journal_if = journalif[item.journal.upper()]
             else:
                 for key in journalif.keys():
                     if item.journal.upper() in key:
-                        item.journalif = journalif[key]
+                        item.journal_if = journalif[key]
         if item.citations == -1:
             item.citations = get_citations(item)
         item.completed = True
