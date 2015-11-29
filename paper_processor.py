@@ -6,6 +6,7 @@ import logging
 import sys
 from db import *
 from sklearn import svm
+from sklearn import gaussian_process
 import pickle
 import math
 
@@ -263,6 +264,10 @@ class PaperProcessor:
             pass
 
     def check_model(self):
+        ALWAYS_CREATE_NEW_MODEL_AND_DONT_SAVE = True
+        if ALWAYS_CREATE_NEW_MODEL_AND_DONT_SAVE:
+            new_model = self.train_model()
+            return new_model
         try:
             search_term = SearchTerm.get(SearchTerm.keyword == self.keyword)
             model = Model.get(Model.search_term == search_term)
@@ -298,6 +303,9 @@ class PaperProcessor:
                 ]
             )
             y.append(click.click_count)
-        clf = svm.SVR(kernel="rbf")
-        clf.fit(x, y)
-        return [clf, sum(y)]
+        #clf = svm.SVR(kernel="rbf")
+        #clf.fit(x, y)
+        #return [clf, sum(y)]
+        gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
+        gp.fit(X, y)
+        return [gp, sum(y)]
