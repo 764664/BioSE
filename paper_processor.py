@@ -244,7 +244,6 @@ class PaperProcessor:
         if model:
             clf = model[0]
             number_clicks = model[1]
-            paper_keys = self.papers.keys()
             maximum_ml_score = -1
             for k,v in self.papers.items():
                 if "Journal_IF" in v and "Year" in v:

@@ -26,7 +26,6 @@ class Paper(BaseModel):
     last_author = TextField(null=True)
     journal = TextField(null=True)
     journal_if = FloatField(default=0)
-    # score = FloatField(default=0)
     completed = BooleanField(default=False)
     last_modified = DateTimeField(default=datetime.datetime.now)
 
