@@ -45,6 +45,13 @@ class Journal(BaseModel):
     impact_factor = FloatField()
     eigenfactor_score = FloatField()
 
+class Author(BaseModel):
+    name = TextField()
+    citations = IntegerField(null=True)
+    h_index = IntegerField()
+    i10_index = IntegerField(null=True)
+    completed = BooleanField(default=False)
+
 print("Starting Execution.")
 database.connect()
 SearchTerm.create_table(True)
