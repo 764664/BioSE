@@ -10,24 +10,29 @@ from sklearn import gaussian_process
 import pickle
 import math
 
-NUM_OF_DOCUMENTS = 500
+NUM_OF_DOCUMENTS = 50000
 
 
 class PaperProcessor:
     def __init__(self, keyword):
-        self.keyword = keyword
-        self.papers = {}
-        self.failure_pubmed = 0
-        self.papers_array = []
+        print(keyword)
+        logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s')
+        if keyword:
+            self.keyword = keyword
+            self.papers = {}
+            self.failure_pubmed = 0
+            self.papers_array = []
 
-        self.get_pubmed()
-        # self.get_google_scholar()
-        #self.truncate_for_display()
-        self.add_missing_info()
-        self.find_exact_match()
-        self.ranking()
-        self.generate_papers_array()
-        self.num_papers = len(self.papers_array)
+            self.get_pubmed()
+            # self.get_google_scholar()
+            # self.truncate_for_display()
+            # self.add_missing_info()
+            # self.find_exact_match()
+            # self.ranking()
+            # self.generate_papers_array()
+            # self.num_papers = len(self.papers_array)
 
 
     def basic_search(self, string):
@@ -76,6 +81,7 @@ class PaperProcessor:
                 self.failure_pubmed = 1
                 return
             score = 1
+            ranking = 1
             for item in root:
                 one_item = {}
                 one_item["ID"] = item[0].text
@@ -84,6 +90,8 @@ class PaperProcessor:
                 for i in item:
                     if "Name" in i.attrib:
                         if i.attrib["Name"] == "Title":
+                            if not i.text:
+                                continue
                             one_item["Title"] = i.text.rstrip(".")
                         if i.attrib["Name"] == "PubDate":
                             one_item["PubDate"] = i.text
@@ -101,7 +109,9 @@ class PaperProcessor:
                                 author_list.append(author.text)
                             one_item["Author"] = ", ".join(author_list)
                 one_item["Score"] = score
+                one_item["PubMedRanking"] = ranking
                 score = score - 1 / NUM_OF_DOCUMENTS
+                ranking += 1
                 if "Title" in one_item and "Author" in one_item:
                     self.papers[one_item["Title"]] = one_item
             logging.info("Finished Fetching PubMed.")
@@ -307,5 +317,5 @@ class PaperProcessor:
         #clf.fit(x, y)
         #return [clf, sum(y)]
         gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
-        gp.fit(X, y)
+        gp.fit(x, y)
         return [gp, sum(y)]
