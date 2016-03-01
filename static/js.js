@@ -272,17 +272,21 @@ var Paper = React.createClass({
         }
         return(
             <li className={"list-group-item "+ this.state.selected}>
-                <p><a href="#" onClick={this.showDetails}>
+                <div className="div_title">
+                <a href="#" onClick={this.showDetails}>
                     <span className="label label-dark title" id={"h"+paper["PMID"]}>{paper["Title"]}</span>
-                </a></p>
-                <p><span className="label label-default author">{paper["Author"]}</span></p>
-                <span className="metainfo">
+                </a>
+                    </div>
+                <div className="div_author">
+                <span className="label label-default author">{paper["Author"]}</span>
+                    </div>
+                <div className="metainfo">
                     <span className="label label-info journal">{ paper["Journal"] ? "Journal: " + paper["Journal"] : ""}</span>
                     <span className="label label-success pubdate">{ paper["PubDate"] ? "PubDate: " + paper["PubDate"] : ""}</span>
                     <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"] : ""}</span>
                     {citation_url}
                     <Detail content={this.state.detail} paper={paper} searchid={searchid} />
-                </span>
+                </div>
             </li>
         );
     }

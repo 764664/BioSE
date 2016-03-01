@@ -31,7 +31,7 @@ class PaperProcessor:
             # self.truncate_for_display()
             #self.add_missing_info()
             self.find_exact_match()
-            self.ranking()
+            # self.ranking()
             self.generate_papers_array()
             self.num_papers = len(self.papers_array)
 

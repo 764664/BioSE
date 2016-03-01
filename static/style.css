@@ -5,6 +5,9 @@ body {
 a {
     text-decoration: none;
 }
+p {
+    margin-bottom: 0;
+}
 a:hover {
     text-decoration: none;
 }
@@ -34,15 +37,16 @@ a:hover {
     width: 100%;
 }
 .label {
-    margin: 0 2px;
+    margin: 0 0px;
     font-size: 100%;
 }
 nav.navbar {
     height: 50px;
 }
-.title {
+.div_title {
     font-size: 14px;
-    margin-bottom: 2px;
+    margin-bottom: 10px;
+    margin-top: 5px;
 }
 .selected .title {
     font-size: 17px;
@@ -53,13 +57,13 @@ nav.navbar {
 .selected .detail {
     display: block;
 }
-.author {
+.div_author {
     font-size: 12px;
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
 .metainfo {
     font-size: 12px;
-    margin-bottom: 0;
+    margin-bottom: 3px;
 }
 /*.searchfield {
     width: 50%;
