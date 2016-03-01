@@ -1,0 +1,767 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2016//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_160101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">26442703</PMID>
+        <DateCreated>
+            <Year>2015</Year>
+            <Month>10</Month>
+            <Day>27</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2015</Year>
+            <Month>10</Month>
+            <Day>27</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1097-0134</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2015</Year>
+                        <Month>Oct</Month>
+                        <Day>7</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Proteins</Title>
+                <ISOAbbreviation>Proteins</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>R248Q mutation-Beyond p53-DNA binding.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn/>
+            </Pagination>
+            <ELocationID EIdType="doi">10.1002/prot.24940</ELocationID>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">R248 in the DNA binding domain (DBD) of p53 interacts directly with the minor groove of DNA. Earlier nuclear magnetic resonance (NMR) studies indicated that the R248Q mutation resulted in conformation changes in parts of DBD far from the mutation site. However, how information propagates from the mutation site to the rest of the DBD is still not well understood. We performed a series of all-atom molecular dynamics (MD) simulations to dissect sterics and charge effects of R248 on p53-DBD conformation: (i) wild-type p53 DBD; (ii) p53 DBD with an electrically neutral arginine side-chain; (iii) p53 DBD with R248A; (iv) p53 DBD with R248W; and (v) p53 DBD with R248Q. Our results agree well with experimental observations of global conformational changes induced by the R248Q mutation. Our simulations suggest that both charge- and sterics are important in the dynamics of the loop (L3) where the mutation resides. We show that helix 2 (H2) dynamics is altered as a result of a change in the hydrogen bonding partner of D281. In turn, neighboring L1 dynamics is altered: in mutants, L1 predominantly adopts the recessed conformation and is unable to interact with the major groove of DNA. We focused our attention the R248Q mutant that is commonly found in a wide range of cancer and observed changes at the zinc-binding pocket that might account for the dominant negative effects of R248Q. Furthermore, in our simulations, the S6/S7 turn was more frequently solvent exposed in R248Q, suggesting that there is a greater tendency of R248Q to partially unfold and possibly lead to an increased aggregation propensity. Finally, based on the observations made in our simulations, we propose strategies for the rescue of R248Q mutants. Proteins 2015. © 2015 Wiley Periodicals, Inc.</AbstractText>
+                <CopyrightInformation>© 2015 Wiley Periodicals, Inc.</CopyrightInformation>
+            </Abstract>
+            <AuthorList>
+                <Author>
+                    <LastName>Ng</LastName>
+                    <ForeName>Jeremy W K</ForeName>
+                    <Initials>JW</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Biological Sciences, National University of Singapore, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                    <AffiliationInfo>
+                        <Affiliation>Bioinformatics Institute, Agency for Science, Technology, and Research, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Lama</LastName>
+                    <ForeName>Dilraj</ForeName>
+                    <Initials>D</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Bioinformatics Institute, Agency for Science, Technology, and Research, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Lukman</LastName>
+                    <ForeName>Suryani</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Bioinformatics Institute, Agency for Science, Technology, and Research, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Applied Mathematics and Sciences, Khalifa University of Science, Technology, and Research, Abu Dhabi, UAE.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Lane</LastName>
+                    <ForeName>David P</ForeName>
+                    <Initials>DP</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>p53 Laboratory, Agency for Science, Technology, and Research, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Verma</LastName>
+                    <ForeName>Chandra S</ForeName>
+                    <Initials>CS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Biological Sciences, National University of Singapore, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                    <AffiliationInfo>
+                        <Affiliation>Bioinformatics Institute, Agency for Science, Technology, and Research, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                    <AffiliationInfo>
+                        <Affiliation>School of Biological Sciences, Nanyang Technological University, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Sim</LastName>
+                    <ForeName>Adelene Y L</ForeName>
+                    <Initials>AY</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Bioinformatics Institute, Agency for Science, Technology, and Research, Singapore, Republic of Singapore.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>ENG</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">JOURNAL ARTICLE</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2015</Year>
+                <Month>10</Month>
+                <Day>7</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <MedlineTA>Proteins</MedlineTA>
+            <NlmUniqueID>8700181</NlmUniqueID>
+            <ISSNLinking>0887-3585</ISSNLinking>
+        </MedlineJournalInfo>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">DNA-binding domain</Keyword>
+            <Keyword MajorTopicYN="N">molecular dynamics</Keyword>
+            <Keyword MajorTopicYN="N">p53</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2015</Year>
+                <Month>8</Month>
+                <Day>7</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2015</Year>
+                <Month>9</Month>
+                <Day>22</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2015</Year>
+                <Month>9</Month>
+                <Day>29</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2015</Year>
+                <Month>10</Month>
+                <Day>8</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2015</Year>
+                <Month>10</Month>
+                <Day>8</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2015</Year>
+                <Month>10</Month>
+                <Day>8</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">26442703</ArticleId>
+            <ArticleId IdType="doi">10.1002/prot.24940</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">26747783</PMID>
+        <DateCreated>
+            <Year>2016</Year>
+            <Month>1</Month>
+            <Day>9</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2016</Year>
+            <Month>1</Month>
+            <Day>10</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1522-1504</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Jan</Month>
+                        <Day>8</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>American journal of physiology. Lung cellular and molecular physiology</Title>
+                <ISOAbbreviation>Am. J. Physiol. Lung Cell Mol. Physiol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>p53- and PAI-1-mediated induction of C-X-C chemokines and CXCR2: Importance in Pulmonary Inflammation due to Cigarette Smoke exposure.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>ajplung.00290.2015</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi">10.1152/ajplung.00290.2015</ELocationID>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">We previously demonstrated that tumor suppressor protein, p53 augments plasminogen activator inhibitor-1 (PAI-1) expression in alveolar epithelial cells (AECs) during chronic cigarette smoke (CS) exposure-induced lung injury. Chronic lung inflammation with elevated p53 and PAI-1 expression in AECs, and increased susceptibility to and exacerbation of respiratory infections are all associated with chronic obstructive pulmonary disease (COPD). We recently demonstrated that preventing p53 from binding to the endogenous PAI-1 mRNA in AECs by either suppressing p53 expression, or blockade of p53 interactions with the PAI-1 mRNA, mitigates apoptosis and lung injury. Within this context, we now show increased expression of the C-X-C chemokines CXCL1 and CXCL2 and their receptor CXCR2, and the intercellular cellular adhesion molecule-1 (ICAM-1), in the lung tissues of patients with COPD. We also found a similar increase in lung tissues and AECs from wild-type (WT) mice exposed to passive CS for 20 weeks and in primary AECs treated with CS extract in vitro. Interestingly, passive CS exposure of mice lacking either p53 or PAI-1 expression resisted an increase in CXCL1, CXCL2, CXCR2 and ICAM-1. Further, inhibition of p53-mediated induction of PAI-1 expression by treatment of WT mice exposed to passive CS with caveolin-1 scaffolding domain peptide (CSP) reduced CXCL1, CXCL2 and CXCR2 levels and lung inflammation. Our study reveals that p53-mediated induction of PAI-1 expression due to chronic CS exposure exacerbates lung inflammation through elaboration of CXCL1, CXCL2 and CXCR2. We further provide evidence that targeting this pathway mitigates lung injury associated with chronic CS exposure.</AbstractText>
+                <CopyrightInformation>Copyright © 2015, American Journal of Physiology - Lung Cellular and Molecular Physiology.</CopyrightInformation>
+            </Abstract>
+            <AuthorList>
+                <Author>
+                    <LastName>Tiwari</LastName>
+                    <ForeName>Nivedita</ForeName>
+                    <Initials>N</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>University of Texas Health Science Center.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Marudamuthu</LastName>
+                    <ForeName>Amarnath S</ForeName>
+                    <Initials>AS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Texas Health Science Center at Tyler.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Tsukasaki</LastName>
+                    <ForeName>Yoshikazu</ForeName>
+                    <Initials>Y</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>University of Texas Health Science Center at Tyler.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Ikebe</LastName>
+                    <ForeName>Mitsuo</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>University of Texas Health Science Center at Tyler.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Fu</LastName>
+                    <ForeName>Jian</ForeName>
+                    <Initials>J</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>University of Kentucky.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Shetty</LastName>
+                    <ForeName>Sreerama</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>The University of Texas Health Science Center at Tyler sreerama.shetty@uthct.edu.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>ENG</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">JOURNAL ARTICLE</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>8</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <MedlineTA>Am J Physiol Lung Cell Mol Physiol</MedlineTA>
+            <NlmUniqueID>100901229</NlmUniqueID>
+            <ISSNLinking>1040-0605</ISSNLinking>
+        </MedlineJournalInfo>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">COPD</Keyword>
+            <Keyword MajorTopicYN="N">PAI-1</Keyword>
+            <Keyword MajorTopicYN="N">lung inflammation</Keyword>
+            <Keyword MajorTopicYN="N">p53</Keyword>
+            <Keyword MajorTopicYN="N">passive cigarette smoke</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>10</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>10</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>10</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">ajplung.00290.2015</ArticleId>
+            <ArticleId IdType="doi">10.1152/ajplung.00290.2015</ArticleId>
+            <ArticleId IdType="pubmed">26747783</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">26738694</PMID>
+        <DateCreated>
+            <Year>2016</Year>
+            <Month>1</Month>
+            <Day>7</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2016</Year>
+            <Month>1</Month>
+            <Day>8</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1525-6014</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Jan</Month>
+                        <Day>7</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Drug and chemical toxicology</Title>
+                <ISOAbbreviation>Drug Chem Toxicol</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Effect of p53 Arg72Pro polymorphism on the induction of micronucleus by aflatoxin B1 in in vitro in human blood lymphocytes.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>1-7</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">Aflatoxin B1 (AFB1) is a class 1 carcinogen produced by Aspergillus flavus and Aspergillus parasiticus that can contaminate a variety of food substances, the liver being its target organ. A common p53 Arg72Pro polymorphism resulting in the substitution of an arginine amino acid by proline amino acid in the transactivating domain has been demonstrated to affect p53 function. The aim of this study is to investigate association between p53 Arg72Pro polymorphism and the frequencies of spontaneous and AFB1-induced DNA damage in peripheral blood lymphocytes from 100 healthy individuals in Turkish population. In vitro cytokinesis-blocked micronucleus (CBMN) assay was used to detect the spontaneous and AFB1-induced DNA damage whereas, genotyping of p53 Arg72Pro polymorphism was carried out by using a polymerase chain reaction restriction fragment length polymorphism assay. During 68 h incubation time, lymphocytes treated with AFB1 (1.56 μg/mL) and S9 mix for a total of 3 h (48-51 h). Treatment of the lymphocytes with AFB1significantly increased the overall frequencies of micronucleus (MN) when compared to untreated cultures (1.23 ± 0.05 versus 0.55 ± 0.02; p &lt; 0.001). Moreover, genotype analysis revealed a statistically significant association between Pro/Pro genotype of p53 Arg72Pro polymorphism and increased frequencies of MN both spontaneous and AFB1-induced cultures when compared Arg/Arg genotype (0.69 ± 0.19 versus 0.46 ± 0.13, p &lt; 0.001; 1.59 ± 0.65 versus 1.01 ± 0.41 p &lt; 0.001; respectively). Our data indicate that p53 Arg72Pro polymorphism plays a significant role in human sensitivity to the genotoxic effects of AFB1. Further investigations in larger sample size and with different ethnic origins as well as including more functional single nucleotide polymorphisms might lead to the identification of novel genetic factors responsible for susceptibility to human carcinogens such as AFB1.</AbstractText>
+            </Abstract>
+            <AuthorList>
+                <Author>
+                    <LastName>Bayram</LastName>
+                    <ForeName>Süleyman</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>a Department of Nursing , Adıyaman School of Health, Adıyaman University , Adıyaman , Turkey .</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Rencüzoğulları</LastName>
+                    <ForeName>Eyyüp</ForeName>
+                    <Initials>E</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>b Department of Biology , Faculty of Science and Letters, Adıyaman University , Adıyaman , Turkey .</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Almas</LastName>
+                    <ForeName>Abdullah Muttalip</ForeName>
+                    <Initials>AM</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>c Department of Biology , Institute of Science, Adıyaman University , Adıyaman , Turkey , and.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Genç</LastName>
+                    <ForeName>Ahmet</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>d Vocational School of Health Services, Adıyaman Univesity , Adıyaman , Turkey.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>ENG</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">JOURNAL ARTICLE</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>7</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <MedlineTA>Drug Chem Toxicol</MedlineTA>
+            <NlmUniqueID>7801723</NlmUniqueID>
+            <ISSNLinking>0148-0545</ISSNLinking>
+        </MedlineJournalInfo>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">Aflatoxin B1</Keyword>
+            <Keyword MajorTopicYN="N">genetic susceptibility</Keyword>
+            <Keyword MajorTopicYN="N">lymphocytes</Keyword>
+            <Keyword MajorTopicYN="N">micronucleus</Keyword>
+            <Keyword MajorTopicYN="N">p53</Keyword>
+            <Keyword MajorTopicYN="N">p53 Arg72Pro polymorphism</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>8</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>8</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2016</Year>
+                <Month>1</Month>
+                <Day>8</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="doi">10.3109/01480545.2015.1121275</ArticleId>
+            <ArticleId IdType="pubmed">26738694</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="In-Data-Review">
+        <PMID Version="1">26687995</PMID>
+        <DateCreated>
+            <Year>2016</Year>
+            <Month>01</Month>
+            <Day>09</Day>
+        </DateCreated>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1873-135X</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>783</Volume>
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Jan</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Mutation research</Title>
+                <ISOAbbreviation>Mutat. Res.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>&quot;p53 mutation spectrum and its role in prognosis of oral cancer patients: A study from Gujarat, West India&quot;.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>15-26</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.mrfmmm.2015.12.001</ELocationID>
+            <ELocationID EIdType="pii" ValidYN="Y">S0027-5107(15)30054-3</ELocationID>
+            <Abstract>
+                <AbstractText Label="BACKGROUND AND AIM" NlmCategory="OBJECTIVE">p53 mutations are critical players in etiopathogenesis of oral cancer. Interestingly, they show differences in terms of type and codon specificity. These differences might be attributed to geographical variations in tobacco use. We aimed to analyze the frequency of p53 mutations in oral cancer patients from Gujarat, India and their effect on clinico-pathological features, local recurrence and survival.</AbstractText>
+                <AbstractText Label="MATERIAL AND METHODS" NlmCategory="METHODS">p53 mutation analysis was performed on 46 paired tissue samples (adjacent normal and primary malignant) using PCR-SSCP and sequencing.</AbstractText>
+                <AbstractText Label="RESULTS" NlmCategory="RESULTS">Sequencing confirmed 51 p53 mutations in 46 paired tissues. Three novel mutations (frameshift deletion in exon 4; G&gt;T transversion at codon 117 in exon 4 and G&gt;A transition at codon 319 in exon 9) were identified. Distinct pattern of p53 mutations was observed: more common C&gt;T transitions and recurring mutation sites at codon 90 and 116 in exon 4. Interestingly, the probability of developing recurrence was higher in small tumors (&lt;4cm) with p53 mutations and in cases with p53 mutations in both adjacent normal and malignant tissues. A significant low disease free survival and overall survival was observed in cases harboring truncating and transcriptionally non-active mutations.</AbstractText>
+                <AbstractText Label="CONCLUSION" NlmCategory="CONCLUSIONS">We report a very high frequency and a diverse pattern of p53 mutations in cases from this region. Interestingly, three distinct novel mutations in exons 4 and 9 were also observed. Analyzing p53 mutation status in tumor tissues at an early stage could serve as an important prognostic factor.</AbstractText>
+                <CopyrightInformation>Copyright © 2015 Elsevier B.V. All rights reserved.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Singh</LastName>
+                    <ForeName>Ragini D</ForeName>
+                    <Initials>RD</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Biochemistry Research Division, Department of Cancer Biology, The Gujarat Cancer &amp; Research Institute, Asarwa, Ahmedabad 380 016, Gujarat, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Patel</LastName>
+                    <ForeName>Kinjal R</ForeName>
+                    <Initials>KR</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Biochemistry Research Division, Department of Cancer Biology, The Gujarat Cancer &amp; Research Institute, Asarwa, Ahmedabad 380 016, Gujarat, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Patel</LastName>
+                    <ForeName>Prabhudas S</ForeName>
+                    <Initials>PS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Biochemistry Research Division, Department of Cancer Biology, The Gujarat Cancer &amp; Research Institute, Asarwa, Ahmedabad 380 016, Gujarat, India. Electronic address: prabhudas_p@hotmail.com.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>03</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Netherlands</Country>
+            <MedlineTA>Mutat Res</MedlineTA>
+            <NlmUniqueID>0400763</NlmUniqueID>
+            <ISSNLinking>0027-5107</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">Mutation</Keyword>
+            <Keyword MajorTopicYN="N">Oral cancer</Keyword>
+            <Keyword MajorTopicYN="N">Tobacco</Keyword>
+            <Keyword MajorTopicYN="N">p53 gene</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2015</Year>
+                <Month>6</Month>
+                <Day>24</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>1</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>1</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>3</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>22</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>22</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2015</Year>
+                <Month>12</Month>
+                <Day>22</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">26687995</ArticleId>
+            <ArticleId IdType="pii">S0027-5107(15)30054-3</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.mrfmmm.2015.12.001</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="In-Data-Review">
+        <PMID Version="1">26556313</PMID>
+        <DateCreated>
+            <Year>2016</Year>
+            <Month>01</Month>
+            <Day>03</Day>
+        </DateCreated>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1878-5875</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>70</Volume>
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Jan</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>The international journal of biochemistry &amp; cell biology</Title>
+                <ISOAbbreviation>Int. J. Biochem. Cell Biol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Spiro-oxindole derivative 5-chloro-4',5'-diphenyl-3'-(4-(2-(piperidin-1-yl) ethoxy) benzoyl) spiro[indoline-3,2'-pyrrolidin]-2-one triggers apoptosis in breast cancer cells via restoration of p53 function.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>105-17</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.biocel.2015.11.003</ELocationID>
+            <ELocationID EIdType="pii" ValidYN="Y">S1357-2725(15)30058-3</ELocationID>
+            <Abstract>
+                <AbstractText>Breast cancer remains a significant health problem due to the involvement of multiple aberrant and redundant signaling pathways in tumorigenesis and the development of resistance to the existing therapeutic agents. Therefore, the search for novel chemotherapeutic agents for effective management of breast cancer is still warranted. In an effort to develop new anti-breast cancer agents, we have synthesized and identified novel spiro-oxindole derivative G613 i.e. 5-chloro-4',5'-diphenyl-3'-(4-(2-(piperidin-1-yl) ethoxy) benzoyl) spiro[indoline-3,2'-pyrrolidin]-2-one, which has shown growth inhibitory activity in breast cancer cells. The present study was aimed to explore the mechanism of anti-tumorigenic action of this newly identified spiro-oxindole compound. Compound G613 inhibited the Mdm2-p53 interaction in breast cancer cells and tumor xenograft. It caused restoration of p53 function by activating its promoter activity, triggering its nuclear accumulation and preventing its ubiquitination and proteasomal degradation. Supportively, molecular docking studies revealed considerable homology in the docking mode of G613 and the known Mdm2 inhibitor Nutlin-3, to p53 binding pocket of Mdm2. The activation of p53 led to upregulation of p53 dependent pro-apoptotic proteins, Bax, Pumaα and Noxa and enhanced interaction of p53 with bcl2 member proteins thus triggering both transcription-dependent and transcription-independent apoptosis, respectively. Additionally, the compound decreased estrogen receptor activity through sequestration of estrogen receptor α by p53 thereby causing a decreased transcriptional activation and expression of proliferation markers. In conclusion, G613 represents a potent small-molecule inhibitor of the Mdm2-p53 interaction and can serve as a promising lead for developing a new class of anti-cancer therapy for breast cancer patients.</AbstractText>
+                <CopyrightInformation>Copyright © 2015 Elsevier Ltd. All rights reserved.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Saxena</LastName>
+                    <ForeName>Ruchi</ForeName>
+                    <Initials>R</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Endocrinology, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Gupta</LastName>
+                    <ForeName>Garima</ForeName>
+                    <Initials>G</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Medicinal &amp; Process Chemistry, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Manohar</LastName>
+                    <ForeName>Murli</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Endocrinology, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Debnath</LastName>
+                    <ForeName>Utsab</ForeName>
+                    <Initials>U</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Medicinal &amp; Process Chemistry, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Popli</LastName>
+                    <ForeName>Pooja</ForeName>
+                    <Initials>P</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Endocrinology, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Prabhakar</LastName>
+                    <ForeName>Yenamandra S</ForeName>
+                    <Initials>YS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Medicinal &amp; Process Chemistry, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Konwar</LastName>
+                    <ForeName>Rituraj</ForeName>
+                    <Initials>R</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Endocrinology, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Kumar</LastName>
+                    <ForeName>Sandeep</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Surgery, King George's Medical University, Lucknow 226001, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Kumar</LastName>
+                    <ForeName>Atul</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Medicinal &amp; Process Chemistry, CSIR-Central Drug Research Institute, Lucknow 226031, India.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Dwivedi</LastName>
+                    <ForeName>Anila</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Endocrinology, CSIR-Central Drug Research Institute, Lucknow 226031, India. Electronic address: anila.dwivedi@rediffmail.com.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2015</Year>
+                <Month>11</Month>
+                <Day>07</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Netherlands</Country>
+            <MedlineTA>Int J Biochem Cell Biol</MedlineTA>
+            <NlmUniqueID>9508482</NlmUniqueID>
+            <ISSNLinking>1357-2725</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">Apoptosis</Keyword>
+            <Keyword MajorTopicYN="N">Breast cancer</Keyword>
+            <Keyword MajorTopicYN="N">Caspase-9</Keyword>
+            <Keyword MajorTopicYN="N">Mdm2</Keyword>
+            <Keyword MajorTopicYN="N">PARP</Keyword>
+            <Keyword MajorTopicYN="N">Spiro-oxindole</Keyword>
+            <Keyword MajorTopicYN="N">p53</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2015</Year>
+                <Month>7</Month>
+                <Day>3</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2015</Year>
+                <Month>10</Month>
+                <Day>15</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2015</Year>
+                <Month>11</Month>
+                <Day>2</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2015</Year>
+                <Month>11</Month>
+                <Day>7</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2015</Year>
+                <Month>11</Month>
+                <Day>12</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2015</Year>
+                <Month>11</Month>
+                <Day>12</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2015</Year>
+                <Month>11</Month>
+                <Day>12</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">26556313</ArticleId>
+            <ArticleId IdType="pii">S1357-2725(15)30058-3</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.biocel.2015.11.003</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+</PubmedArticleSet>
