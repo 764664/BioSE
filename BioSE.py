@@ -1,4 +1,4 @@
-from flask import Flask, current_app, redirect, g, abort
+from flask import Flask, current_app, redirect, g, abort, request
 from paper_processor import PaperProcessor
 import json
 import logging
@@ -44,18 +44,88 @@ def basic_search(keyword, page):
         logging.warning("No result.")
         return ''
     search_id_to_results[search.id] = query_result
+    # return_value = json.dumps(
+    #     [
+    #         query_result.papers_array
+    #         [(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
+    #         math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),  # 1
+    #         query_result.failure_pubmed,  # 2 Boolean
+    #         query_result.num_papers,  # 3 Integer
+    #         search.id  # 4 Integer
+    #     ]
+    # )
     return_value = json.dumps(
-        [
-            query_result.papers_array
-            [(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
-            math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),  # 1
-            query_result.failure_pubmed,  # 2 Boolean
-            query_result.num_papers,  # 3 Integer
-            search.id  # 4 Integer
-        ]
+        {
+            "success": True,
+            "errors": [],
+            "result": query_result.papers_array[(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
+            "result_info": {
+                "page": math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),
+                "count": query_result.num_papers,
+                "id": search.id,
+                "failure_pubmed": query_result.failure_pubmed
+            }
+        }
     )
     return return_value
 
+@app.route('/search/<keyword>')
+def search(keyword):
+    logging.debug(request.form)
+
+    page = int(request.args.get('page', ''))
+
+
+    search = SearchLog.create(keyword=keyword)
+    SearchTerm.get_or_create(keyword = keyword)
+    if keyword in results:
+        query_result = results[keyword]
+    else:
+        query_result = PaperProcessor(keyword)
+        results[keyword] = query_result
+    if page <= 0 or (page-1)*RESULTS_PER_PAGE >= \
+            len(query_result.papers_array):
+        logging.warning("No result.")
+        return ''
+    search_id_to_results[search.id] = query_result
+
+    logging.debug(request.args.get('order_by', ''))
+    if request.args.get('order_by', '') == "Default":
+        logging.debug("Order by default")
+        query_result.papers_array.sort(key=lambda x: x["Score"], reverse=True)
+    else:
+        for paper in query_result.papers_array:
+            try:
+                paper["ParsedDate"] = datetime.datetime.strptime(paper["PubDate"], "%Y %b %d").strftime("%Y%m%d")
+            except:
+                try:
+                    paper["ParsedDate"] = datetime.datetime.strptime(paper["PubDate"], "%Y %b").strftime("%Y%m%d")
+                except:
+                    try:
+                        paper["ParsedDate"] = datetime.datetime.strptime(paper["PubDate"], "%Y").strftime("%Y%m%d")
+                    except:
+                        paper["ParsedDate"] = "19000000"
+
+    if request.args.get('order_by', '') == "Publication Date(Ascending)":
+        query_result.papers_array.sort(key=lambda x: x["ParsedDate"])
+
+    if request.args.get('order_by', '') == "Publication Date(Descending)":
+        query_result.papers_array.sort(key=lambda x: x["ParsedDate"], reverse=True)
+
+    return_value = json.dumps(
+        {
+            "success": True,
+            "errors": [],
+            "result": query_result.papers_array[(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
+            "result_info": {
+                "page": math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),
+                "count": query_result.num_papers,
+                "id": search.id,
+                "failure_pubmed": query_result.failure_pubmed
+            }
+        }
+    )
+    return return_value
 
 @app.route('/jump/<int:search_id>/<int:paper_id>')
 def jump(search_id, paper_id):

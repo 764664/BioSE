@@ -5,16 +5,13 @@ import csv
 from sklearn.cross_validation import KFold
 import numpy as np
 import random
+from sklearn import gaussian_process
+from sklearn import svm
 
 logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s')
-# q = "levamisole inhibitor"
-# q = "levamisole"
-# q = "phosphorylation"
-# q = "methylation"
-q = "p53"
-p = PaperProcessor(q)
+
 
 def build_author_network(papers):
     h = {}
@@ -63,7 +60,7 @@ def save_author_network(h):
                 csv.writer(csvfile).writerow([i,m,n])
                 # print("{}|{}|{}".format(i,m,n), file=f)
 
-def cv(papers):
+def cv_author_network(papers):
     kf = KFold(len(papers), n_folds=5, shuffle=True)
     papers = np.array(papers)
     size = len(papers)
@@ -112,5 +109,52 @@ def cv(papers):
     print("Total Average Difference: {}".format(total_average_difference))
     print("Zeros: {}".format(zeros))
 
-for i in range(10):
+def cv(papers):
+    kf = KFold(len(papers), n_folds=5, shuffle=True)
+    papers = np.array(papers)
+    size = len(papers)
+    total_average_difference = 0
+    zeros = 0
+    for train, test in kf:
+        train_set = list(papers[train])
+        test_set = list(papers[test])
+        random.shuffle(test_set)
+        test_size = len(test)
+        average_difference = 0
+        random_average_difference = 0
+
+        x = []
+        y = []
+        for paper in train_set:
+            x.append([paper['Journal_IF'], paper['Year']])
+            y.append(size - paper["PubMedRanking"])
+        # gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
+        # gp.fit(x, y)
+        clf = svm.SVR(kernel="rbf")
+        clf.fit(x, y)
+        for paper in test_set:
+            assert 'Author' in paper
+            score = clf.predict([[paper['Journal_IF'], paper['Year']]])[0]
+            paper['TestScore'] = score
+            # logging.debug("{}: {}".format(paper['Title'], score))
+
+        test_set.sort(key=lambda x: x["PubMedRanking"])
+        for idx, paper in enumerate(test_set):
+            paper['ReferenceRanking'] = idx
+        test_set.sort(key=lambda x: x["TestScore"])
+        test_set.reverse()
+        for idx, paper in enumerate(test_set):
+            difference = abs(idx-paper['ReferenceRanking']) / test_size
+            average_difference += difference / test_size
+        total_average_difference += average_difference / 5
+    print("Total Average Difference: {}".format(total_average_difference))
+
+# q = "levamisole inhibitor"
+# q = "levamisole"
+# q = "phosphorylation"
+q = "methylation"
+# q = "p53"
+p = PaperProcessor(q)
+p.add_missing_info()
+for i in range(5):
     cv(list(p.papers.values()))

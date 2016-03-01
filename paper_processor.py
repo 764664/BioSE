@@ -10,7 +10,7 @@ from sklearn import gaussian_process
 import pickle
 import math
 
-NUM_OF_DOCUMENTS = 50000
+NUM_OF_DOCUMENTS = 300
 
 
 class PaperProcessor:
@@ -26,25 +26,26 @@ class PaperProcessor:
             self.papers_array = []
 
             self.get_pubmed()
+
             # self.get_google_scholar()
             # self.truncate_for_display()
-            # self.add_missing_info()
-            # self.find_exact_match()
-            # self.ranking()
-            # self.generate_papers_array()
-            # self.num_papers = len(self.papers_array)
+            #self.add_missing_info()
+            self.find_exact_match()
+            self.ranking()
+            self.generate_papers_array()
+            self.num_papers = len(self.papers_array)
 
 
     def basic_search(self, string):
         url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
-               "db=pubmed&term=" + string)
+               "db=pubmed&term=" + string + "&sort=relevance")
         r = requests.get(url)
         root = etree.fromstring(r.content)
         return " ".join([i.text for i in root[3]])
 
     def get_webenv(self):
         url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
-               "db=pubmed&term=" + self.keyword + "&usehistory=y")
+               "db=pubmed&term=" + self.keyword + "&usehistory=y&sort=relevance")
         logging.debug(url)
         r = requests.get(url)
         root = etree.fromstring(r.content)
@@ -84,9 +85,10 @@ class PaperProcessor:
             ranking = 1
             for item in root:
                 one_item = {}
-                one_item["ID"] = item[0].text
+                one_item["Source"] = "PubMed"
+                one_item["PMID"] = item[0].text
                 one_item["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + \
-                    one_item["ID"]
+                    one_item["PMID"]
                 for i in item:
                     if "Name" in i.attrib:
                         if i.attrib["Name"] == "Title":
@@ -239,15 +241,25 @@ class PaperProcessor:
         self.add_journal_if()
 
     def add_journal_if(self):
-         for k,v in self.papers.items():
+        for k,v in self.papers.items():
+            if 'Journal' not in v or not v['Journal']:
+                v["Journal_IF"] = 0
+                continue
             try:
                 stripped_journal_name = re.sub('[\W_]+', '', v["Journal"].upper())
                 v["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
             except DoesNotExist:
                 try:
-                    v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[12])).impact_factor
+                    if len(stripped_journal_name) >= 12:
+                        v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:12])).impact_factor
+                    elif len(stripped_journal_name) >= 8:
+                        v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:8])).impact_factor
+                    elif len(stripped_journal_name) >= 4:
+                        v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:4])).impact_factor
+                    else:
+                        v["Journal_IF"] = 0
                 except DoesNotExist:
-                    pass
+                    v["Journal_IF"] = 0
 
 
     def ranking(self):
@@ -268,7 +280,7 @@ class PaperProcessor:
             for k,v in self.papers.items():
                 if "Score_ML" in v:
                     v["Score_ML"] *= 1 / maximum_ml_score
-                    logging.debug("{}: {}".format(v["Title"], v["Score_ML"]))
+                    # logging.debug("{}: {}".format(v["Title"], v["Score_ML"]))
                     v["Score"] = v["Score"]*(1-v["Weight"]) + v["Score_ML"]*v["Weight"]
         else:
             pass
