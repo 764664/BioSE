@@ -3,3 +3,6 @@ lxml
 requests
 beautifulsoup4
 peewee
+numpy
+scipy
+sklearn
