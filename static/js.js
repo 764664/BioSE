@@ -278,10 +278,22 @@ var Paper = React.createClass({
                 </a>
                     </div>
                 <div className="div_author">
-                <span className="label label-default author">{paper["Author"]}</span>
+                <span>
+                    {
+                        paper["Author"].split(", ").map(function(author, index){
+                            var plus_concatenated = author.split(" ").join("+");
+                            var url = "https://scholar.google.com/scholar?as_q=&as_epq=&as_oq=&as_eq=&as_occt=any&as_sauthors="+plus_concatenated+"&as_publication=&as_ylo=&as_yhi=&btnG=&hl=en&as_sdt=0%2C5";
+                            return(
+                                <span className="label label-default author" key={index}>
+                                    <a target="_blank" href={url}>{author}</a>
+                                </span>
+                            );
+                        })
+                    }
+                </span>
                     </div>
                 <div className="metainfo">
-                    <span className="label label-info journal">{ paper["Journal"] ? "Journal: " + paper["Journal"] : ""}</span>
+                    <span className="label label-info journal"><a target="_blank" href={"http://google.com/search?btnI=1&q="+paper["Journal"]}>{ paper["Journal"] ? "Journal: " + paper["Journal"] : ""}</a></span>
                     <span className="label label-success pubdate">{ paper["PubDate"] ? "PubDate: " + paper["PubDate"] : ""}</span>
                     <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"] : ""}</span>
                     {citation_url}

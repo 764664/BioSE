@@ -17,7 +17,6 @@ a:hover {
 .detail a {
     font-size: 20px;
 }
-
 #search_button {
     margin-left: 10px;
     /*margin-right: 10px;*/
@@ -51,11 +50,20 @@ nav.navbar {
 .selected .title {
     font-size: 17px;
 }
+.author {
+    margin-right: 5px;
+}
 .detail {
     display: none;
 }
 .selected .detail {
     display: block;
+}
+.journal {
+    margin-right: 5px;
+}
+.pubdate {
+    margin-right: 5px;
 }
 .div_author {
     font-size: 12px;
@@ -105,6 +113,12 @@ nav.navbar {
 .list-group-item {
     padding-top: 2px;
     padding-bottom: 2px;
+}
+.div_author a{
+    color: #fff;
+}
+.journal a{
+    color: #fff;
 }
 /*.paperlist {
     height: calc(100% - 130px);
