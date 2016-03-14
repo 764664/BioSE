@@ -26,7 +26,7 @@ class PaperProcessor:
 
             self.get_pubmed()
 
-            self.get_google_scholar()
+            # self.get_google_scholar()
             # self.truncate_for_display()
             self.add_missing_info()
             self.find_exact_match()
