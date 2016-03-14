@@ -175,7 +175,7 @@ def jump(search_id, paper_id):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s')
     app.debug = True
     app.run(host='0.0.0.0')
