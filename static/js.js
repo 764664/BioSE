@@ -45,7 +45,7 @@ var Controller = function(){
         loadData: function() {
             $('.modal').modal('toggle');
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.timeout = 10000;
+            xmlhttp.timeout = 30000;
             var url = "/search/" + keyword + "?page=" + page + "&order_by=" + order_by + "&filter_by=" + filter_by;
             xmlhttp.open("GET", url, true);
             //r.onreadystatechange = function () {
@@ -295,7 +295,7 @@ var Paper = React.createClass({
                 <div className="metainfo">
                     <span className="label label-info journal"><a target="_blank" href={"http://google.com/search?btnI=1&q="+paper["Journal"]}>{ paper["Journal"] ? "Journal: " + paper["Journal"] : ""}</a></span>
                     <span className="label label-success pubdate">{ paper["PubDate"] ? "PubDate: " + paper["PubDate"] : ""}</span>
-                    <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"] : ""}</span>
+                    <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"].toFixed(2) : ""}</span>
                     {citation_url}
                     <Detail content={this.state.detail} paper={paper} searchid={searchid} />
                 </div>

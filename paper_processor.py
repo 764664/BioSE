@@ -10,29 +10,25 @@ from sklearn import gaussian_process
 import pickle
 import math
 
-NUM_OF_DOCUMENTS = 300
-
 
 class PaperProcessor:
-    def __init__(self, keyword, num_of_documents):
+    def __init__(self, keyword, num_of_documents=2000):
         print(keyword)
         logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')
-        if num_of_documents:
-            global NUM_OF_DOCUMENTS
-            NUM_OF_DOCUMENTS = num_of_documents
         if keyword:
             self.keyword = keyword
+            self.num_of_documents = num_of_documents
             self.papers = {}
             self.failure_pubmed = 0
             self.papers_array = []
 
             self.get_pubmed()
 
-            # self.get_google_scholar()
+            self.get_google_scholar()
             # self.truncate_for_display()
-            #self.add_missing_info()
+            self.add_missing_info()
             self.find_exact_match()
             # self.ranking()
             self.generate_papers_array()
@@ -74,7 +70,7 @@ class PaperProcessor:
         if webenv:
             url = (
                 "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?"
-                "db=pubmed&retmax=" + str(NUM_OF_DOCUMENTS) +
+                "db=pubmed&retmax=" + str(self.num_of_documents) +
                 "&query_key=1&WebEnv=" + webenv)
             logging.debug(url)
             r = requests.get(url)
@@ -114,7 +110,7 @@ class PaperProcessor:
                             one_item["Author"] = ", ".join(author_list)
                 one_item["Score"] = score
                 one_item["PubMedRanking"] = ranking
-                score = score - 1 / NUM_OF_DOCUMENTS
+                score = score - 1 / self.num_of_documents
                 ranking += 1
                 if "Title" in one_item and "Author" in one_item:
                     self.papers[one_item["Title"]] = one_item
@@ -180,7 +176,7 @@ class PaperProcessor:
                                 splited[header["Citations_URL"]]
                         one_item["Journal"] = ""
                         one_item["Author"] = ""
-                        score = score - 1 / NUM_OF_DOCUMENTS
+                        score = score - 1 / self.num_of_documents
                         papers_local.append(one_item)
             for item in sbt.decode().split("b'"):
                 m = re.match(
@@ -203,7 +199,7 @@ class PaperProcessor:
             else:
                 if not paper["Author"]:
                     paper["Author"] = "Failed to fetch author names."
-                self.papers[paper["Title"]] = paper
+                # self.papers[paper["Title"]] = paper
         logging.info("Fetched {} papers from Google Scholar".format(
             len(papers_local)))
 
