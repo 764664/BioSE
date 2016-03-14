@@ -15,7 +15,7 @@ class PaperProcessor:
     def __init__(self, keyword, num_of_documents=10000):
         print(keyword)
         logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s')
         if keyword:
             self.keyword = keyword
