@@ -12,7 +12,7 @@ import math
 
 
 class PaperProcessor:
-    def __init__(self, keyword, num_of_documents=10000):
+    def __init__(self, keyword, num_of_documents=5000):
         print(keyword)
         logging.basicConfig(
         level=logging.INFO,

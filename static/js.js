@@ -45,7 +45,7 @@ var Controller = function(){
         loadData: function() {
             $('.modal').modal('toggle');
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.timeout = 30000;
+            xmlhttp.timeout = 300000;
             var url = "/search/" + keyword + "?page=" + page + "&order_by=" + order_by + "&filter_by=" + filter_by;
             xmlhttp.open("GET", url, true);
             //r.onreadystatechange = function () {
