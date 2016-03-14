@@ -199,7 +199,7 @@ class PaperProcessor:
             else:
                 if not paper["Author"]:
                     paper["Author"] = "Failed to fetch author names."
-                # self.papers[paper["Title"]] = paper
+                self.papers[paper["Title"]] = paper
         logging.info("Fetched {} papers from Google Scholar".format(
             len(papers_local)))
 
