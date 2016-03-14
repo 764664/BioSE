@@ -7,6 +7,7 @@ import numpy as np
 import random
 from sklearn import gaussian_process
 from sklearn import svm
+from sklearn import linear_model
 
 logging.basicConfig(
         level=logging.INFO,
@@ -128,14 +129,18 @@ def cv(papers):
         for paper in train_set:
             x.append([paper['Journal_IF'], paper['Year']])
             y.append(size - paper["PubMedRanking"])
-        # gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
+        # gp = gaussian_process.GaussianProcessRegressor(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
         # gp.fit(x, y)
         clf = svm.SVR(kernel="rbf")
+        # clf = linear_model.LinearRegression()
         clf.fit(x, y)
+        # print(clf.support_vectors_.shape)
         for paper in test_set:
             assert 'Author' in paper
             score = clf.predict([[paper['Journal_IF'], paper['Year']]])[0]
-            paper['TestScore'] = score
+            # score = gp.predict([[paper['Journal_IF'], paper['Year']]])[0]
+            # paper['TestScore'] = score
+            paper['TestScore'] = random.random()
             # logging.debug("{}: {}".format(paper['Title'], score))
 
         test_set.sort(key=lambda x: x["PubMedRanking"])
@@ -152,9 +157,10 @@ def cv(papers):
 # q = "levamisole inhibitor"
 # q = "levamisole"
 # q = "phosphorylation"
-q = "methylation"
+# q = "methylation"
 # q = "p53"
-p = PaperProcessor(q)
+q = "homo sapiens"
+p = PaperProcessor(q, num_of_documents=10000)
 p.add_missing_info()
-for i in range(5):
+for i in range(3):
     cv(list(p.papers.values()))

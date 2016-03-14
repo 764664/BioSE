@@ -14,11 +14,14 @@ NUM_OF_DOCUMENTS = 300
 
 
 class PaperProcessor:
-    def __init__(self, keyword):
+    def __init__(self, keyword, num_of_documents):
         print(keyword)
         logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')
+        if num_of_documents:
+            global NUM_OF_DOCUMENTS
+            NUM_OF_DOCUMENTS = num_of_documents
         if keyword:
             self.keyword = keyword
             self.papers = {}
@@ -34,7 +37,6 @@ class PaperProcessor:
             # self.ranking()
             self.generate_papers_array()
             self.num_papers = len(self.papers_array)
-
 
     def basic_search(self, string):
         url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
