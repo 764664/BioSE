@@ -2,7 +2,7 @@
 
 ## Introduction
 
-BioSE is an application to search for literatures in bioinformatics field. It has some novel features to help the users find the papers they want quickly. The data comes from mainly PubMed, also Google Scholar. The application acts as a post processor for these sources.
+BioSE is a self-adaptive search engine for literatures in the bioinformatics field. It has some novel features to help the users find the papers they want quickly. The data comes from mainly PubMed, also Google Scholar. The application acts as a post processor for these sources.
 
 ## Features
 
@@ -23,4 +23,16 @@ The server side application is a Python program, located in root directory. The 
 ## Frontend
 
 The frontend application is mainly a Javascript program, along with some HTML and CSS code. React is used to build this application.
+
+## Deployment
+
+Requirements: Python3
+
+Platform: Linux and OS X preferred
+
+You can use the following command to install the dependencies required by Python.
+
+```bash
+pip install -r requirements.txt
+```
 
