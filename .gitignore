@@ -143,3 +143,6 @@ Temporary Items
 
 # resources
 resources/
+
+# vscode
+.vscode/
