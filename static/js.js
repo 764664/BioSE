@@ -16,24 +16,52 @@ var App = React.createClass({
     },
     onChange: function(e){
         this.setState({text: e.target.value});
+        var xmlhttp = new XMLHttpRequest();
+        var url = "/instant/" + e.target.value;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onload = function() {
+            var j = JSON.parse(xmlhttp.responseText);
+            ReactDOM.render(<InstantSearch terms={j}/>, document.getElementById("instant"));
+            document.getElementById("instant").style.display = "block";
+        };
+        xmlhttp.send();
     },
     render: function() {
         return (
             <nav className="navbar navbar-default navbar-fixed-top">
                 <div className="container">
-                <div className="searchfield">
-                <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
-                <input className="form-control" onChange={this.onChange} value={this.state.text} placeholder="Search"/>
-                <button className="btn btn-primary" id="search_button">Search</button>
-                </form>
-                <span id="span_num_results"></span>
-                <span id="span_order_by"></span>
-                </div>
+                    <div className="searchfield">
+                        <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
+                            <input className="form-control" onChange={this.onChange} value={this.state.text} placeholder="Search"/>
+                            <div id="instant"></div>
+                            <button className="btn btn-primary" id="search_button">Search</button>
+                        </form>
+                        <span id="span_num_results"></span>
+                        <span id="span_order_by"></span>
+                    </div>
                 </div>
             </nav>
         );
     }
 });
+
+var InstantSearch = React.createClass({
+    render: function() {
+        return(
+            <div>
+                <ul>
+                    {
+                        this.props.terms.map(function(term, index){
+                            return(
+                                <li key={index}>{term}</li>
+                            );
+                        })
+                    }
+                </ul>
+            </div>
+        )
+    }
+})
 
 var Controller = function(){
     var keyword = '';

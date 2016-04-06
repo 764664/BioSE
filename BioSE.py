@@ -1,8 +1,10 @@
-from flask import Flask, current_app, redirect, g, abort, request
+from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack
 from paper_processor import PaperProcessor
 import json
 import logging
 import math
+import goterm
+import tax
 from db import *
 
 RESULTS_PER_PAGE = 10
@@ -12,6 +14,9 @@ app = Flask(__name__)
 results = {}
 search_id_to_results = {}
 
+goterm = goterm.GoTerm()
+
+tax = tax.Tax()
 
 @app.before_request
 def before_request():
@@ -173,9 +178,20 @@ def jump(search_id, paper_id):
     else:
         abort(404)
 
+@app.route('/instant/<keyword>')
+def instant(keyword):
+    keyword = keyword.replace("%20", "")
+    with app.app_context():
+        in_goterm = goterm.starts_with(keyword)
+        in_tax = tax.starts_with(keyword)
+    return json.dumps(
+        in_goterm + in_tax
+    )
+
 if __name__ == '__main__':
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s')
     app.debug = True
     app.run(host='0.0.0.0')
+
