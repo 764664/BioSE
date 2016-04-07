@@ -14,6 +14,11 @@ var App = React.createClass({
         //waitingDialog.show();
         Controller.loadInitialData(this.state.text);
     },
+    handleClick: function(e) {
+        this.setState({text: e.target["innerText"]});
+        console.info(e.target);
+        document.getElementById("instant").style.display = "none";
+    },
     onChange: function(e){
         this.setState({text: e.target.value});
         var xmlhttp = new XMLHttpRequest();
@@ -21,9 +26,9 @@ var App = React.createClass({
         xmlhttp.open("GET", url, true);
         xmlhttp.onload = function() {
             var j = JSON.parse(xmlhttp.responseText);
-            ReactDOM.render(<InstantSearch terms={j}/>, document.getElementById("instant"));
+            ReactDOM.render(<InstantSearch terms={j} click={this.handleClick}/>, document.getElementById("instant"));
             document.getElementById("instant").style.display = "block";
-        };
+        }.bind(this);
         xmlhttp.send();
     },
     render: function() {
@@ -32,7 +37,7 @@ var App = React.createClass({
                 <div className="container">
                     <div className="searchfield">
                         <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
-                            <input className="form-control" onChange={this.onChange} value={this.state.text} placeholder="Search"/>
+                            <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search"/>
                             <div id="instant"></div>
                             <button className="btn btn-primary" id="search_button">Search</button>
                         </form>
@@ -53,9 +58,9 @@ var InstantSearch = React.createClass({
                     {
                         this.props.terms.map(function(term, index){
                             return(
-                                <li key={index}>{term}</li>
+                                <li key={index} onClick={this.props.click}>{term}</li>
                             );
-                        })
+                        }, this)
                     }
                 </ul>
             </div>
