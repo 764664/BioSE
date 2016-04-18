@@ -3,20 +3,12 @@ from paper_processor import PaperProcessor
 import json
 import logging
 import math
-import goterm
-import tax
-from db import *
+from instant_search import InstantSearch
+from db import SearchLog, SearchTerm, database
 
 RESULTS_PER_PAGE = 10
 
 app = Flask(__name__)
-
-results = {}
-search_id_to_results = {}
-
-goterm = goterm.GoTerm()
-
-tax = tax.Tax()
 
 @app.before_request
 def before_request():
@@ -31,7 +23,7 @@ def after_request(response):
 
 
 @app.route('/')
-def hello_world():
+def index():
     return current_app.send_static_file('index.html')
 
 
@@ -179,19 +171,18 @@ def jump(search_id, paper_id):
         abort(404)
 
 @app.route('/instant/<keyword>')
-def instant(keyword):
+def instant_search(keyword):
     keyword = keyword.replace("%20", "")
     with app.app_context():
-        in_goterm = goterm.starts_with(keyword)
-        in_tax = tax.starts_with(keyword)
-    return json.dumps(
-        in_goterm + in_tax
-    )
+        return json.dumps(instant.search(keyword))
 
 if __name__ == '__main__':
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s')
-    app.debug = True
+    results = {}
+    search_id_to_results = {}
+    instant = InstantSearch()
+    # app.debug = True
     app.run(host='0.0.0.0')
 

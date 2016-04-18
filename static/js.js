@@ -12,6 +12,7 @@ var App = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault();
         //waitingDialog.show();
+        document.getElementById("instant").style.display = "none";
         Controller.loadInitialData(this.state.text);
     },
     handleClick: function(e) {
@@ -319,7 +320,7 @@ var Paper = React.createClass({
                     {
                         paper["Author"].split(", ").map(function(author, index){
                             var plus_concatenated = author.split(" ").join("+");
-                            var url = "https://scholar.google.com/scholar?as_q=&as_epq=&as_oq=&as_eq=&as_occt=any&as_sauthors="+plus_concatenated+"&as_publication=&as_ylo=&as_yhi=&btnG=&hl=en&as_sdt=0%2C5";
+                            var url = "https://scholar.google.com/scholar?q=author%3A"+plus_concatenated+"&btnG=&hl=en&as_sdt=0%2C5";
                             return(
                                 <span className="label label-default author" key={index}>
                                     <a target="_blank" href={url}>{author}</a>

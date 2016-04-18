@@ -10,21 +10,21 @@ class BaseModel(Model):
 
 
 class SearchTerm(BaseModel):
-    keyword = TextField()
+    keyword = CharField()
 
 
 class SearchLog(BaseModel):
-    keyword = TextField()
+    keyword = CharField()
     date = DateTimeField(default=datetime.datetime.now)
 
 
 class Paper(BaseModel):
-    title = TextField()
+    title = CharField()
     citations = IntegerField(default=-1)
     year = IntegerField(null=True)
-    authors = TextField(null=True)
-    last_author = TextField(null=True)
-    journal = TextField(null=True)
+    authors = CharField(null=True)
+    last_author = CharField(null=True)
+    journal = CharField(null=True)
     journal_if = FloatField(default=0)
     completed = BooleanField(default=False)
     last_modified = DateTimeField(default=datetime.datetime.now)
@@ -46,19 +46,12 @@ class Journal(BaseModel):
     eigenfactor_score = FloatField()
 
 class Author(BaseModel):
-    name = TextField()
+    name = CharField()
     citations = IntegerField(null=True)
     h_index = IntegerField()
     i10_index = IntegerField(null=True)
     completed = BooleanField(default=False)
 
-print("Starting Execution.")
-database.connect()
-SearchTerm.create_table(True)
-SearchLog.create_table(True)
-Paper.create_table(True)
-Click.create_table(True)
-Model.create_table(True)
-Journal.create_table(True)
-database.close()
-print("Finishing Execution.")
+class InstantSearch(BaseModel):
+    keyword = CharField(index=True)
+    result = CharField()

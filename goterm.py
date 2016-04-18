@@ -4,7 +4,7 @@ class GoTerm:
         with open("./resources/go.obo", 'r') as f:
             for line in f:
                 if line[:5] == "name:":
-                    self.names.append(line[6:])
+                    self.names.append(line[6:].strip())
 
     def starts_with(self, keyword):
         len_keyword = len(keyword)
