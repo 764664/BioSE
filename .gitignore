@@ -142,7 +142,7 @@ Temporary Items
 .apdisk
 
 # resources
-resources/
+# resources/
 
 # vscode
 .vscode/
