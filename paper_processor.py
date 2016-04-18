@@ -9,14 +9,11 @@ from sklearn import svm
 from sklearn import gaussian_process
 import pickle
 import math
+from pubmed import PubMedFetcher
 
 
 class PaperProcessor:
-    def __init__(self, keyword, num_of_documents=5000):
-        print(keyword)
-        logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s')
+    def __init__(self, keyword, num_of_documents=100):
         if keyword:
             self.keyword = keyword
             self.num_of_documents = num_of_documents
@@ -28,96 +25,15 @@ class PaperProcessor:
 
             # self.get_google_scholar()
             # self.truncate_for_display()
-            self.add_missing_info()
-            self.find_exact_match()
+            # self.add_missing_info()
+            # self.find_exact_match()
             # self.ranking()
             self.generate_papers_array()
             self.num_papers = len(self.papers_array)
 
-    def basic_search(self, string):
-        url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
-               "db=pubmed&term=" + string + "&sort=relevance")
-        r = requests.get(url)
-        root = etree.fromstring(r.content)
-        return " ".join([i.text for i in root[3]])
-
-    def get_webenv(self):
-        url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
-               "db=pubmed&term=" + self.keyword + "&usehistory=y&sort=relevance")
-        logging.debug(url)
-        r = requests.get(url)
-        root = etree.fromstring(r.content)
-        try:
-            assert root[4].tag == "WebEnv" and root[3].text == "1"
-        except AssertionError as e:
-            logging.warning("Error in Getting WebEnv.")
-            logging.warning("Response is {}".format(r.content))
-            logging.warning(root[4].tag)
-            logging.warning(root[3].text)
-            sys.exit("Error in Getting WebEnv.")
-            return False
-        except IndexError as e:
-            logging.warning(e)
-            logging.warning("Error in Getting WebEnv.")
-            logging.warning("Response is {}".format(r.content))
-            sys.exit("Error in Getting WebEnv.")
-            return False
-        return root[4].text
-
     def get_pubmed(self):
-        logging.info("Started Fetching PubMed.")
-        webenv = self.get_webenv()
-        if webenv:
-            url = (
-                "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?"
-                "db=pubmed&retmax=" + str(self.num_of_documents) +
-                "&query_key=1&WebEnv=" + webenv)
-            logging.debug(url)
-            r = requests.get(url)
-            root = etree.fromstring(r.content)
-            if root[0].tag == "ERROR":
-                logging.warning(root[0].text)
-                self.failure_pubmed = 1
-                return
-            score = 1
-            ranking = 1
-            for item in root:
-                one_item = {}
-                one_item["Source"] = "PubMed"
-                one_item["PMID"] = item[0].text
-                one_item["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + \
-                    one_item["PMID"]
-                for i in item:
-                    if "Name" in i.attrib:
-                        if i.attrib["Name"] == "Title":
-                            if not i.text:
-                                continue
-                            one_item["Title"] = i.text.rstrip(".")
-                        if i.attrib["Name"] == "PubDate":
-                            one_item["PubDate"] = i.text
-                            try:
-                                one_item["Year"] = int(i.text[:4])
-                            except Exception:
-                                one_item["Year"] = 2000
-                        if i.attrib["Name"] == "FullJournalName":
-                            one_item["Journal"] = i.text
-                        if i.attrib["Name"] == "LastAuthor":
-                            one_item["LastAuthor"] = i.text
-                        if i.attrib["Name"] == "AuthorList":
-                            author_list = []
-                            for author in i:
-                                author_list.append(author.text)
-                            one_item["Author"] = ", ".join(author_list)
-                one_item["Score"] = score
-                one_item["PubMedRanking"] = ranking
-                score = score - 1 / self.num_of_documents
-                ranking += 1
-                if "Title" in one_item and "Author" in one_item:
-                    self.papers[one_item["Title"]] = one_item
-            logging.info("Finished Fetching PubMed.")
-            logging.info("Fetched {} papers from PubMed.".format(len(root)))
-        else:
-            self.failure_pubmed = 1
+        pubmed = PubMedFetcher(keyword=self.keyword)
+        self.papers = pubmed.papers
 
     def get_google_scholar(self):
         logging.info("Started fetching Google Scholar.")

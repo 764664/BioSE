@@ -4,7 +4,7 @@ import json
 import logging
 import math
 from instant_search import InstantSearch
-from db import SearchLog, SearchTerm, database
+from db import SearchLog, SearchTerm, Click, database
 
 RESULTS_PER_PAGE = 10
 
@@ -178,11 +178,11 @@ def instant_search(keyword):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')
     results = {}
     search_id_to_results = {}
     instant = InstantSearch()
-    # app.debug = True
+    app.debug = True
     app.run(host='0.0.0.0')
 

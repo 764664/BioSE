@@ -233,10 +233,10 @@ var Paper = React.createClass({
 
         var searchid = this.props.searchid;
         var paper = this.props.paper;
-        var id = paper["PMID"];
-
-        var xmlhttp = new XMLHttpRequest();
-        var url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=" + id + "&rettype=abstract&retmode=text";
+        // var id = paper["PMID"];
+        //
+        // var xmlhttp = new XMLHttpRequest();
+        // var url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=" + id + "&rettype=abstract&retmode=text";
         //
         //if(document.getElementById("detail"+id).hasChildNodes()) {
         //    var detailDOM = document.getElementById("detail"+id).firstChild;
@@ -262,26 +262,35 @@ var Paper = React.createClass({
         //    }.bind(this);
         //    xmlhttp.send();
         //}
-        if(!this.state.detail) {
-            $('.modal').modal('toggle');
-            console.info("Fetching detail.");
-            xmlhttp.open('GET', url, true);
-            xmlhttp.onload = function () {
-                //ReactDOM.render(<Detail content={xmlhttp.responseText} paper={paper} searchid={searchid} />, document.getElementById("detail"+id));
-                this.setState({selected: 'selected', detail: xmlhttp.responseText});
-                $('.modal').modal('toggle');
-            }.bind(this);
-            xmlhttp.send();
+        this.setState({detail: paper["Abstract"]})
+        // if(!this.state.detail) {
+        //     $('.modal').modal('toggle');
+        //     console.info("Fetching detail.");
+        //     xmlhttp.open('GET', url, true);
+        //     xmlhttp.onload = function () {
+        //         //ReactDOM.render(<Detail content={xmlhttp.responseText} paper={paper} searchid={searchid} />, document.getElementById("detail"+id));
+        //         this.setState({selected: 'selected', detail: xmlhttp.responseText});
+        //         $('.modal').modal('toggle');
+        //     }.bind(this);
+        //     xmlhttp.send();
+        // }
+        // else {
+        //     if (this.state.selected) {
+        //         this.setState({selected: ''});
+        //         console.info("Hide.");
+        //     }
+        //     else {
+        //         this.setState({selected: 'selected'});
+        //         console.info("Show.");
+        //     }
+        // }
+        if (this.state.selected) {
+            this.setState({selected: ''});
+            console.info("Hide.");
         }
         else {
-            if (this.state.selected) {
-                this.setState({selected: ''});
-                console.info("Hide.");
-            }
-            else {
-                this.setState({selected: 'selected'});
-                console.info("Show.");
-            }
+            this.setState({selected: 'selected'});
+            console.info("Show.");
         }
     },
     render: function(){
@@ -318,7 +327,7 @@ var Paper = React.createClass({
                 <div className="div_author">
                 <span>
                     {
-                        paper["Author"].split(", ").map(function(author, index){
+                        paper["Author"].map(function(author, index){
                             var plus_concatenated = author.split(" ").join("+");
                             var url = "https://scholar.google.com/scholar?q=author%3A"+plus_concatenated+"&btnG=&hl=en&as_sdt=0%2C5";
                             return(
