@@ -4,6 +4,8 @@
 
 BioSE is a self-adaptive search engine for literatures in the bioinformatics field. It has some novel features to help the users find the papers they want quickly. The data comes from mainly PubMed, also Google Scholar. The application acts as a post processor for these sources.
 
+![](static/diagram.png)
+
 ## Features
 
 ### Self Adaptive
@@ -20,7 +22,7 @@ When the user types every character, the server will predict the phrases the use
 
 The server side application is a Python program, located in root directory. The web framework used is [Flask](http://flask.pocoo.org/). 
 
-## Frontend
+### Frontend
 
 The frontend application is mainly a Javascript program, along with some HTML and CSS code. React is used to build this application.
 
@@ -36,3 +38,6 @@ You can use the following command to install the dependencies required by Python
 pip install -r requirements.txt
 ```
 
+## Screenshot
+
+![](static/screenshot.png)
