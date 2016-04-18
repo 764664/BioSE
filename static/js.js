@@ -42,7 +42,7 @@ var App = React.createClass({
                 <div className="container">
                     <div className="searchfield">
                         <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
-                            <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search"/>
+                            <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
                             <div id="instant"></div>
                             <button className="btn btn-primary" id="search_button">Search</button>
                         </form>
@@ -513,3 +513,7 @@ var WaitingDialog = React.createClass({
 
 ReactDOM.render(<App />, document.getElementById("form"));
 ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));
+
+document.addEventListener("click", function(){
+    document.getElementById("instant").style.display = "none";
+})
