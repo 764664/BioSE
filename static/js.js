@@ -16,7 +16,6 @@ var App = React.createClass({
     },
     handleClick: function(e) {
         this.setState({text: e.target["innerText"]});
-        console.info(e.target);
         document.getElementById("instant").style.display = "none";
     },
     onChange: function(e){
@@ -26,8 +25,13 @@ var App = React.createClass({
         xmlhttp.open("GET", url, true);
         xmlhttp.onload = function() {
             var j = JSON.parse(xmlhttp.responseText);
-            ReactDOM.render(<InstantSearch terms={j} click={this.handleClick}/>, document.getElementById("instant"));
-            document.getElementById("instant").style.display = "block";
+            if (j.length > 0) {
+                ReactDOM.render(<InstantSearch terms={j} click={this.handleClick}/>, document.getElementById("instant"));
+                document.getElementById("instant").style.display = "block";
+            }
+            else {
+                document.getElementById("instant").style.display = "none";
+            }
         }.bind(this);
         xmlhttp.send();
     },

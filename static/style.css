@@ -46,6 +46,7 @@ nav.navbar {
     font-size: 14px;
     margin-bottom: 10px;
     margin-top: 5px;
+    overflow: hidden;
 }
 .selected .title {
     font-size: 17px;
@@ -71,6 +72,7 @@ nav.navbar {
 .div_author {
     font-size: 12px;
     margin-bottom: 10px;
+    overflow: hidden;
 }
 .metainfo {
     font-size: 12px;
@@ -186,6 +188,7 @@ nav.navbar {
     border: 5px;
     border-style: inset;
     text-align: left;
+    background-color: white;
 }
 .form-control {
     min-width: 500px;
