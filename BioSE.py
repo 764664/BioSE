@@ -4,7 +4,9 @@ import json
 import logging
 import math
 from instant_search import InstantSearch
-from db import SearchLog, SearchTerm, Click, database
+from db import SearchLog, SearchTerm, Click, Paper, database
+import datetime
+from abstract import AbstractProcessor
 
 RESULTS_PER_PAGE = 10
 
@@ -109,16 +111,26 @@ def search(keyword):
     if request.args.get('order_by', '') == "Publication Date(Descending)":
         query_result.papers_array.sort(key=lambda x: x["ParsedDate"], reverse=True)
 
+
+    if request.args.get('filter_by', '')!="Default":
+        return_list = [paper for paper in query_result.papers_array if paper["Abstract"].lower().find(request.args.get('filter_by', '')) != -1]
+    else:
+        return_list = query_result.papers_array
+
+    bag = AbstractProcessor().process_list(return_list)
+    words = [[y, bag[y]] for y in sorted(list(bag.keys()), key=lambda x: bag[x], reverse=True)[:30]]
+
     return_value = json.dumps(
         {
             "success": True,
             "errors": [],
-            "result": query_result.papers_array[(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
+            "result": return_list[(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
             "result_info": {
-                "page": math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),
-                "count": query_result.num_papers,
+                "page": math.ceil(len(return_list)/RESULTS_PER_PAGE),
+                "count": len(return_list),
                 "id": search.id,
-                "failure_pubmed": query_result.failure_pubmed
+                "failure_pubmed": query_result.failure_pubmed,
+                "words": words
             }
         }
     )
@@ -131,7 +143,7 @@ def jump(search_id, paper_id):
         try:
             search_term_text = SearchLog.get(SearchLog.id == search_id).keyword
             local_search_term = SearchTerm.get(SearchTerm.keyword == search_term_text)
-        except DoesNotExist:
+        except:
             logging.error("Search log doesn't exist.")
         page = math.floor(paper_id/RESULTS_PER_PAGE) + 1
         for i in range(

@@ -4,74 +4,9 @@
 
 //var React = require('react');
 //var ReactDOM = require('react-dom');
-
-var App = React.createClass({
-    getInitialState: function() {
-        return {text: '', result: ''};
-    },
-    handleSubmit: function(e) {
-        e.preventDefault();
-        //waitingDialog.show();
-        document.getElementById("instant").style.display = "none";
-        Controller.loadInitialData(this.state.text);
-    },
-    handleClick: function(e) {
-        this.setState({text: e.target["innerText"]});
-        document.getElementById("instant").style.display = "none";
-    },
-    onChange: function(e){
-        this.setState({text: e.target.value});
-        var xmlhttp = new XMLHttpRequest();
-        var url = "/instant/" + e.target.value;
-        xmlhttp.open("GET", url, true);
-        xmlhttp.onload = function() {
-            var j = JSON.parse(xmlhttp.responseText);
-            if (j.length > 0) {
-                ReactDOM.render(<InstantSearch terms={j} click={this.handleClick}/>, document.getElementById("instant"));
-                document.getElementById("instant").style.display = "block";
-            }
-            else {
-                document.getElementById("instant").style.display = "none";
-            }
-        }.bind(this);
-        xmlhttp.send();
-    },
-    render: function() {
-        return (
-            <nav className="navbar navbar-default navbar-fixed-top">
-                <div className="container">
-                    <div className="searchfield">
-                        <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
-                            <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
-                            <div id="instant"></div>
-                            <button className="btn btn-primary" id="search_button">Search</button>
-                        </form>
-                        <span id="span_num_results"></span>
-                        <span id="span_order_by"></span>
-                    </div>
-                </div>
-            </nav>
-        );
-    }
-});
-
-var InstantSearch = React.createClass({
-    render: function() {
-        return(
-            <div>
-                <ul>
-                    {
-                        this.props.terms.map(function(term, index){
-                            return(
-                                <li key={index} onClick={this.props.click}>{term}</li>
-                            );
-                        }, this)
-                    }
-                </ul>
-            </div>
-        )
-    }
-})
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router';
 
 var Controller = function(){
     var keyword = '';
@@ -99,10 +34,11 @@ var Controller = function(){
                 //    alert = "Failed to fetch data from PubMed."
                 //}
                 //waitingDialog.hide();
-                $('.modal').modal('toggle');
+                $('.modal').modal('hide');
                 ReactDOM.render(<OutPut papers={j["result"]} pages={j["result_info"]["page"]} current={page} searchid={j["result_info"]["id"]} alert=""/>, document.getElementById("result"));
                 ReactDOM.render(<span className="navbar-text">{j["result_info"]["count"] +" results found."}</span>, document.getElementById("span_num_results"));
-                ReactDOM.render(<OrderBy />, document.getElementById("span_order_by"))
+                ReactDOM.render(<OrderBy />, document.getElementById("span_order_by"));
+                ReactDOM.render(<Filter words={j["result_info"]["words"]} />, document.getElementById("filter_container"))
             }.bind(this);
             xmlhttp.ontimeout = function(){
                 console.info("AJAX Timeout.");
@@ -131,6 +67,55 @@ var Controller = function(){
     };
 }();
 
+var InstantSearch = React.createClass({
+    render: function() {
+        return(
+            <div>
+                <ul>
+                    {
+                        this.props.terms.map(function(term, index){
+                            return(
+                                <li key={index} onClick={this.props.click}>{term}</li>
+                            );
+                        }, this)
+                    }
+                </ul>
+            </div>
+        )
+    }
+});
+
+var Filter = React.createClass({
+    handleClick: function(index, e){
+        console.info(e.target);
+        if (e.target.id=="showall") {
+            Controller.loadInitialData(undefined, undefined, undefined, "Default");
+        }
+        else {
+            // console.info(e.target.key);
+            Controller.loadInitialData(undefined, undefined, undefined, this.props.words[index][0]);
+        }
+    },
+    render: function(){
+        return(
+            <div>
+                <ul>
+                    <li onClick={this.handleClick.bind(this, 0)} id="showall">Show All</li>
+                    {
+                        this.props.words.map(function(word, index){
+                            return(
+                                <li onClick={this.handleClick.bind(this, index)} key={index}>
+                                    {word[0]+" ("+word[1]+")"}
+                                </li>
+                            )
+                        }, this)
+                    }
+                </ul>
+            </div>
+        )
+    }
+});
+
 var OrderBy = React.createClass({
     handleClick: function(e){
         e.preventDefault();
@@ -154,40 +139,6 @@ var OrderBy = React.createClass({
     }
 });
 
-var FilterBy = React.createClass({
-    handleClick: function(e){
-        e.preventDefault();
-        // console.info(e.target.text);
-        Controller.loadInitialData(undefined, 1, e.target.text);
-    },
-    render: function(){
-        return(
-            <div className="btn-group navbar-btn" id="order_by">
-              <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Order By <span className="caret"></span>
-              </button>
-              <ul className="dropdown-menu">
-                <li><a onClick={this.handleClick} href="#">Default</a></li>
-                <li role="separator" className="divider"></li>
-                <li><a onClick={this.handleClick} href="#">Publication Date(Ascending)</a></li>
-                <li><a onClick={this.handleClick} href="#">Publication Date(Descending)</a></li>
-              </ul>
-            </div>
-            )
-    }
-});
-
-var OutPut = React.createClass({
-    render: function(){
-        return(
-            <div>
-                <Alerting message={this.props.alert}/>
-                <PaperList papers={this.props.papers} searchid={this.props.searchid}/>
-                <Pagination pages={this.props.pages} current={this.props.current}/>
-            </div>
-        )
-    }
-});
 
 var Alerting = React.createClass({
     render: function(){
@@ -202,7 +153,6 @@ var Alerting = React.createClass({
         else{
             return(<div></div>)
         }
-
     }
 });
 
@@ -262,7 +212,7 @@ var Paper = React.createClass({
         //    }.bind(this);
         //    xmlhttp.send();
         //}
-        this.setState({detail: paper["Abstract"]})
+        this.setState({detail: paper["Abstract"]});
         // if(!this.state.detail) {
         //     $('.modal').modal('toggle');
         //     console.info("Fetching detail.");
@@ -442,7 +392,103 @@ var Pagination = React.createClass({
     }
 });
 
+var OutPut = React.createClass({
+    render: function(){
+        return(
+            <div>
+                <Alerting message={this.props.alert}/>
+                <PaperList papers={this.props.papers} searchid={this.props.searchid}/>
+                <Pagination pages={this.props.pages} current={this.props.current}/>
+            </div>
+        )
+    }
+});
 
+
+
+var App = React.createClass({
+    getInitialState: function() {
+        return {text: '', result: ''};
+    },
+    handleSubmit: function(e) {
+        e.preventDefault();
+        //waitingDialog.show();
+        document.getElementById("instant").style.display = "none";
+        location.href="/#/search/" + this.state.text;
+    },
+    go: function() {
+        // document.getElementById("instant").style.display = "none";
+        Controller.loadInitialData(this.props.params.keyword);
+    },
+    handleClick: function(e) {
+        this.setState({text: e.target["innerText"]});
+        document.getElementById("instant").style.display = "none";
+    },
+    onChange: function(e){
+        this.setState({text: e.target.value});
+        if(e.target.value.length > 0){
+            var xmlhttp = new XMLHttpRequest();
+            var url = "/instant/" + e.target.value;
+            xmlhttp.open("GET", url, true);
+            xmlhttp.onload = function() {
+                var j = JSON.parse(xmlhttp.responseText);
+                if (j.length > 0) {
+                    ReactDOM.render(<InstantSearch terms={j} click={this.handleClick}/>, document.getElementById("instant"));
+                    document.getElementById("instant").style.display = "block";
+                }
+                else {
+                    document.getElementById("instant").style.display = "none";
+                }
+            }.bind(this);
+            xmlhttp.send();
+        }
+    },
+    render: function() {
+        if(this.props.params.keyword){
+            this.go();
+        }
+        return (
+            <nav className="navbar navbar-default navbar-fixed-top">
+                <div className="container">
+                    <div className="searchfield">
+                        <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
+                            <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
+                            <div id="instant"></div>
+                            <button className="btn btn-primary" id="search_button">Search</button>
+                        </form>
+                        <span id="span_num_results"></span>
+                        <span id="span_order_by"></span>
+                    </div>
+                </div>
+            </nav>
+        );
+    }
+});
+
+
+var WaitingDialog = React.createClass({
+    render: function(){
+        return(
+            <div className="modal fade" data-backdrop="static" data-keyboard="false" tabIndex="-1" role="dialog" aria-hidden="true">
+                <div className="modal-dialog modal-m">
+                    <div className="modal-content">
+                    <div className="modal-header"><h3>Loading</h3></div>
+                    <div className="modal-body">
+                    <div className="progress progress-striped active"><div className="progress-bar"></div></div>
+                    </div></div></div></div>
+        )
+    }
+});
+
+ReactDOM.render((
+  <Router history={hashHistory}>
+    <Route path="/" component={App}>
+        <Route path="/search/:keyword" component="{App}" />
+    </Route>
+  </Router>
+), document.getElementById("form"));
+// ReactDOM.render(<App />, document.getElementById("form"));
+ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));
 //
 //var waitingDialog = waitingDialog || (function ($) {
 //    'use strict';
@@ -506,23 +552,7 @@ var Pagination = React.createClass({
 //
 //})(jQuery);
 
-var WaitingDialog = React.createClass({
-    render: function(){
-        return(
-            <div className="modal fade" data-backdrop="static" data-keyboard="false" tabIndex="-1" role="dialog" aria-hidden="true">
-                <div className="modal-dialog modal-m">
-                    <div className="modal-content">
-                    <div className="modal-header"><h3>Loading</h3></div>
-                    <div className="modal-body">
-                    <div className="progress progress-striped active"><div className="progress-bar"></div></div>
-                    </div></div></div></div>
-        )
-    }
-});
-
-ReactDOM.render(<App />, document.getElementById("form"));
-ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));
 
 document.addEventListener("click", function(){
     document.getElementById("instant").style.display = "none";
-})
+});

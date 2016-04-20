@@ -10,6 +10,7 @@ from sklearn import gaussian_process
 import pickle
 import math
 from pubmed import PubMedFetcher
+from abstract import AbstractProcessor
 
 
 class PaperProcessor:
@@ -22,6 +23,9 @@ class PaperProcessor:
             self.papers_array = []
 
             self.get_pubmed()
+
+            # self.bag = AbstractProcessor(self.papers).bag
+            # self.words = [[y, self.bag[y]] for y in sorted(list(self.bag.keys()), key=lambda x: self.bag[x], reverse=True)[:30]]
 
             # self.get_google_scholar()
             # self.truncate_for_display()
