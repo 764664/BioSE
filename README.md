@@ -14,9 +14,9 @@ The ranking of papers is automatically being improved utilizing the users' click
 
 ### Instant Search
 
-When the user types every character, the server will predict the phrases the users is likely to input based on GO terms and NCBI Tax.
+When the user types every character, the server will predict the phrases the users is likely to input based on GO terms and NCBI Tax. This is provided using 
 
-## Structure
+## Implementation
 
 ### Serverside
 
@@ -24,7 +24,13 @@ The server side application is a Python program, located in root directory. The 
 
 ### Frontend
 
-The frontend application is mainly a Javascript program, along with some HTML and CSS code. React is used to build this application.
+The frontend application is mainly a Javascript program, along with some HTML and CSS code. [React.js](https://facebook.github.io/react/) is used to build this application.
+
+### Underlying software
+
+[redis](http://redis.io/), to provide instant search using sorted set
+
+Any RDBMS, e.g. [SQLite](https://www.sqlite.org), [MySQL](https://www.mysql.com), [MariaDB](https://mariadb.org/)
 
 ## Deployment
 

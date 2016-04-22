@@ -1,8 +1,8 @@
 flask
 lxml
 requests
-beautifulsoup4
 peewee
 numpy
 scipy
 scikit-learn
+redis

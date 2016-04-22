@@ -3,7 +3,7 @@ from paper_processor import PaperProcessor
 import json
 import logging
 import math
-from instant_search import InstantSearch
+from autocomplete import InstantSearch
 from db import SearchLog, SearchTerm, Click, Paper, database
 import datetime
 from abstract import AbstractProcessor
@@ -186,7 +186,7 @@ def jump(search_id, paper_id):
 def instant_search(keyword):
     keyword = keyword.replace("%20", "")
     with app.app_context():
-        return json.dumps(instant.search(keyword))
+        return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
 
 if __name__ == '__main__':
     logging.basicConfig(

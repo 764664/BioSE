@@ -1,0 +1,52 @@
+import goterm
+import tax
+import logging
+# import string
+# import db
+import redis
+# import datetime
+
+class InstantSearch:
+    def __init__(self, load_db = True):
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s')
+        self.r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        self.redis_key = "biose"
+        if not self.r.exists(self.redis_key):
+            self.add_to_redis()
+
+    def add_to_redis(self):
+        self.goterm = goterm.GoTerm()
+        self.tax = tax.Tax()
+        for name in self.goterm.names:
+            self.r.zadd(self.redis_key, 0, name)
+        for name in self.tax.names:
+            self.r.zadd(self.redis_key, 0, name)
+
+    def search(self, s):
+        return(self.r.zrangebylex(self.redis_key, "["+s, "["+s+"z"))
+
+    def naive_search(self, s):
+        self.goterm = goterm.GoTerm()
+        self.tax = tax.Tax()
+        in_goterm = self.goterm.starts_with(s)
+        in_tax = self.tax.starts_with(s)
+        return in_goterm+in_tax
+
+
+if __name__ == "__main__":
+    instant = InstantSearch()
+    # instant.add_to_redis()
+    # logging.info(instant.search_in_redis("m"))
+    # print(instant.naive_search("m"))
+    # print(len(instant.tax.names))
+    # print(instant.tax.names[100:120])
+    # print(len(instant.goterm.names))
+    # print(instant.goterm.names[100:120])
+    # t = datetime.datetime.now().timestamp()
+    # instant.search_in_redis("methylation")
+    # print(datetime.datetime.now().timestamp() - t)
+    # t = datetime.datetime.now().timestamp()
+    # instant.naive_search("methylation")
+    # print(datetime.datetime.now().timestamp() - t)
