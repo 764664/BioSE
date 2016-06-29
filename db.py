@@ -1,8 +1,8 @@
 from peewee import *
 import datetime
+import logging
 
 database = SqliteDatabase('my_database.db', threadlocals=True)
-
 
 class BaseModel(Model):
     class Meta:

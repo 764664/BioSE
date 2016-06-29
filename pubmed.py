@@ -42,20 +42,23 @@ class PubMedFetcher:
     def process_one(self, item):
         if len(item) < 30:
             return None
-        m = re.search("pmid (\d+).+?title.+?name \"(.+?)\".+?authors \{(.+?)\},\s*from journal.+?name \"(.+?)\".+abstract \"(.+?)\"", item, re.DOTALL)
+        m = re.search("pmid (\d+).+?title.+?name \"(.+?)\".+?authors \{(.+?)\},\s*from journal.+?name \"(.+?)\".+?year (\d+).+?month (\d+).+?abstract \"(.+?)\"", item, re.DOTALL)
         if m:
             id = m.group(1)
             title = m.group(2)
             author = m.group(3)
             m_author = re.findall("name ml \"(.+?)\"", author)
             journal = m.group(4)
-            abstract = m.group(5)
+            year = m.group(5)
+            month = m.group(6)
+            abstract = m.group(7)
             h = {
                 "Source": "PubMed",
                 "PMID": id,
                 "Title": title,
                 "Author": m_author,
                 "Journal": journal,
+                "Year": int(year),
                 "Abstract": abstract
             }
             return h
@@ -142,4 +145,5 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')
-    PubMedFetcher("methylation")
+    p = PubMedFetcher("methylation", num_of_documents=2)
+    print(p.papers)

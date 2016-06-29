@@ -14,8 +14,9 @@ from abstract import AbstractProcessor
 
 
 class PaperProcessor:
-    def __init__(self, keyword, num_of_documents=100):
+    def __init__(self, keyword, num_of_documents=100, postprocessing = True):
         if keyword:
+            logging.basicConfig(level=logging.INFO)
             self.keyword = keyword
             self.num_of_documents = num_of_documents
             self.papers = {}
@@ -27,16 +28,17 @@ class PaperProcessor:
             # self.bag = AbstractProcessor(self.papers).bag
             # self.words = [[y, self.bag[y]] for y in sorted(list(self.bag.keys()), key=lambda x: self.bag[x], reverse=True)[:30]]
 
+            if postprocessing:
             # self.get_google_scholar()
             # self.truncate_for_display()
-            # self.add_missing_info()
+                self.add_missing_info()
             # self.find_exact_match()
             # self.ranking()
             self.generate_papers_array()
             self.num_papers = len(self.papers_array)
 
     def get_pubmed(self):
-        pubmed = PubMedFetcher(keyword=self.keyword)
+        pubmed = PubMedFetcher(keyword=self.keyword, num_of_documents=self.num_of_documents)
         self.papers = pubmed.papers
 
     def get_google_scholar(self):
@@ -168,6 +170,9 @@ class PaperProcessor:
                 v["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
             except DoesNotExist:
                 try:
+                    if len(stripped_journal_name) >= 16:
+                        v["Journal_IF"] = Journal.get(
+                            Journal.title.startswith(stripped_journal_name[:16])).impact_factor
                     if len(stripped_journal_name) >= 12:
                         v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:12])).impact_factor
                     elif len(stripped_journal_name) >= 8:

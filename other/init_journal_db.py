@@ -1,3 +1,7 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import ../db.py
+import db
 from db import *
 import logging
 import re
@@ -6,7 +10,7 @@ journals = {}
 
 def read_if():
     try:
-        f = open("2014_SCI_IF.csv", "r")
+        f = open("./resources/2014_SCI_IF.csv", "r")
     except Exception as e:
         logging.warning(e)
         return
