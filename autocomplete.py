@@ -1,20 +1,23 @@
 import goterm
 import tax
-import logging
-# import string
-# import db
 import redis
+import sys
+import logging
 # import datetime
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class InstantSearch:
     def __init__(self, load_db = True):
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s')
-        self.r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        self.redis_key = "biose"
-        if not self.r.exists(self.redis_key):
-            self.add_to_redis()
+        try:
+            self.r = redis.StrictRedis(host='localhost', port=6379, db=0)
+            self.redis_key = "biose"
+            if not self.r.exists(self.redis_key):
+                self.add_to_redis()
+        except Exception:
+            logger.error("Something went wrong with Redis.")
+            sys.exit()
 
     def add_to_redis(self):
         self.goterm = goterm.GoTerm()

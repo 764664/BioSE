@@ -74,7 +74,6 @@ def search(keyword):
 
     page = int(request.args.get('page', ''))
 
-
     search = SearchLog.create(keyword=keyword)
     SearchTerm.get_or_create(keyword = keyword)
     if keyword in results:
@@ -88,9 +87,9 @@ def search(keyword):
         return ''
     search_id_to_results[search.id] = query_result
 
-    logging.debug(request.args.get('order_by', ''))
+    logging.debug("Order by : " + request.args.get('order_by', ''))
     if request.args.get('order_by', '') == "Default":
-        logging.debug("Order by default")
+        # logging.debug("Order by default")
         query_result.papers_array.sort(key=lambda x: x["Score"], reverse=True)
     else:
         for paper in query_result.papers_array:
@@ -111,6 +110,7 @@ def search(keyword):
     if request.args.get('order_by', '') == "Publication Date(Descending)":
         query_result.papers_array.sort(key=lambda x: x["ParsedDate"], reverse=True)
 
+    logging.debug("Filter by : " + request.args.get('filter_by', ''))
 
     if request.args.get('filter_by', '')!="Default":
         return_list = [paper for paper in query_result.papers_array if paper["Abstract"].lower().find(request.args.get('filter_by', '')) != -1]

@@ -291,7 +291,7 @@ var Paper = React.createClass({
                     </div>
                 <div className="metainfo">
                     <span className="label label-info journal"><a target="_blank" href={"http://google.com/search?btnI=1&q="+paper["Journal"]}>{ paper["Journal"] ? "Journal: " + paper["Journal"] : "Journal: Unknown"}</a></span>
-                    <span className="label label-success pubdate">{ paper["PubDate"] ? "PubDate: " + paper["PubDate"] : "PubDate: Unknown"}</span>
+                    <span className="label label-success pubdate">{ paper["Year"] ? "Year: " + paper["Year"] : "Year: Unknown"}</span>
                     <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"].toFixed(2) : ""}</span>
                     {citation_url}
                     <Detail content={this.state.detail} paper={paper} searchid={searchid} />

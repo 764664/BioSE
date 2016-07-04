@@ -1,6 +1,9 @@
+from collections import defaultdict
+from vocabulary import Vocabulary
+
 class AbstractProcessor:
     def __init__(self):
-        pass
+        self.common_words = ["all", "other"]
 
     # def process_dict(self):
     #     for paper in self.papers.values():
@@ -12,15 +15,23 @@ class AbstractProcessor:
     #             else:
     #                 self.bag[word] += 1
 
+    # def process_list(self, papers):
+    #     bag = defaultdict(int)
+    #     for paper in papers:
+    #         abstract = paper["Abstract"]
+    #         words = list(set([x.strip().strip(",.").lower() for x in abstract.split()]))
+    #         for word in words:
+    #             bag[word] += 1
+    #     return bag
+
     def process_list(self, papers):
-        bag = {}
+        bag = defaultdict(int)
+        voc = Vocabulary()
         for paper in papers:
             abstract = paper["Abstract"]
             words = list(set([x.strip().strip(",.").lower() for x in abstract.split()]))
             for word in words:
-                if word not in bag:
-                    bag[word] = 1
-                else:
+                if word not in self.common_words and voc.exact_search(word):
                     bag[word] += 1
         return bag
 

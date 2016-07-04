@@ -4,6 +4,9 @@ import logging
 
 database = SqliteDatabase('my_database.db', threadlocals=True)
 
+logger = logging.getLogger('peewee')
+logger.setLevel(logging.INFO)
+
 class BaseModel(Model):
     class Meta:
         database = database

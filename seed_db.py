@@ -16,8 +16,6 @@ Model.create_table(True)
 Journal.create_table(True)
 InstantSearch.create_table(True)
 
-
-
 def process_one_instant_search(s, instant):
     i, created = InstantSearch.get_or_create(keyword=s, defaults={"result": ",".join(instant.search(s))})
     i.save()
