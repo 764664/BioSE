@@ -2,3 +2,5 @@ resources/2014_SCI_IF.csv filter=lfs diff=lfs merge=lfs -text
 resources/go.obo filter=lfs diff=lfs merge=lfs -text
 resources/names.dmp filter=lfs diff=lfs merge=lfs -text
 resources/sample_xml_pubmed filter=lfs diff=lfs merge=lfs -text
+
+scholar.py linguist-vendored
