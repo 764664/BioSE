@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: './js.jsx',
-  output: { path: __dirname, filename: 'bundle.js' },
+  output: { path: __dirname, filename: 'bundle.min.js' },
   module: {
     loaders: [
       {
@@ -16,4 +16,12 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
+    }),
+    new webpack.optimize.OccurenceOrderPlugin()
+  ]
 };
