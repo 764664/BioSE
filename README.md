@@ -44,6 +44,9 @@ You can use the following command to install the dependencies required by Python
 pip install -r requirements.txt
 ```
 
+## Demo
+Demo is currently available at [biose.jie.today](https://biose.jie.today)
+
 ## Screenshot
 
 ![](static/screenshot.png)

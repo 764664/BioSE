@@ -1,5 +1,5 @@
 from pubmed import PubMedFetcher
-from models.basic import *
+from models import *
 from paper_processor import PaperProcessor
 from sklearn.cross_validation import KFold
 import numpy as np
@@ -10,16 +10,29 @@ import os.path
 import csv
 
 class Evaluation:
-    def __init__(self, queries, evaluator=BasicEvaluator, num_of_papers=1000, scaling_factor=1, noise=False):
+    def __init__(self, queries, model=Model, num_of_papers=10000, scaling_factors=[1], noise=False):
         self.num_of_papers = num_of_papers
-        self.scaling_factor = scaling_factor
         self.noise = noise
-        self.evaluator = evaluator
-        self.evaluator_name = evaluator.__name__
-        for query in queries:
-            self.evaluate(query)
+        self.model = model
+        self.model_name = model.__name__
 
-    def evaluate(self, query):
+        len_papers = 0
+        total_average = 0
+        for query in queries:
+            result = []
+            for i in scaling_factors:
+                score, len_papers = self.evaluate(query, i)
+                result.append(score)
+            result.append(sum(result)/len(result))
+            total_average += sum(result)/len(result)/len(queries)
+
+            with open('tmp/' + self.model_name + '.csv', 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([query, len_papers] + result)
+
+        logging.info("Total Average: {}".format(total_average))
+
+    def evaluate(self, query, scaling_factor):
         m = hashlib.md5(str.encode(query+str(self.num_of_papers)))
         digest = m.hexdigest()
         filename = "tmp/"+digest
@@ -43,19 +56,17 @@ class Evaluation:
 
 
         papers = np.array(list(pubmed.papers.values()))
-        logging.info("Got {} papers for query {}".format(len(papers), query))
+        logging.info("Got {} papers for query \"{}\", scaling_factor={}".format(len(papers), query, scaling_factor))
 
         all_time_result = 0
 
-        times = 5
-        result = []
+        times = 1
         for i in range(1, times+1):
             overall_diff = 0
             kf = KFold(len(papers), 5, shuffle=True)
             for train, test in kf:
                 train_set = papers[train]
                 test_set = papers[test]
-                test_size = len(test)
 
                 for train_sample in train_set:
                     score = len(papers) - train_sample["Ranking"] + 1
@@ -64,46 +75,44 @@ class Evaluation:
                     score = 1 if score==0 else abs(score)
                     noise = np.random.normal(0, score / 5)
 
-                    score *= self.scaling_factor
+                    score *= scaling_factor
                     if self.noise:
                         score += noise
 
                     train_sample["Score"] = score
 
-                for test_sample in test_set:
-                    test_sample["Score"] = np.random.rand()
+                # for test_sample in test_set:
+                #     test_sample["Score"] = np.random.rand()
 
-                self.evaluator.evaluate(train_set, test_set, query)
+                self.model(train_set, test_set, query)
 
                 test_set = list(test_set)
+                test_size = len(test_set)
                 test_set.sort(key = lambda x: x["Ranking"])
                 for idx, test_sample in enumerate(test_set):
-                    test_sample["Test_Ranking"] = idx
+                    test_sample["Correct_Ranking"] = idx
 
                 total_diff = 0
                 test_set.sort(key = lambda x: x["Score"])
                 test_set.reverse()
                 # logging.info("Test size: {}".format(test_size))
                 for idx, test_sample in enumerate(test_set):
-                    total_diff += abs(test_sample["Test_Ranking"] - idx) / test_size
+                    total_diff += abs(test_sample["Correct_Ranking"] - idx) / test_size
                 ave_diff = total_diff / test_size
                 overall_diff += ave_diff / 5
 
             all_time_result += overall_diff / times
 
-            logging.info("{}th trial, Average Difference: {}".format(i, overall_diff))
-            result.append(overall_diff)
+            # logging.info("{}th trial, Average Difference: {}".format(i, overall_diff))
 
-        logging.info("For all trials, Average Difference: {}".format(all_time_result))
-        result.append(all_time_result)
-
-        with open('tmp/'+self.evaluator_name+'.csv', 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([query, len(papers)]+result)
+        # logging.info("For all trials, Average Difference: {}".format(all_time_result))
+        return all_time_result, len(papers)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     # queries = ["methylation"]
+    scaling_factors = [1, 0.1, 0.01, 0.001]
+    # scaling_factors = [1]
     queries = ["methylation", "RNA-Seq", "homo sapiens", "p53", "alignment"]
-    Evaluation(queries, evaluator=BasicEvaluatorTF, num_of_papers=10000)
+    Evaluation(queries, model=Model12, num_of_papers=10000, scaling_factors=scaling_factors, noise=True)

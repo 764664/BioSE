@@ -70,7 +70,7 @@ def basic_search(keyword, page):
 
 @app.route('/search/<keyword>')
 def search(keyword):
-    logging.debug(request.form)
+    # logging.debug(request.form)
 
     page = int(request.args.get('page', ''))
 
