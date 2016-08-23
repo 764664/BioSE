@@ -7,21 +7,21 @@ database = SqliteDatabase('my_database.db', threadlocals=True)
 logger = logging.getLogger('peewee')
 logger.setLevel(logging.INFO)
 
-class BaseModel(Model):
+class MyBaseModel(Model):
     class Meta:
         database = database
 
 
-class SearchTerm(BaseModel):
+class SearchTerm(MyBaseModel):
     keyword = CharField()
 
 
-class SearchLog(BaseModel):
+class SearchLog(MyBaseModel):
     keyword = CharField()
     date = DateTimeField(default=datetime.datetime.now)
 
 
-class Paper(BaseModel):
+class Paper(MyBaseModel):
     title = CharField()
     citations = IntegerField(default=-1)
     year = IntegerField(null=True)
@@ -33,28 +33,34 @@ class Paper(BaseModel):
     last_modified = DateTimeField(default=datetime.datetime.now)
 
 
-class Click(BaseModel):
+class Click(MyBaseModel):
     search_term = ForeignKeyField(SearchTerm, related_name='clicks')
     paper = ForeignKeyField(Paper, related_name='clicks')
     click_count = IntegerField(default=0)
 
-class Model(BaseModel):
+class QueryModel(MyBaseModel):
     search_term = ForeignKeyField(SearchTerm, related_name='model')
     model = BlobField()
     last_modified = DateTimeField(default=datetime.datetime.now)
 
-class Journal(BaseModel):
+class Journal(MyBaseModel):
     title = TextField()
     impact_factor = FloatField()
     eigenfactor_score = FloatField()
 
-class Author(BaseModel):
+class Author(MyBaseModel):
     name = CharField()
     citations = IntegerField(null=True)
     h_index = IntegerField()
     i10_index = IntegerField(null=True)
     completed = BooleanField(default=False)
 
-class InstantSearch(BaseModel):
+class InstantSearch(MyBaseModel):
     keyword = CharField(index=True)
     result = CharField()
+
+class User(MyBaseModel):
+    username = CharField()
+    email = CharField()
+    password = CharField()
+    model = BlobField(null=True)

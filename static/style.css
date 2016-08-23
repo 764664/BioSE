@@ -91,9 +91,18 @@ nav.navbar {
     margin-top: 10px;
 }
 .searchfield {
+    /*width: 80%;*/
     /*display: inline-block;*/
     /*padding-top: 12px;*/
 }
+#login {
+    padding-top: 0.5em;
+    /*width: 20%;*/
+    /*display: inline;*/
+}
+#register_btn {
+    margin-right: 5px;
+} 
 .score {
     display: inline;
 }
@@ -205,4 +214,7 @@ ul {
 #filter_container li:hover {
     background-color: #EEEEEE;
     cursor: pointer;
+}
+.highlight {
+    color: red;
 }

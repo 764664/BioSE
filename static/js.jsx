@@ -35,7 +35,7 @@ var Controller = function(){
                 //}
                 //waitingDialog.hide();
                 $('.modal').modal('hide');
-                ReactDOM.render(<OutPut papers={j["result"]} pages={j["result_info"]["page"]} current={page} searchid={j["result_info"]["id"]} alert=""/>, document.getElementById("result"));
+                ReactDOM.render(<OutPut papers={j["result"]} pages={j["result_info"]["page"]} current={page} searchid={j["result_info"]["id"]} alert="" query={keyword} />, document.getElementById("result"));
                 ReactDOM.render(<span className="navbar-text">{j["result_info"]["count"] +" results found."}</span>, document.getElementById("span_num_results"));
                 ReactDOM.render(<OrderBy />, document.getElementById("span_order_by"));
                 ReactDOM.render(<Filter words={j["result_info"]["words"]} />, document.getElementById("filter_container"))
@@ -163,9 +163,7 @@ var Detail = React.createClass({
                 <a href={"/jump/" + this.props.searchid + "/" + this.props.paper["ID"]}>
                     {this.props.paper["Title"]}
                 </a>
-                <pre>
-                    { this.props.content }
-                </pre>
+                <div className="abstract" dangerouslySetInnerHTML={{__html: this.props.content.split(this.props.query).join("<span class=\"highlight\">"+this.props.query+"</span>")}} />
             </div>
         )
     }
@@ -294,7 +292,7 @@ var Paper = React.createClass({
                     <span className="label label-success pubdate">{ paper["Year"] ? "Year: " + paper["Year"] : "Year: Unknown"}</span>
                     <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"].toFixed(2) : ""}</span>
                     {citation_url}
-                    <Detail content={this.state.detail} paper={paper} searchid={searchid} />
+                    <Detail {...this.props} content={this.state.detail} paper={paper} searchid={searchid} />
                 </div>
             </li>
         );
@@ -313,7 +311,7 @@ var PaperList = React.createClass({
                     {
                         papers.map(function (paper, index) {
                             return (
-                                <Paper paper={paper} searchid={searchid} key={index} />
+                                <Paper {...this.props} paper={paper} searchid={searchid} key={index} />
                             );
                         }, this)
                     }
@@ -396,15 +394,34 @@ var OutPut = React.createClass({
     render: function(){
         return(
             <div>
-                <Alerting message={this.props.alert}/>
-                <PaperList papers={this.props.papers} searchid={this.props.searchid}/>
-                <Pagination pages={this.props.pages} current={this.props.current}/>
+                <Alerting message={this.props.alert} />
+                <PaperList {...this.props} papers={this.props.papers} searchid={this.props.searchid} />
+                <Pagination pages={this.props.pages} current={this.props.current} />
             </div>
         )
     }
 });
 
-
+var Login = React.createClass({
+    render: function(){
+        var xmlhttp = new XMLHttpRequest();
+        var url = "/checklogin";
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onload = () => {
+            var j = JSON.parse(xmlhttp.responseText);
+            if(j.username) {
+                document.getElementById('login').innerHTML = `Welcome back, ${j.username}`;
+            }
+        };
+        xmlhttp.send();
+        return(
+            <div id='login'>
+                <a href='/register'><button className="btn btn-info" id="register_btn">Register</button></a>
+                <a href='/login'><button className="btn btn-info">Login</button></a>
+            </div>
+        )
+    }
+})
 
 var App = React.createClass({
     getInitialState: function() {
@@ -450,6 +467,8 @@ var App = React.createClass({
         return (
             <nav className="navbar navbar-default navbar-fixed-top">
                 <div className="container">
+                <div className="row">
+                <div className="col-sm-9">
                     <div className="searchfield">
                         <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
                             <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
@@ -459,7 +478,11 @@ var App = React.createClass({
                         <span id="span_num_results"></span>
                         <span id="span_order_by"></span>
                     </div>
+                    </div>
+                <div className="col-sm-3">
+                    <Login />
                 </div>
+                </div></div>
             </nav>
         );
     }

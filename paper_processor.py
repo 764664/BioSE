@@ -1,16 +1,12 @@
-from lxml import etree
-import requests
-import subprocess
-import re
-import logging
-import sys
-from db import *
-from sklearn import svm
-from sklearn import gaussian_process
-import pickle
 import math
+import pickle
+import re
+import subprocess
+
+from sklearn import gaussian_process
+
+from db import *
 from pubmed import PubMedFetcher
-from abstract import AbstractProcessor
 
 
 class PaperProcessor:
@@ -158,9 +154,9 @@ class PaperProcessor:
             paper["ID"] = index
 
     def add_missing_info(self):
-        self.add_journal_if()
+        self.add_journal_if_self()
 
-    def add_journal_if(self):
+    def add_journal_if_self(self):
         for k,v in self.papers.items():
             if 'Journal' not in v or not v['Journal']:
                 v["Journal_IF"] = 0
@@ -184,6 +180,30 @@ class PaperProcessor:
                 except DoesNotExist:
                     v["Journal_IF"] = 0
 
+    @staticmethod
+    def add_journal_if(paper_list):
+        for paper in paper_list:
+            if 'Journal' not in paper or not paper['Journal']:
+                paper["Journal_IF"] = 0
+                continue
+            try:
+                stripped_journal_name = re.sub('[\W_]+', '', paper["Journal"].upper())
+                paper["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
+            except DoesNotExist:
+                try:
+                    if len(stripped_journal_name) >= 16:
+                        paper["Journal_IF"] = Journal.get(
+                            Journal.title.startswith(stripped_journal_name[:16])).impact_factor
+                    if len(stripped_journal_name) >= 12:
+                        paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:12])).impact_factor
+                    elif len(stripped_journal_name) >= 8:
+                        paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:8])).impact_factor
+                    elif len(stripped_journal_name) >= 4:
+                        paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:4])).impact_factor
+                    else:
+                        paper["Journal_IF"] = 0
+                except DoesNotExist:
+                    paper["Journal_IF"] = 0
 
     def ranking(self):
         model = self.check_model()

@@ -1,16 +1,18 @@
-from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack
+from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack, session, url_for
 from paper_processor import PaperProcessor
 import json
 import logging
 import math
 from autocomplete import InstantSearch
-from db import SearchLog, SearchTerm, Click, Paper, database
+from db import SearchLog, SearchTerm, Click, Paper, User, database
 import datetime
 from abstract import AbstractProcessor
+from flask_bcrypt import Bcrypt
 
 RESULTS_PER_PAGE = 10
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 @app.before_request
 def before_request():
@@ -28,6 +30,49 @@ def after_request(response):
 def index():
     return current_app.send_static_file('index.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        try:
+            u = User.get(User.username == username)
+            session['username'] = u.username
+            return "Success"
+        except Exception as e:
+            logging.warn(e)
+            return "User not exist."
+    else:
+        return current_app.send_static_file('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        if not username or not password or not email:
+            return 'Input not valid.'
+        try:
+            u = User.get(User.username == username)
+        except Exception:
+            User.create(username=username, password=bcrypt.generate_password_hash(password), email=email)
+            return 'Success.'
+        else:
+            return 'Already exists.'
+    else:
+        return current_app.send_static_file('register.html')
+
+@app.route('/checklogin')
+def check_login():
+    if 'username' in session:
+        return json.dumps({
+            "login": True,
+            "username": session['username']
+        })
+    else:
+        return json.dumps({
+            "login": False,
+        })
 
 @app.route('/basic_search/<keyword>/<int:page>')
 def basic_search(keyword, page):
@@ -141,7 +186,9 @@ def jump(search_id, paper_id):
     if search_id in search_id_to_results:
         query = search_id_to_results[search_id]
         try:
+            # pylint: disable=E1101
             search_term_text = SearchLog.get(SearchLog.id == search_id).keyword
+            # pylint: enable=E1101            
             local_search_term = SearchTerm.get(SearchTerm.keyword == search_term_text)
         except:
             logging.error("Search log doesn't exist.")
@@ -172,9 +219,11 @@ def jump(search_id, paper_id):
                     local_paper.score = 0
                 local_paper.save()
             print(local_search_term)
-            click, created = Click.get_or_create(search_term = local_search_term, paper = local_paper)
+            click, created = Click.get_or_create(search_term=local_search_term, paper=local_paper)
             if paper_id == i:
+                # pylint: disable=E1101
                 click.click_count += 1
+                # pylint: enable=E1101
                 click.save()
         return redirect(
             query.papers_array[paper_id]["URL"]
@@ -195,6 +244,7 @@ if __name__ == '__main__':
     results = {}
     search_id_to_results = {}
     instant = InstantSearch()
+    app.secret_key = 'test'
     app.debug = True
     app.run(host='0.0.0.0')
 

@@ -33,26 +33,31 @@ class Model:
     def predict(self, paper):
         score = self.model.predict([[paper['Journal_IF'], paper['Year']]])[0]
         paper["Score"] = score
+        # print(score)
 
     def postprocessing(self):
         pass
 
 class Model1(Model):
+    """linear regression, IF+Year"""
     pass
 
 class Model2(Model):
+    """SVR(RBF), IF+Year"""
     def train_model(self):
         regressor = svm.SVR(kernel="rbf")
         regressor.fit(self.x, self.y)
         self.model = regressor
 
 class Model3(Model):
+    """SVR(Linear), IF+Year"""
     def train_model(self):
         regressor = svm.SVR(kernel="linear")
         regressor.fit(self.x, self.y)
         self.model = regressor
 
 class Model4(Model):
+    """linear regression, IF+Year+TF_Of_Query_In_Abstract"""
     def construct_train_data(self):
         x, y = [], []
         for paper in self.train:
@@ -68,12 +73,14 @@ class Model4(Model):
         paper["Score"] = score
 
 class Model5(Model4):
+    """SVR(Linear), IF+Year+TF_Of_Query_In_Abstract"""
     def train_model(self):
         regressor = svm.SVR(kernel="linear")
         regressor.fit(self.x, self.y)
         self.model = regressor
 
 class Model6(Model5):
+    """SVR(Linear), IF+Year+TF_Of_Query_In_Abstract+TF_Of_Query_In_Title"""
     def construct_train_data(self):
         x, y = [], []
         for paper in self.train:
@@ -91,6 +98,7 @@ class Model6(Model5):
         paper["Score"] = score
 
 class Model7(Model):
+    """linear regression, IF+Year, with standardlization"""
     def construct_train_data(self):
         x, y = [], []
         for paper in self.train:
@@ -107,6 +115,7 @@ class Model7(Model):
         paper["Score"] = score
 
 class Model8(Model):
+    """linear regression, Year, with standardlization"""
     def construct_train_data(self):
         x, y = [], []
         for paper in self.train:
@@ -123,6 +132,7 @@ class Model8(Model):
         paper["Score"] = score
 
 class Model9(Model):
+    """linear regression, IF, with standardlization"""
     def construct_train_data(self):
         x, y = [], []
         for paper in self.train:
@@ -139,6 +149,7 @@ class Model9(Model):
         paper["Score"] = score
 
 class Model10(Model3):
+    """SVR(Linear), IF+Year, with standardlization"""
     def construct_train_data(self):
         x, y = [], []
         for paper in self.train:
@@ -155,12 +166,14 @@ class Model10(Model3):
         paper["Score"] = score
 
 class Model11(Model7):
+    """Ridge Regression, IF+Year, with standardlization"""
     def train_model(self):
         regressor = clf = linear_model.Ridge()
         regressor.fit(self.x, self.y)
         self.model = regressor
 
 class Model12(Model1):
+    """linear regression, IF+Year+TFIDF_Of_Query_In_Abstract+TFIDF_Of_Query_In_Title, with standardlization"""
     def construct_train_data(self):
         x, y = [], []
         n = len(self.train)

@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.0.min.js"></script>
+    </head>
+    <body>
+        <form action="/re" id="testform">
+            Username: <input type=text name=username><br />
+            Password: <input type=password name=password><br />
+            Email: <input type=text name=email><br />
+        <input type=submit value="Sign Up">
+        </form>
+        <script>
+            $("form").submit(
+                function(event) {
+                    event.preventDefault();
+                    // console.log($("#testform").serialize());
+                    $.post("/register", $("#testform").serialize(), function(data){
+                        console.log(data);
+                        alert(data);
+                    });
+                    window.setTimeout( () => {
+                        window.location = "/";
+                    }, 1000);
+                }
+            )
+        </script>
+    </body>
+</html>

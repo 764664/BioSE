@@ -43,15 +43,16 @@ class PubMedFetcher:
         if len(item) < 30:
             return None
         m = re.search("pmid (\d+).+?title.+?name \"(.+?)\".+?authors \{(.+?)\},\s*from journal.+?name \"(.+?)\".+?year (\d+).+?month (\d+).+?abstract \"(.+?)\"", item, re.DOTALL)
+        error_count = 1
         if m:
             id = m.group(1)
-            title = m.group(2)
+            title = m.group(2).replace("\n", "").strip()
             author = m.group(3)
             m_author = re.findall("name ml \"(.+?)\"", author)
             journal = m.group(4)
             year = m.group(5)
             month = m.group(6)
-            abstract = m.group(7)
+            abstract = m.group(7).replace("\n", "").strip()
             h = {
                 "Source": "PubMed",
                 "PMID": id,
@@ -61,9 +62,11 @@ class PubMedFetcher:
                 "Year": int(year),
                 "Abstract": abstract
             }
+            h["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + h["PMID"]
             return h
         else:
-            logging.warning("Parse error.")
+            logging.warning("Parse error. #%d", error_count)
+            error_count += 1
             return None
 
 
@@ -76,6 +79,7 @@ class PubMedFetcher:
         # print(r.content)
         score = 1
         ranking = 1
+        count = 0
         logging.info("Start parsing.")
 
         for item in r.text.split("Pubmed-entry"):
@@ -86,6 +90,8 @@ class PubMedFetcher:
                 self.papers[paper["Title"]] = paper
                 score = score - 1 / self.num_of_documents
                 ranking += 1
+                count += 1
+        logging.info("Got %d papers from %d entries", count, self.num_of_documents)
 
     def get_pubmed(self):
         logging.info("Started Fetching PubMed.")
