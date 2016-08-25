@@ -2,6 +2,8 @@ import logging
 import requests
 from lxml import etree
 import re
+import json
+from IPython import embed
 
 class PubMedFetcher:
     def __init__(self, keyword, num_of_documents=2):
@@ -10,10 +12,8 @@ class PubMedFetcher:
         self.papers = {}
         self.error = False
 
-        self.webenv = self.get_webenv()
-        if not self.webenv:
-            return
-        self.process()
+        idlist = self.get_idlist()
+        self.fetch_from_idlist(idlist)
 
     def get_webenv(self):
         logging.info("Getting WebEnv.")
@@ -38,6 +38,47 @@ class PubMedFetcher:
             self.error = "Error in Getting WebEnv."
             return False
         return root[4].text
+
+    def get_idlist(self):
+        logging.info("Getting WebEnv.")
+        url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+        payload = {
+            'db': 'pubmed',
+            'sort': 'relevance',
+            'term': self.keyword,
+            'retmode': 'json',
+            'retmax': self.num_of_documents
+        }
+        logging.debug(url)
+        req = requests.post(url, data=payload)
+        j = req.json()
+        idlist = j['esearchresult']['idlist']
+        return idlist
+
+    def fetch_from_idlist(self, idlist):
+        url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        payload = {
+            'id': ','.join(list(map(lambda x: str(x), idlist))),
+            'db': 'pubmed',
+            'retmax': len(idlist)
+        }
+        logging.debug(url)
+        r = requests.post(url, data=payload)
+        score = 1
+        ranking = 1
+        count = 0
+        logging.info("Start parsing.")
+
+        for item in r.text.split("Pubmed-entry"):
+            paper = self.process_one(item)
+            if paper:
+                paper["Score"] = score
+                paper["Ranking"] = ranking
+                self.papers[paper["Title"]] = paper
+                score = score - 1 / self.num_of_documents
+                ranking += 1
+                count += 1
+        logging.info("Got %d papers from %d entries", count, self.num_of_documents)
 
     def process_one(self, item):
         if len(item) < 30:
@@ -73,7 +114,7 @@ class PubMedFetcher:
     def process(self):
         url = (
             "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmax={}&query_key=1&WebEnv={}"
-                .format(str(self.num_of_documents),self.webenv))
+                .format(str(self.num_of_documents), self.webenv))
         logging.debug(url)
         r = requests.get(url)
         # print(r.content)
@@ -151,5 +192,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')
-    p = PubMedFetcher("methylation", num_of_documents=2)
-    print(p.papers)
+    p = PubMedFetcher("methylation", num_of_documents=100)
+    for paper in p.papers.values():
+        if paper["Ranking"] < 2:
+            print(paper)
