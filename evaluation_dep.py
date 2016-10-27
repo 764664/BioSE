@@ -8,7 +8,9 @@ import pickle
 import hashlib
 import os.path
 import csv
-
+import random
+import scipy.stats
+from IPython import embed
 
 class NewEvaluation:
     def __init__(self, papers, query, model=Model, scaling_factors=[1], noise=False):
@@ -18,13 +20,24 @@ class NewEvaluation:
         self.result = 0
 
         result = []
+        final_score = []
         for i in scaling_factors:
-            score, len_papers = self.evaluate(papers, query, i)
-            result.append(score)
-        final_score = sum(result)/len(result)
+            scores, len_papers = self.evaluate(papers, query, i)
+            result.append(scores)
+        for i in range(3):
+            final_score.append(sum([one[i] for one in result])/len(result))
         self.result = final_score
 
         logging.info("Query: {}, Num:{}, Model: {}, Total Average: {}".format(query, len(papers), model, final_score))
+
+    def calculate_md(self, x, y):
+        n = len(x)
+        _sum = 0
+        for i in range(n):
+            diff = abs(x[i] - y[i])
+            _sum += diff
+        ave = _sum / n / n
+        return ave
 
     def evaluate(self, papers, query, scaling_factor):
         papers = np.array(papers)
@@ -34,19 +47,19 @@ class NewEvaluation:
 
         times = 1
         for i in range(1, times+1):
-            overall_diff = 0
-            kf = KFold(len(papers), 5, shuffle=True)
+            metrics = [0, 0, 0]
+            kf = KFold(len(papers), 5, shuffle=True, random_state=42)
             for train, test in kf:
                 train_set = papers[train]
                 test_set = papers[test]
-                train_set = papers
-                test_set = papers
+                # train_set = papers
+                # test_set = papers
                 for train_sample in train_set:
                     score = len(papers) - train_sample["ReferenceRank"] + 1
                     # Gaussian noise
                     # Standard Variation: Score/5
                     score = 1 if score == 0 else abs(score)
-                    noise = np.random.normal(0, score / 5)
+                    noise = np.random.normal(0, score / 200)
 
                     score *= scaling_factor
                     if self.noise:
@@ -54,8 +67,8 @@ class NewEvaluation:
 
                     train_sample["Score"] = score
 
-            # for test_sample in test_set:
-            #     test_sample["Score"] = np.random.rand()
+                for test_sample in test_set:
+                    test_sample["Score"] = random.random()
 
                 self.model(train_set, test_set, query)
 
@@ -68,18 +81,23 @@ class NewEvaluation:
                 total_diff = 0
                 test_set.sort(key = lambda x: x["Score"])
                 test_set.reverse()
-                # logging.info("Test size: {}".format(test_size))
-                for idx, test_sample in enumerate(test_set):
-                    total_diff += abs(test_sample["Correct_Ranking"] - idx) / test_size
-                ave_diff = total_diff / test_size
-                overall_diff += ave_diff / 5
+                x = list(range(1, len(test_set)+1))
+                y = [one['Correct_Ranking'] for one in test_set]
 
-            all_time_result += overall_diff / times
+            # logging.info("Test size: {}".format(test_size))
+            #     for idx, test_sample in enumerate(test_set):
+            #         total_diff += abs(test_sample["Correct_Ranking"] - idx) / test_size
+            #     ave_diff = total_diff / test_size
+
+                metrics[0] += self.calculate_md(x, y) / 5
+                metrics[1] += scipy.stats.pearsonr(x, y)[0] / 5
+                metrics[2] += scipy.stats.kendalltau(x, y)[0] / 5
+            # all_time_result += overall_diff / times
 
             # logging.info("{}th trial, Average Difference: {}".format(i, overall_diff))
 
         # logging.info("For all trials, Average Difference: {}".format(all_time_result))
-        return all_time_result, len(papers)
+        return metrics, len(papers)
 
 class Evaluation:
     def __init__(self, queries, model=Model, num_of_papers=10000, scaling_factors=[1], noise=False):
