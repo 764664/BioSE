@@ -1,5 +1,5 @@
-import goterm
-import tax
+import src.goterm
+import src.tax
 import redis
 import sys
 import logging

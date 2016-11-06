@@ -1,8 +1,8 @@
 import redis
 import logging
 import sys
-import goterm
-import tax
+import src.goterm
+import src.tax
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

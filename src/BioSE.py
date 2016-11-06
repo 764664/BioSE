@@ -1,17 +1,17 @@
 from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack, session, url_for
-from paper_processor import PaperProcessor
 import json
 import logging
 import math
-from autocomplete import InstantSearch
-from db import SearchLog, SearchTerm, Click, Paper, User, database
 import datetime
-from abstract import AbstractProcessor
 from flask_bcrypt import Bcrypt
+from src import app
+from src.paper_processor import PaperProcessor
+from src.autocomplete import InstantSearch
+from src.db import SearchLog, SearchTerm, Click, Paper, User, database
+from src.abstract import AbstractProcessor
 
 RESULTS_PER_PAGE = 10
 
-app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 @app.before_request
@@ -188,7 +188,7 @@ def jump(search_id, paper_id):
         try:
             # pylint: disable=E1101
             search_term_text = SearchLog.get(SearchLog.id == search_id).keyword
-            # pylint: enable=E1101            
+            # pylint: enable=E1101
             local_search_term = SearchTerm.get(SearchTerm.keyword == search_term_text)
         except:
             logging.error("Search log doesn't exist.")

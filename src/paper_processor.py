@@ -2,11 +2,9 @@ import math
 import pickle
 import re
 import subprocess
-
 from sklearn import gaussian_process
-
-from db import *
-from pubmed import PubMedFetcher
+from src.db import *
+from src.pubmed import PubMedFetcher
 
 
 class PaperProcessor:

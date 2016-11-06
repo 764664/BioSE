@@ -423,25 +423,34 @@ var Login = React.createClass({
     }
 })
 
-var App = React.createClass({
-    getInitialState: function() {
-        return {text: '', result: ''};
-    },
-    handleSubmit: function(e) {
+class App extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {text: '', result: ''};
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleClick = this.handleClick.bind(this);
+      this.onChange = this.onChange.bind(this);
+    }
+
+    handleSubmit(e) {
+        console.log('123');
         e.preventDefault();
         //waitingDialog.show();
         document.getElementById("instant").style.display = "none";
-        location.href="/#/search/" + this.state.text;
-    },
-    go: function() {
+        location.href=`/#/search/${this.state.text}`;
+    }
+
+    go() {
         // document.getElementById("instant").style.display = "none";
         Controller.loadInitialData(this.props.params.keyword);
-    },
-    handleClick: function(e) {
+    }
+
+    handleClick(e) {
         this.setState({text: e.target["innerText"]});
         document.getElementById("instant").style.display = "none";
-    },
-    onChange: function(e){
+    }
+
+    onChange(e) {
         this.setState({text: e.target.value});
         if(e.target.value.length > 0){
             var xmlhttp = new XMLHttpRequest();
@@ -459,8 +468,9 @@ var App = React.createClass({
             }.bind(this);
             xmlhttp.send();
         }
-    },
-    render: function() {
+    }
+
+    render() {
         if(this.props.params.keyword){
             this.go();
         }
@@ -486,7 +496,7 @@ var App = React.createClass({
             </nav>
         );
     }
-});
+}
 
 
 var WaitingDialog = React.createClass({

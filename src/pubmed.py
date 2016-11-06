@@ -17,7 +17,7 @@ class PubMedFetcher:
 
     def get_webenv(self):
         logging.info("Getting WebEnv.")
-        url = ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
+        url = ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
                "db=pubmed&term={}&usehistory=y&sort=relevance".format(self.keyword))
         logging.debug(url)
         r = requests.get(url)
@@ -41,7 +41,7 @@ class PubMedFetcher:
 
     def get_idlist(self):
         logging.info("Getting WebEnv.")
-        url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+        url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
         payload = {
             'db': 'pubmed',
             'sort': 'relevance',
@@ -56,7 +56,7 @@ class PubMedFetcher:
         return idlist
 
     def fetch_from_idlist(self, idlist):
-        url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
         payload = {
             'id': ','.join(list(map(lambda x: str(x), idlist))),
             'db': 'pubmed',
@@ -113,7 +113,7 @@ class PubMedFetcher:
 
     def process(self):
         url = (
-            "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmax={}&query_key=1&WebEnv={}"
+            "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmax={}&query_key=1&WebEnv={}"
                 .format(str(self.num_of_documents), self.webenv))
         logging.debug(url)
         r = requests.get(url)
@@ -138,7 +138,7 @@ class PubMedFetcher:
         logging.info("Started Fetching PubMed.")
         if self.webenv:
             url = (
-                "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?"
+                "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?"
                 "db=pubmed&retmax=" + str(self.num_of_documents) +
                 "&query_key=1&WebEnv=" + self.webenv)
             logging.debug(url)

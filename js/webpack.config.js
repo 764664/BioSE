@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: './js.jsx',
-  output: { path: __dirname, filename: 'bundle.min.js' },
+  output: { path: __dirname, filename: '../static/bundle.min.js' },
   module: {
     loaders: [
       {
