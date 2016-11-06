@@ -14,11 +14,6 @@ class MyBaseModel(Model):
 class SearchTerm(MyBaseModel):
     keyword = CharField()
 
-class SearchLog(MyBaseModel):
-    keyword = CharField()
-    date = DateTimeField(default=datetime.datetime.now)
-    user = ForeignKeyField(User, related_name='search_logs')
-
 class Paper(MyBaseModel):
     title = CharField()
     citations = IntegerField(default=-1)
@@ -61,3 +56,8 @@ class User(MyBaseModel):
     username = CharField()
     password = CharField()
     model = BlobField(null=True)
+
+class SearchLog(MyBaseModel):
+    keyword = CharField()
+    date = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(User, related_name='search_logs')

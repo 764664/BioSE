@@ -1,4 +1,4 @@
-from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack, session, url_for
+from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack, session, url_for, flash
 import json
 import logging
 import math
@@ -9,10 +9,14 @@ from src.paper_processor import PaperProcessor
 from src.autocomplete import InstantSearch
 from src.db import SearchLog, SearchTerm, Click, Paper, User, database
 from src.abstract import AbstractProcessor
+import flask_login
 
 RESULTS_PER_PAGE = 10
 
 bcrypt = Bcrypt(app)
+
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
 @app.before_request
 def before_request():
@@ -34,11 +38,22 @@ def index():
 def login():
     if request.method == 'POST':
         email = request.form['email']
+        logging.debug("{} tries to login.".format(email))
         try:
-            u = User.get(User.email == email)
-            session['email'] = u.email
-            session['username'] = u.username
-            return "Success"
+            user = User.get(User.email == email)
+            if bcrypt.check_password_hash(user.password, request.form['password']):
+                fuser = FlaskUser()
+                fuser.email = email
+                fuser.id = user.id
+                fuser.username = user.username
+                flask_login.login_user(fuser)
+                logging.debug('Logged in successfully.')
+                flash('Logged in successfully.')
+                return redirect(url_for('index'))
+            else:
+                logging.debug('Wrong password.')
+                flash('Wrong password.')
+                return redirect(url_for('login'))
         except Exception as e:
             logging.warn(e)
             return "User not exist."
@@ -63,12 +78,17 @@ def register():
     else:
         return current_app.send_static_file('register.html')
 
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return redirect(url_for('index'))
+
 @app.route('/checklogin')
 def check_login():
-    if 'username' in session:
+    if flask_login.current_user.is_authenticated:
         return json.dumps({
             "login": True,
-            "username": session['username']
+            "username": flask_login.current_user.username
         })
     else:
         return json.dumps({
@@ -116,11 +136,9 @@ def basic_search(keyword, page):
 
 @app.route('/search/<keyword>')
 def search(keyword):
-    # logging.debug(request.form)
-
     page = int(request.args.get('page', ''))
 
-    search = SearchLog.create(keyword=keyword)
+    search = SearchLog.create(keyword=keyword, user=flask_login.current_user.id)
     SearchTerm.get_or_create(keyword = keyword)
     if keyword in results:
         query_result = results[keyword]
@@ -238,6 +256,18 @@ def instant_search(keyword):
     with app.app_context():
         return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
 
+class FlaskUser(flask_login.UserMixin):
+    pass
+
+@login_manager.user_loader
+def user_loader(email):
+    user = User.get(User.email == email)
+    fuser = FlaskUser()
+    fuser.email = email
+    fuser.id = user.id
+    fuser.username = user.username
+    return fuser
+
 # if __name__ == '__main__':
 logging.basicConfig(
     level=logging.DEBUG,
@@ -246,6 +276,7 @@ results = {}
 search_id_to_results = {}
 instant = InstantSearch()
 app.secret_key = 'test'
+
 app.debug = True
 app.run(host='0.0.0.0')
 

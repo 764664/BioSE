@@ -402,26 +402,52 @@ var OutPut = React.createClass({
     }
 });
 
-var Login = React.createClass({
-    render: function(){
+class Login extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {username: null};
+    }
+
+    componentWillMount() {
         var xmlhttp = new XMLHttpRequest();
         var url = "/checklogin";
         xmlhttp.open("GET", url, true);
         xmlhttp.onload = () => {
             var j = JSON.parse(xmlhttp.responseText);
             if(j.username) {
-                document.getElementById('login').innerHTML = `Welcome back, ${j.username}`;
+                this.setState({username: j.username, loaded: true});
+            }
+            else {
+                this.setState({loaded: true});
             }
         };
         xmlhttp.send();
-        return(
-            <div id='login'>
-                <a href='/register'><button className="btn btn-info" id="register_btn">Register</button></a>
-                <a href='/login'><button className="btn btn-info">Login</button></a>
-            </div>
-        )
     }
-})
+
+    render(){
+        if(this.state.loaded) {
+            if(this.state.username) {
+                return(
+                    <div id='login'>
+                        <p className="navbar-text">{`Welcome back, ${this.state.username}`}</span>
+                        <a href='/logout'><button className="btn btn-info navbar-btn">Logout</button></a>
+                    </div>
+                )
+            }
+            else{
+                return(
+                    <div id='login'>
+                        <a href='/register'><button className="btn btn-info navbar-btn" id="register_btn">Register</button></a>
+                        <a href='/login'><button className="btn btn-info navbar-btn">Login</button></a>
+                    </div>
+                )
+            }
+        }
+        else {
+            return null;
+        }
+    }
+}
 
 class App extends React.Component {
     constructor(props) {
@@ -475,24 +501,27 @@ class App extends React.Component {
             this.go();
         }
         return (
-            <nav className="navbar navbar-default navbar-fixed-top">
+            <nav className="navbar navbar-default navbar-fixed-top mynavbar">
                 <div className="container">
-                <div className="row">
-                <div className="col-sm-9">
-                    <div className="searchfield">
-                        <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
-                            <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
-                            <div id="instant"></div>
-                            <button className="btn btn-primary" id="search_button">Search</button>
-                        </form>
-                        <span id="span_num_results"></span>
-                        <span id="span_order_by"></span>
+                    <div className="row">
+                        <div className="col-sm-8">
+                            <div className="searchfield">
+                                <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
+                                    <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
+                                    <div id="instant"></div>
+                                    <button className="btn btn-primary" id="search_button">Search</button>
+                                </form>
+                                <span id="span_num_results"></span>
+                                <span id="span_order_by"></span>
+                            </div>
+                            </div>
+                        <div className="col-sm-4">
+                            <div className="logincol">
+                                <Login />
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                <div className="col-sm-3">
-                    <Login />
                 </div>
-                </div></div>
             </nav>
         );
     }
