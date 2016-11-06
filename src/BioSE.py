@@ -33,9 +33,10 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         try:
-            u = User.get(User.username == username)
+            u = User.get(User.email == email)
+            session['email'] = u.email
             session['username'] = u.username
             return "Success"
         except Exception as e:
@@ -53,7 +54,7 @@ def register():
         if not username or not password or not email:
             return 'Input not valid.'
         try:
-            u = User.get(User.username == username)
+            u = User.get(User.email == email)
         except Exception:
             User.create(username=username, password=bcrypt.generate_password_hash(password), email=email)
             return 'Success.'
@@ -237,14 +238,14 @@ def instant_search(keyword):
     with app.app_context():
         return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
 
-if __name__ == '__main__':
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s - %(levelname)s - %(message)s')
-    results = {}
-    search_id_to_results = {}
-    instant = InstantSearch()
-    app.secret_key = 'test'
-    app.debug = True
-    app.run(host='0.0.0.0')
+# if __name__ == '__main__':
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s')
+results = {}
+search_id_to_results = {}
+instant = InstantSearch()
+app.secret_key = 'test'
+app.debug = True
+app.run(host='0.0.0.0')
 

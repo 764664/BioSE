@@ -11,15 +11,13 @@ class MyBaseModel(Model):
     class Meta:
         database = database
 
-
 class SearchTerm(MyBaseModel):
     keyword = CharField()
-
 
 class SearchLog(MyBaseModel):
     keyword = CharField()
     date = DateTimeField(default=datetime.datetime.now)
-
+    user = ForeignKeyField(User, related_name='search_logs')
 
 class Paper(MyBaseModel):
     title = CharField()
@@ -31,7 +29,6 @@ class Paper(MyBaseModel):
     journal_if = FloatField(default=0)
     completed = BooleanField(default=False)
     last_modified = DateTimeField(default=datetime.datetime.now)
-
 
 class Click(MyBaseModel):
     search_term = ForeignKeyField(SearchTerm, related_name='clicks')
@@ -60,7 +57,7 @@ class InstantSearch(MyBaseModel):
     result = CharField()
 
 class User(MyBaseModel):
-    username = CharField()
     email = CharField()
+    username = CharField()
     password = CharField()
     model = BlobField(null=True)
