@@ -89,11 +89,13 @@ def logout():
 @app.route('/checklogin')
 def check_login():
     if flask_login.current_user.is_authenticated:
+        logging.info("Authenticated.")
         return json.dumps({
             "login": True,
             "username": flask_login.current_user.username
         })
     else:
+        logging.info("Not authenticated.")
         return json.dumps({
             "login": False,
         })
@@ -280,14 +282,15 @@ class FlaskUser(flask_login.UserMixin):
     pass
 
 @login_manager.user_loader
-def user_loader(email):
+def user_loader(id):
+    logging.debug("User loader:{}".format(id));
     try:
-        user = User.objects(email=email).get()
+        user = User.objects(id=id).get()
     except:
         return None
     fuser = FlaskUser()
-    fuser.email = email
-    fuser.id = user.id
+    fuser.email = user.email
+    fuser.id = id
     fuser.username = user.username
     return fuser
 
