@@ -4,13 +4,15 @@ from lxml import etree
 import re
 import json
 from IPython import embed
+from datetime import datetime
 
 class PubMedFetcher:
-    def __init__(self, keyword, num_of_documents=2):
+    def __init__(self, keyword, num_of_documents=2, sort='relevance'):
         self.keyword = keyword
         self.num_of_documents = num_of_documents
         self.papers = {}
         self.error = False
+        self.sort = sort
 
         idlist = self.get_idlist()
         self.fetch_from_idlist(idlist)
@@ -44,7 +46,7 @@ class PubMedFetcher:
         url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
         payload = {
             'db': 'pubmed',
-            'sort': 'relevance',
+            'sort': self.sort,
             'term': self.keyword,
             'retmode': 'json',
             'retmax': self.num_of_documents
@@ -63,10 +65,12 @@ class PubMedFetcher:
             'retmax': len(idlist)
         }
         logging.debug(url)
+        logging.debug(payload)
         r = requests.post(url, data=payload)
         score = 1
         ranking = 1
         count = 0
+        # logging.debug(r.text)
         logging.info("Start parsing.")
 
         for item in r.text.split("Pubmed-entry"):
@@ -83,24 +87,26 @@ class PubMedFetcher:
     def process_one(self, item):
         if len(item) < 30:
             return None
-        m = re.search("pmid (\d+).+?title.+?name \"(.+?)\".+?authors \{(.+?)\},\s*from journal.+?name \"(.+?)\".+?year (\d+).+?month (\d+).+?abstract \"(.+?)\"", item, re.DOTALL)
+        m = re.search("pmid (\d+).+?year (\d+).+?month (\d+).+?day (\d+).+?title.+?name \"(.+?)\".+?authors \{(.+?)\},\s*from journal.+?name \"(.+?)\".+?abstract \"(.+?)\"", item, re.DOTALL)
         error_count = 1
         if m:
             id = m.group(1)
-            title = m.group(2).replace("\n", "").strip()
-            author = m.group(3)
+            title = m.group(5).replace("\n", "").strip()
+            author = m.group(6)
             m_author = re.findall("name ml \"(.+?)\"", author)
-            journal = m.group(4)
-            year = m.group(5)
-            month = m.group(6)
-            abstract = m.group(7).replace("\n", "").strip()
+            journal = m.group(7)
+            year = int(m.group(2))
+            month = int(m.group(3))
+            day = int(m.group(4))
+            abstract = m.group(8).replace("\n", "").strip()
             h = {
                 "Source": "PubMed",
                 "PMID": id,
                 "Title": title,
                 "Author": m_author,
                 "Journal": journal,
-                "Year": int(year),
+                "Year": year,
+                "Date": datetime(year, month, day).strftime("%Y %m %d"),
                 "Abstract": abstract
             }
             h["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + h["PMID"]
@@ -192,7 +198,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')
-    p = PubMedFetcher("methylation", num_of_documents=100)
+    p = PubMedFetcher("methylation", num_of_documents=5, sort="pub+date")
     for paper in p.papers.values():
-        if paper["Ranking"] < 2:
-            print(paper)
+        # if paper["Ranking"] < 2:
+            print(paper["Date"])

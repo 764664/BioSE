@@ -7,8 +7,10 @@ from flask_bcrypt import Bcrypt
 from src import app
 from src.paper_processor import PaperProcessor
 from src.autocomplete import InstantSearch
-from src.db import SearchLog, SearchTerm, Click, Paper, User, database
+from src.db import SearchLog, SearchTerm, Click, Paper, database
+from src.db_mongo import User
 from src.abstract import AbstractProcessor
+from src.subscription import Subscription
 import flask_login
 
 RESULTS_PER_PAGE = 10
@@ -40,7 +42,7 @@ def login():
         email = request.form['email']
         logging.debug("{} tries to login.".format(email))
         try:
-            user = User.get(User.email == email)
+            user = User.objects(email=email).get()
             if bcrypt.check_password_hash(user.password, request.form['password']):
                 fuser = FlaskUser()
                 fuser.email = email
@@ -69,9 +71,10 @@ def register():
         if not username or not password or not email:
             return 'Input not valid.'
         try:
-            u = User.get(User.email == email)
+            user = User.objects(email=email).get()
         except Exception:
-            User.create(username=username, password=bcrypt.generate_password_hash(password), email=email)
+            user = User(username=username, password=bcrypt.generate_password_hash(password), email=email)
+            user.save()
             return 'Success.'
         else:
             return 'Already exists.'
@@ -138,7 +141,7 @@ def basic_search(keyword, page):
 def search(keyword):
     page = int(request.args.get('page', ''))
 
-    search = SearchLog.create(keyword=keyword, user=flask_login.current_user.id)
+    search = SearchLog.create(keyword=keyword, user=str(flask_login.current_user.id))
     SearchTerm.get_or_create(keyword = keyword)
     if keyword in results:
         query_result = results[keyword]
@@ -256,12 +259,32 @@ def instant_search(keyword):
     with app.app_context():
         return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
 
+@app.route('/subscription/add/<keyword>')
+def add_subscription(keyword):
+    try:
+        Subscription.add(keyword)
+        return 'ok'
+    except:
+        return 'error'
+
+@app.route('/subscription/timeline')
+def timeline():
+    papers = Subscription.get_timeline()
+    return json.dumps([{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'authors': [a.name for a in x.authors]} for x in papers])
+
+@app.route('/subscription/recommendations')
+def recommendations():
+    pass
+
 class FlaskUser(flask_login.UserMixin):
     pass
 
 @login_manager.user_loader
 def user_loader(email):
-    user = User.get(User.email == email)
+    try:
+        user = User.objects(email=email).get()
+    except:
+        return None
     fuser = FlaskUser()
     fuser.email = email
     fuser.id = user.id
@@ -276,7 +299,6 @@ results = {}
 search_id_to_results = {}
 instant = InstantSearch()
 app.secret_key = 'test'
-
 app.debug = True
-app.run(host='0.0.0.0')
+
 

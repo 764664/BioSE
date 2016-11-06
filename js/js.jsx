@@ -7,6 +7,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router';
+import Subscription from './subscription';
 
 var Controller = function(){
     var keyword = '';
@@ -36,7 +37,7 @@ var Controller = function(){
                 //waitingDialog.hide();
                 $('.modal').modal('hide');
                 ReactDOM.render(<OutPut papers={j["result"]} pages={j["result_info"]["page"]} current={page} searchid={j["result_info"]["id"]} alert="" query={keyword} />, document.getElementById("result"));
-                ReactDOM.render(<span className="navbar-text">{j["result_info"]["count"] +" results found."}</span>, document.getElementById("span_num_results"));
+                // ReactDOM.render(<span className="navbar-text">{j["result_info"]["count"] +" results found."}</span>, document.getElementById("span_num_results"));
                 ReactDOM.render(<OrderBy />, document.getElementById("span_order_by"));
                 ReactDOM.render(<Filter words={j["result_info"]["words"]} />, document.getElementById("filter_container"))
             }.bind(this);
@@ -429,8 +430,9 @@ class Login extends React.Component {
             if(this.state.username) {
                 return(
                     <div id='login'>
-                        <p className="navbar-text">{`Welcome back, ${this.state.username}`}</span>
+                        <p className="navbar-text">{this.state.username}</p>
                         <a href='/logout'><button className="btn btn-info navbar-btn">Logout</button></a>
+                        <a href='/#/subscription'><button className="btn btn-info navbar-btn">Subscription</button></a>
                     </div>
                 )
             }
@@ -510,9 +512,9 @@ class App extends React.Component {
                                     <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
                                     <div id="instant"></div>
                                     <button className="btn btn-primary" id="search_button">Search</button>
+                                    <span id="span_num_results"></span>
+                                    <span id="span_order_by"></span>
                                 </form>
-                                <span id="span_num_results"></span>
-                                <span id="span_order_by"></span>
                             </div>
                             </div>
                         <div className="col-sm-4">
@@ -544,11 +546,13 @@ var WaitingDialog = React.createClass({
 
 ReactDOM.render((
   <Router history={hashHistory}>
-    <Route path="/" component={App}>
-        <Route path="/search/:keyword" component="{App}" />
-    </Route>
+
+        <Route path="/search/:keyword" component={App} />
+        <Route path="/subscription" component={Subscription} />
+        <Route path="/" component={App} />
   </Router>
 ), document.getElementById("form"));
+
 // ReactDOM.render(<App />, document.getElementById("form"));
 ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));
 //
@@ -614,7 +618,8 @@ ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));
 //
 //})(jQuery);
 
-
-document.addEventListener("click", function(){
-    document.getElementById("instant").style.display = "none";
-});
+if(document.getElementById("instant")) {
+    document.addEventListener("click", function(){
+        document.getElementById("instant").style.display = "none";
+    });
+}

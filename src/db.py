@@ -60,4 +60,4 @@ class User(MyBaseModel):
 class SearchLog(MyBaseModel):
     keyword = CharField()
     date = DateTimeField(default=datetime.datetime.now)
-    user = ForeignKeyField(User, related_name='search_logs')
+    user = CharField()
