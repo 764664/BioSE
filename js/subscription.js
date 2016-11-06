@@ -26,12 +26,16 @@ export default class Subscription extends React.Component {
         if(this.state.papers) {
             return(
                 <div>
-                <AddSubscription />
-                {this.state.papers.map((paper) => {
-                    return(
-                        <OneItem paper={paper} />
-                    );
-                })}
+                    <AddSubscription />
+                    <ul className="list-group">
+                        {
+                            this.state.papers.map( (paper) => {
+                                return(
+                                    <OneItem paper={paper} />
+                                )
+                            })
+                        }
+                    </ul>
                 </div>
             )
         }
@@ -44,11 +48,11 @@ export default class Subscription extends React.Component {
 class OneItem extends React.Component {
     render() {
         return(
-            <div>
-                <h3>{this.props.paper.title}</h3>
+            <li className="list-group-item">
+                <div className="div_title"><a href={this.props.paper.url} className="title">{this.props.paper.title}</a></div>
                 <p>{this.props.paper.authors.join(", ")}</p>
                 <p>{this.props.paper.date}</p>
-            </div>
+            </li>
         )
     }
 }
@@ -78,15 +82,16 @@ class AddSubscription extends React.Component {
 
     render() {
         return(
-            <div>
+            <form className="form-inline b10">
                 <input type="text"
                   placeholder="Subscription"
+                  className="form-control"
                   value={this.state.value}
                   onChange={this.handleChange} />
-                <button onClick={this.handleSubmit}>
+                <button onClick={this.handleSubmit} className="btn btn-primary l10">
                   Add
                 </button>
-              </div>
+              </form>
         );
     }
 }

@@ -11,6 +11,7 @@ class Paper(Document):
     abstract = StringField()
     journal = StringField()
     date = DateTimeField()
+    url = StringField()
 
 class SubscriptionItem(Document):
     keyword = StringField()

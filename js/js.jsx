@@ -391,8 +391,8 @@ var Pagination = React.createClass({
     }
 });
 
-var OutPut = React.createClass({
-    render: function(){
+class OutPut extends React.Component {
+    render(){
         return(
             <div>
                 <Alerting message={this.props.alert} />
@@ -401,7 +401,7 @@ var OutPut = React.createClass({
             </div>
         )
     }
-});
+}
 
 class Login extends React.Component {
     constructor(props) {
@@ -432,7 +432,9 @@ class Login extends React.Component {
                     <div id='login'>
                         <p className="navbar-text">{this.state.username}</p>
                         <a href='/logout'><button className="btn btn-info navbar-btn">Logout</button></a>
-                        <a href='/#/subscription'><button className="btn btn-info navbar-btn">Subscription</button></a>
+                        { (this.props.routes[this.props.routes.length - 1].path=="/subscription")
+                        ?<a href='/#/'><button className="btn btn-info navbar-btn l10">Homepage</button></a>
+                        :<a href='/#/subscription'><button className="btn btn-info navbar-btn l10">Subscription</button></a>}
                     </div>
                 )
             }
@@ -451,7 +453,7 @@ class Login extends React.Component {
     }
 }
 
-class App extends React.Component {
+class SearchApp extends React.Component {
     constructor(props) {
       super(props);
       this.state = {text: '', result: ''};
@@ -503,11 +505,7 @@ class App extends React.Component {
             this.go();
         }
         return (
-            <nav className="navbar navbar-default navbar-fixed-top mynavbar">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-sm-8">
-                            <div className="searchfield">
+            <div>
                                 <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
                                     <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
                                     <div id="instant"></div>
@@ -515,16 +513,46 @@ class App extends React.Component {
                                     <span id="span_num_results"></span>
                                     <span id="span_order_by"></span>
                                 </form>
+
+
+            <div className="container" id="main">
+                <div className="row">
+                    <div className="col-md-3" id="filter_container"></div>
+                    <div className="col-md-9">
+                            <div id="form">
                             </div>
+                            <div id="result">
+                            </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        );
+    }
+}
+
+class App extends React.Component {
+        render() {
+
+        return (
+            <div>
+            <nav className="navbar navbar-default navbar-fixed-top mynavbar">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-8">
+
                             </div>
                         <div className="col-sm-4">
                             <div className="logincol">
-                                <Login />
+                                <Login {...this.props} />
                             </div>
                         </div>
                     </div>
                 </div>
             </nav>
+            {this.props.children}
+            </div>
         );
     }
 }
@@ -546,12 +574,13 @@ var WaitingDialog = React.createClass({
 
 ReactDOM.render((
   <Router history={hashHistory}>
-
-        <Route path="/search/:keyword" component={App} />
+    <Route path="/" component={App}>
+        <IndexRoute component={SearchApp} />
+        <Route path="/search/:keyword" component={SearchApp} />
         <Route path="/subscription" component={Subscription} />
-        <Route path="/" component={App} />
+    </Route>
   </Router>
-), document.getElementById("form"));
+), document.getElementById("main"));
 
 // ReactDOM.render(<App />, document.getElementById("form"));
 ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));

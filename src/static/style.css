@@ -1,6 +1,6 @@
 body {
     padding-top: 50px;
-    padding-bottom: 50px;
+    /*padding-bottom: 50px;*/
 }
 a {
     text-decoration: none;
@@ -183,7 +183,8 @@ a:hover {
 #instant {
     display: none;
     position: absolute;
-    top: 40px;
+    top: 100px;
+    left: 200px;
     min-width: 500px;
     border: 5px;
     border-style: inset;
@@ -211,4 +212,14 @@ ul {
 }
 #span_order_by {
     margin-left: 5px;
+}
+a.title {
+    font-size: 18px;
+    color: blue;
+}
+.l10 {
+    margin-left: 10px;
+}
+.b10 {
+    margin-bottom: 10px;
 }

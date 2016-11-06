@@ -89,7 +89,7 @@ class PubMedFetcher:
             return None
         m = re.search("pmid (\d+).+?year (\d+).+?month (\d+).+?day (\d+).+?title.+?name \"(.+?)\".+?authors \{(.+?)\},\s*from journal.+?name \"(.+?)\".+?abstract \"(.+?)\"", item, re.DOTALL)
         error_count = 1
-        if m:
+        if m and m.group(6):
             id = m.group(1)
             title = m.group(5).replace("\n", "").strip()
             author = m.group(6)

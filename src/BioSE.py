@@ -270,7 +270,7 @@ def add_subscription(keyword):
 @app.route('/subscription/timeline')
 def timeline():
     papers = Subscription.get_timeline()
-    return json.dumps([{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'authors': [a.name for a in x.authors]} for x in papers])
+    return json.dumps([{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'authors': [a.name for a in x.authors], 'url': x.url} for x in papers])
 
 @app.route('/subscription/recommendations')
 def recommendations():

@@ -44,7 +44,8 @@ class Subscription:
                     abstract=paper.get("Abstract"),
                     journal=paper.get("Journal"),
                     authors=authors,
-                    date=paper.get("Date")
+                    date=paper.get("Date"),
+                    url=paper.get("URL")
                 )
                 paper_mongo.save()
             else:
