@@ -109,7 +109,6 @@ class OneItem extends React.Component {
     }
 
     render() {
-
         return(
             <li className="list-group-item one-item">
                 <div className="div-title">
@@ -138,7 +137,7 @@ class OneItem extends React.Component {
                         {
                             this.props.paper.subscriptions.map( (subscription) => {
                                 return(
-                                    <p>{subscription}</p>
+                                    <p className="from-subscription">{subscription}</p>
                                     )
                             })
                         }

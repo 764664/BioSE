@@ -286,3 +286,8 @@ a.title {
 .pub-date {
     color: #8999A5;
 }
+p.from-subscription {
+    margin-left: 3px;
+}
+.meta-info-second p:not(:first-child)::before {
+    content: ", ";
