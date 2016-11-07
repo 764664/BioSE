@@ -46,11 +46,27 @@ export default class Subscription extends React.Component {
 }
 
 class OneItem extends React.Component {
+    handleClick(e) {
+        console.log("123");
+    }
+
+    componentDidMount() {
+        $('[data-toggle="popover"]').popover({html:true});
+    }
+
     render() {
         return(
             <li className="list-group-item">
                 <div className="div_title"><a href={this.props.paper.url} className="title">{this.props.paper.title}</a></div>
-                <p>{this.props.paper.authors.join(", ")}</p>
+                {this.props.paper.authors.map( (author) => {
+                    return(
+                        <button type="button" className="btn btn-default l10"
+                        data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="focus"
+                        data-content="<button class='btn btn-primary'>Follow</button>">
+                          {author}
+                        </button>
+                        )
+                })}
                 <p>{this.props.paper.date}</p>
             </li>
         )
@@ -89,7 +105,7 @@ class AddSubscription extends React.Component {
                   value={this.state.value}
                   onChange={this.handleChange} />
                 <button onClick={this.handleSubmit} className="btn btn-primary l10">
-                  Add
+                  Follow
                 </button>
               </form>
         );
