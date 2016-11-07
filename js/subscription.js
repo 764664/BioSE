@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {OverlayTrigger, Popover, Button} from 'react-bootstrap';
+import Infinite from 'react-infinite';
 
 export default class Subscription extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {papers: [], subscriptions: []};
+        this.state = {papers: [], subscriptions: [], no_more: false};
         this.loadData = this.loadData.bind(this);
         this.addSubscription = this.addSubscription.bind(this);
         this.loadSubscription = this.loadSubscription.bind(this);
@@ -37,8 +38,29 @@ export default class Subscription extends React.Component {
         xmlhttp.onload = function () {
             if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
             var j = JSON.parse(xmlhttp.responseText);
-            console.info(j);
-            this.setState({papers: j})
+            // console.info(j.response);
+            this.setState({papers: j.response})
+        }.bind(this);
+        xmlhttp.send();
+    }
+
+    loadMore() {
+        var length = this.state.papers.length;
+        if(length==0) {
+            return;
+        }
+        var url = `/subscription/timeline?offset=${length}`;
+        console.log(`loadMore: ${length}`);
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onload = function () {
+            if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
+            var j = JSON.parse(xmlhttp.responseText);
+            // console.info(j);
+            this.setState({papers: this.state.papers.concat(j.response)});
+            if(!j.more) {
+                this.setState({no_more: true});
+            }
         }.bind(this);
         xmlhttp.send();
     }
@@ -71,13 +93,22 @@ export default class Subscription extends React.Component {
                         </div>
                         <div className="col-sm-9">
                             <ul className="list-group">
+                            <Infinite
+                                elementHeight={120}
+                                infiniteLoadBeginEdgeOffset={100}
+                                useWindowAsScrollContainer={true}
+                                onInfiniteLoad={() => {
+                                    this.loadMore();
+                                }}
+                            >
                                 {
-                                    this.state.papers.map( (paper) => {
+                                    this.state.papers.map( (paper, index) => {
                                         return(
-                                            <OneItem subscription={this} paper={paper} />
+                                            <OneItem subscription={this} paper={paper} no_more={this.state.no_more} last={index==this.state.papers.length-1}/>
                                         )
                                     })
                                 }
+                            </Infinite>;
                             </ul>
                         </div>
                     </div>
@@ -99,6 +130,12 @@ class OneItem extends React.Component {
     handleClickOnAuthor(author) {
         this.props.subscription.addSubscription(author);
     }
+
+    // componentWillMount() {
+    //     if(this.props.last && !this.props.no_more) {
+    //         this.props.subscription.loadMore();
+    //     }
+    // }
 
     popover(author) {
         return(

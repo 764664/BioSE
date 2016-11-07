@@ -277,8 +277,17 @@ def subscription_add(keyword):
 
 @app.route('/subscription/timeline')
 def subscription_timeline():
+    count = request.args.get('count', 20)
+    offset = int(request.args.get('offset', 0))
+
     papers = Subscription.get_timeline()
-    return json.dumps([{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'journal': x.journal, 'authors': [a.name for a in x.authors], 'url': x.url, 'subscriptions': [s.keyword for s in x.subscriptions]} for x in papers])
+    if offset > len(papers):
+        return json.dumps({'response': [], 'more':False})
+    else:
+        more = offset+count < len(papers)
+        papers = papers[offset: offset+count]
+        return json.dumps({'response':[{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'journal': x.journal, 'authors': [a.name for a in x.authors], 'url': x.url, 'subscriptions': [s.keyword for s in x.subscriptions]} for x in papers],
+        'more': more})
 
 @app.route('/subscription/index')
 def subscription_index():
