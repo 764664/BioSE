@@ -3,6 +3,7 @@ import json
 import logging
 import math
 import datetime
+import time
 from flask_bcrypt import Bcrypt
 from src import app
 from src.paper_processor import PaperProcessor
@@ -75,6 +76,11 @@ def register():
         except Exception:
             user = User(username=username, password=bcrypt.generate_password_hash(password), email=email)
             user.save()
+            fuser = FlaskUser()
+            fuser.email = email
+            fuser.id = user.id
+            fuser.username = user.username
+            flask_login.login_user(fuser)
             return 'Success.'
         else:
             return 'Already exists.'
@@ -262,7 +268,7 @@ def instant_search(keyword):
         return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
 
 @app.route('/subscription/add/<keyword>')
-def add_subscription(keyword):
+def subscription_add(keyword):
     try:
         Subscription.add(keyword)
         return 'ok'
@@ -270,12 +276,17 @@ def add_subscription(keyword):
         return 'error'
 
 @app.route('/subscription/timeline')
-def timeline():
+def subscription_timeline():
     papers = Subscription.get_timeline()
-    return json.dumps([{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'authors': [a.name for a in x.authors], 'url': x.url} for x in papers])
+    return json.dumps([{'title': x.title, 'date': x.date.strftime("%Y-%m-%d"), 'journal': x.journal, 'authors': [a.name for a in x.authors], 'url': x.url, 'subscriptions': [s.keyword for s in x.subscriptions]} for x in papers])
+
+@app.route('/subscription/index')
+def subscription_index():
+    subscriptions = Subscription.index()
+    return json.dumps([{'keyword': x.keyword} for x in subscriptions])
 
 @app.route('/subscription/recommendations')
-def recommendations():
+def subscription_recommendations():
     pass
 
 class FlaskUser(flask_login.UserMixin):
@@ -302,6 +313,5 @@ results = {}
 search_id_to_results = {}
 instant = InstantSearch()
 app.secret_key = 'test'
-app.debug = True
 
 

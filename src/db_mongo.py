@@ -1,4 +1,5 @@
 from mongoengine import *
+import datetime
 
 connect('biose')
 
@@ -12,6 +13,7 @@ class Paper(Document):
     journal = StringField()
     date = DateTimeField()
     url = StringField()
+    subscriptions = ListField(ReferenceField('SubscriptionItem'))
 
 class SubscriptionItem(Document):
     keyword = StringField()
@@ -22,3 +24,13 @@ class User(Document):
     password = StringField()
     email = StringField()
     subscriptions = ListField(ReferenceField(SubscriptionItem))
+
+class SearchItem(Document):
+    keyword = StringField()
+    count = IntField()
+    model = BinaryField()
+
+class SearchHistory(Document):
+    item = ReferenceField(SearchItem)
+    user = ReferenceField(User)
+    time = DateTimeField(default=datetime.datetime.now)

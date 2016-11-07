@@ -11,8 +11,9 @@ class Subscription:
         if SubscriptionItem.objects(keyword=keyword).count() == 0:
             item = SubscriptionItem(keyword=keyword)
             item.save()
-            t = threading.Thread(target=Subscription.update, args=(item,))
-            t.start()
+            # t = threading.Thread(target=Subscription.update, args=(item,))
+            # t.start()
+            Subscription.update(item)
         else:
             item = SubscriptionItem.objects(keyword=keyword).first()
         user.update(push__subscriptions=item)
@@ -52,6 +53,7 @@ class Subscription:
                 paper_mongo = Paper.objects(title=paper.get("Title")).get()
             if paper_mongo.id not in papers_existing_in_item:
                 item.update(push__papers=paper_mongo)
+                paper_mongo.update(push__subscriptions=item)
 
     @staticmethod
     def get_timeline():
@@ -69,6 +71,10 @@ class Subscription:
         papers = Paper.objects(id__in=paper_ids).order_by('-date')
         return papers
 
+    @staticmethod
+    def index():
+        user = User.objects(id=flask_login.current_user.id).get()
+        return user.subscriptions
 # item = SubscriptionItem.objects.first()
 # Subscription.update(item)
 # print(Subscription.get_timeline())

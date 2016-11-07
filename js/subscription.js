@@ -1,15 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {OverlayTrigger, Popover, Button} from 'react-bootstrap';
 
 export default class Subscription extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {papers: null};
+        this.state = {papers: [], subscriptions: []};
+        this.loadData = this.loadData.bind(this);
+        this.addSubscription = this.addSubscription.bind(this);
+        this.loadSubscription = this.loadSubscription.bind(this);
+    }
+
+    addSubscription(keyword) {
+        let item = {'keyword': keyword};
+        this.setState({subscriptions: this.state.subscriptions.concat([item])});
+        var url = `/subscription/add/${keyword}`;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onload = function () {
+            if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
+            this.loadData();
+        }.bind(this);
+        xmlhttp.send();
     }
 
     componentWillMount() {
-        console.log("componentWillMount");
+        this.loadData();
+        this.loadSubscription();
+    }
+
+    loadData() {
         var url = "/subscription/timeline";
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", url, true);
@@ -22,20 +43,44 @@ export default class Subscription extends React.Component {
         xmlhttp.send();
     }
 
+    loadSubscription() {
+        let xmlhttp = new XMLHttpRequest();
+        const url = "/subscription/index";
+        xmlhttp.open("GET", url);
+        xmlhttp.onload = () => {
+            if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
+                console.log(xmlhttp.response);
+                this.setState({subscriptions: JSON.parse(xmlhttp.response)});
+            }
+            else {
+                console.log(xmlhttp.statusText);
+            }
+        }
+        xmlhttp.send();
+    }
+
     render() {
         if(this.state.papers) {
             return(
-                <div>
-                    <AddSubscription />
-                    <ul className="list-group">
-                        {
-                            this.state.papers.map( (paper) => {
-                                return(
-                                    <OneItem paper={paper} />
-                                )
-                            })
-                        }
-                    </ul>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-3">
+                            <div className="subscription-management">
+                            <SubscriptionManager subscription={this} subscriptions={this.state.subscriptions} />
+                            </div>
+                        </div>
+                        <div className="col-sm-9">
+                            <ul className="list-group">
+                                {
+                                    this.state.papers.map( (paper) => {
+                                        return(
+                                            <OneItem subscription={this} paper={paper} />
+                                        )
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             )
         }
@@ -46,30 +91,112 @@ export default class Subscription extends React.Component {
 }
 
 class OneItem extends React.Component {
-    handleClick(e) {
-        console.log("123");
+    constructor() {
+        super();
+        this.popover = this.popover.bind(this);
     }
 
-    componentDidMount() {
-        $('[data-toggle="popover"]').popover({html:true});
+    handleClickOnAuthor(author) {
+        this.props.subscription.addSubscription(author);
+    }
+
+    popover(author) {
+        return(
+          <Popover>
+            <button type="button" className="btn btn-primary" onClick={() => {this.handleClickOnAuthor(author)}}>Follow</button>
+          </Popover>
+        );
     }
 
     render() {
+
         return(
-            <li className="list-group-item">
-                <div className="div_title"><a href={this.props.paper.url} className="title">{this.props.paper.title}</a></div>
-                {this.props.paper.authors.map( (author) => {
+            <li className="list-group-item one-item">
+                <div className="div-title">
+                    <h4>{this.props.paper.title}</h4>
+                    <a href={this.props.paper.url} className="title"><i className="material-icons">open_in_new</i></a>
+                </div>
+                <div className="div-authors">
+                {
+                    this.props.paper.authors.map( (author) => {
                     return(
-                        <button type="button" className="btn btn-default l10"
-                        data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="focus"
-                        data-content="<button class='btn btn-primary'>Follow</button>">
-                          {author}
-                        </button>
+                        <OverlayTrigger trigger={['focus']} placement="bottom" overlay={this.popover(author)}>
+                            <button type="button" className="btn btn-default btn-xs l10">
+                              {author}
+                            </button>
+                        </OverlayTrigger>
                         )
-                })}
-                <p>{this.props.paper.date}</p>
+                    })
+                }
+                </div>
+                <div className="meta-info">
+                    <div className="meta-info-first">
+                    <h6>{this.props.paper.journal}</h6>
+                    <h6 className="pub-date">{this.props.paper.date}</h6>
+                    </div>
+                    <div className="meta-info-second">
+                        {
+                            this.props.paper.subscriptions.map( (subscription) => {
+                                return(
+                                    <p>{subscription}</p>
+                                    )
+                            })
+                        }
+                    </div>
+                </div>
             </li>
         )
+    }
+}
+
+class SubscriptionManager extends React.Component {
+    render() {
+        return(
+            <div>
+                <AddSubscription {...this.props} subscription_manager={this} />
+                <h4>Your subscriptions</h4>
+                <div className="subscriptions">
+                    {
+                        this.props.subscriptions.map( (subscription) => {
+                            return(<OneSubscription name={subscription.keyword} />);
+                        })
+                    }
+                </div>
+                <h4>Recommended for you</h4>
+            </div>
+        )
+    }
+}
+
+class OneSubscription extends React.Component {
+    constructor() {
+        super();
+        this.state = {hover: false};
+        this.mouseOver = this.mouseOver.bind(this);
+        this.mouseOut = this.mouseOut.bind(this);
+    }
+    mouseOver() {
+        this.setState({hover: true});
+    }
+
+    mouseOut() {
+        this.setState({hover: false});
+    }
+    render() {
+        if(this.state.hover) {
+            return(
+                <div className="subscription">
+                    <h6>{this.props.name}</h6>
+                    <button type="button" className="btn btn-danger btn-sm btn-follow" onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>Unfollow</button>
+                </div>
+            );
+        }
+        return(
+            <div className="subscription">
+                <h6>{this.props.name}</h6>
+                <button type="button" className="btn btn-primary btn-sm btn-follow" onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>Following</button>
+            </div>
+        );
     }
 }
 
@@ -86,27 +213,30 @@ class AddSubscription extends React.Component {
     }
 
     handleSubmit(event) {
-        var url = `/subscription/add/${this.state.value}`;
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", url, true);
-        xmlhttp.onload = function () {
-            if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
-            alert(xmlhttp.responseText);
-        }.bind(this);
-        xmlhttp.send();
+        this.setState({value: ''});
+        this.props.subscription.addSubscription(this.state.value);
     }
 
     render() {
         return(
-            <form className="form-inline b10">
+            <form className="form-inline">
+            <div className="subscription-management">
+            <div className="row">
+            <div className="col-sm-8">
                 <input type="text"
                   placeholder="Subscription"
                   className="form-control"
                   value={this.state.value}
                   onChange={this.handleChange} />
-                <button onClick={this.handleSubmit} className="btn btn-primary l10">
+            </div>
+            <div className="col-sm-4 follow-button">
+                <button onClick={this.handleSubmit} className="btn btn-primary">
                   Follow
                 </button>
+            </div>
+            </div>
+            </div>
+
               </form>
         );
     }
