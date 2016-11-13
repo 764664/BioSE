@@ -4,7 +4,7 @@
 
 BioSE is a self-adaptive search engine for literatures in the bioinformatics field. It has some novel features to help the users find the papers they want quickly. The data comes from mainly PubMed, also Google Scholar. The application acts as a post processor for these sources.
 
-![](static/diagram.png)
+![](src/static/diagram.png)
 
 ## Features
 
@@ -49,4 +49,4 @@ Demo is currently available at [biose.jie.today](https://biose.jie.today)
 
 ## Screenshot
 
-![](static/screenshot.png)
+![](src/static/screenshot.png)
