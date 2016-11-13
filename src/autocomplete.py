@@ -1,5 +1,5 @@
-import src.goterm
-import src.tax
+import src.goterm as goterm
+import src.tax as tax
 import redis
 import sys
 import logging
@@ -10,14 +10,14 @@ logger.setLevel(logging.INFO)
 
 class InstantSearch:
     def __init__(self, load_db = True):
-        try:
+        # try:
             self.r = redis.StrictRedis(host='localhost', port=6379, db=0)
             self.redis_key = "biose"
             if not self.r.exists(self.redis_key):
                 self.add_to_redis()
-        except Exception:
-            logger.error("Something went wrong with Redis.")
-            sys.exit()
+        # except Exception as e:
+        #     logger.error("Something went wrong with Redis.: {}".format(e))
+        #     sys.exit()
 
     def add_to_redis(self):
         self.goterm = goterm.GoTerm()

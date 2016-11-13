@@ -3,7 +3,6 @@ import requests
 from lxml import etree
 import re
 import json
-from IPython import embed
 from datetime import datetime
 
 class PubMedFetcher:
