@@ -1,8 +1,10 @@
-from src.db_mongo import SubscriptionItem, User, Paper, Author
-import flask_login
-from src.pubmed import PubMedFetcher
-import threading
 import time
+
+import flask_login
+
+from src.helpers.pubmed import PubMedFetcher
+from src.models.schema import SubscriptionItem, User, Paper, Author
+
 
 class Subscription:
     @staticmethod

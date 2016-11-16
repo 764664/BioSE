@@ -1,19 +1,17 @@
-from flask import Flask, current_app, redirect, g, abort, request, _app_ctx_stack, session, url_for, flash
 import json
 import logging
 import math
-import datetime
-import time
-from flask_bcrypt import Bcrypt
-from src import app
-from src.paper_processor import PaperProcessor
-from src.autocomplete import InstantSearch
-from src.db import SearchLog, SearchTerm, Click, Paper, database
-from src.db_mongo import User, SearchItem
-from src.abstract import AbstractProcessor
-from src.subscription import Subscription
-from src.controllers.search_controller import SearchController
+
 import flask_login
+from flask import current_app, redirect, g, abort, request, url_for, flash
+from flask_bcrypt import Bcrypt
+
+from src import app
+from src.controllers.search_controller import SearchController
+from src.db import SearchLog, SearchTerm, Click, Paper, database
+from src.helpers.autocomplete import InstantSearch
+from src.models.schema import User
+from src.models.subscription import Subscription
 
 RESULTS_PER_PAGE = 10
 
@@ -59,7 +57,7 @@ def login():
                 flash('Wrong password.')
                 return redirect(url_for('login'))
         except Exception as e:
-            logging.warn(e)
+            logging.warning(e)
             return "User not exist."
     else:
         return current_app.send_static_file('login.html')

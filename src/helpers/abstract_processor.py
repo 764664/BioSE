@@ -1,5 +1,6 @@
 from collections import defaultdict
-from src.vocabulary import Vocabulary
+
+from src.helpers.vocabulary import Vocabulary
 
 
 class AbstractProcessor:

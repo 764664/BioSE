@@ -1,12 +1,14 @@
-from src.db_mongo import User, SearchItem, SearchHistory
-from flask import g
-from src.paper_processor import PaperProcessor
-from src.abstract import AbstractProcessor
-import logging
-import json
 import datetime
+import json
+import logging
 import math
+
 import flask_login
+from flask import g
+
+from src.helpers.abstract_processor import AbstractProcessor
+from src.helpers.paper_processor import PaperProcessor
+from src.models.schema import User, SearchItem, SearchHistory
 
 RESULTS_PER_PAGE = 10
 
