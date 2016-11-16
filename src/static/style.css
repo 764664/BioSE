@@ -241,7 +241,7 @@ input {
 .div-title {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 .div-authors {
     display: flex;
