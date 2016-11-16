@@ -150,7 +150,7 @@ class OneItem extends React.Component {
             <li className="list-group-item one-item">
                 <div className="div-title">
                     <h4>{this.props.paper.title}</h4>
-                    <a href={this.props.paper.url} className="title"><i className="material-icons">open_in_new</i></a>
+                    <a href={this.props.paper.url} className="title" target="_blank"><i className="material-icons">open_in_new</i></a>
                 </div>
                 <div className="div-authors">
                 {
