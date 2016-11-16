@@ -57,18 +57,8 @@ class Subscription:
 
     @staticmethod
     def get_timeline():
-        # user = User.objects.first()
         user = User.objects(id=flask_login.current_user.id).get()
-        paper_ids = []
-        for subscription in user.subscriptions:
-            try:
-                papers = subscription.papers
-                paper_ids.extend([x.id for x in papers])
-            except:
-                pass
-        paper_ids = set(paper_ids)
-        print(paper_ids)
-        papers = Paper.objects(id__in=paper_ids).order_by('-date')
+        papers = Paper.objects(subscriptions__in=user.subscriptions).order_by('-date')
         return papers
 
     @staticmethod
