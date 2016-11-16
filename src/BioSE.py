@@ -9,9 +9,10 @@ from src import app
 from src.paper_processor import PaperProcessor
 from src.autocomplete import InstantSearch
 from src.db import SearchLog, SearchTerm, Click, Paper, database
-from src.db_mongo import User
+from src.db_mongo import User, SearchItem
 from src.abstract import AbstractProcessor
 from src.subscription import Subscription
+from src.controllers.search_controller import SearchController
 import flask_login
 
 RESULTS_PER_PAGE = 10
@@ -106,110 +107,10 @@ def check_login():
             "login": False,
         })
 
-@app.route('/basic_search/<keyword>/<int:page>')
-def basic_search(keyword, page):
-    search = SearchLog.create(keyword=keyword)
-    SearchTerm.get_or_create(keyword = keyword)
-    if keyword in results:
-        query_result = results[keyword]
-    else:
-        query_result = PaperProcessor(keyword)
-        results[keyword] = query_result
-    if page <= 0 or (page-1)*RESULTS_PER_PAGE >= \
-            len(query_result.papers_array):
-        logging.warning("No result.")
-        return ''
-    search_id_to_results[search.id] = query_result
-    # return_value = json.dumps(
-    #     [
-    #         query_result.papers_array
-    #         [(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
-    #         math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),  # 1
-    #         query_result.failure_pubmed,  # 2 Boolean
-    #         query_result.num_papers,  # 3 Integer
-    #         search.id  # 4 Integer
-    #     ]
-    # )
-    return_value = json.dumps(
-        {
-            "success": True,
-            "errors": [],
-            "result": query_result.papers_array[(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
-            "result_info": {
-                "page": math.ceil(len(query_result.papers_array)/RESULTS_PER_PAGE),
-                "count": query_result.num_papers,
-                "id": search.id,
-                "failure_pubmed": query_result.failure_pubmed
-            }
-        }
-    )
-    return return_value
-
 @app.route('/search/<keyword>')
 def search(keyword):
-    page = int(request.args.get('page', ''))
-
-    search = SearchLog.create(keyword=keyword, user=str(flask_login.current_user.id))
-    SearchTerm.get_or_create(keyword = keyword)
-    if keyword in results:
-        query_result = results[keyword]
-    else:
-        query_result = PaperProcessor(keyword)
-        results[keyword] = query_result
-    if page <= 0 or (page-1)*RESULTS_PER_PAGE >= \
-            len(query_result.papers_array):
-        logging.warning("No result.")
-        return ''
-    search_id_to_results[search.id] = query_result
-
-    logging.debug("Order by : " + request.args.get('order_by', ''))
-    if request.args.get('order_by', '') == "Default":
-        # logging.debug("Order by default")
-        query_result.papers_array.sort(key=lambda x: x["Score"], reverse=True)
-    else:
-        for paper in query_result.papers_array:
-            try:
-                paper["ParsedDate"] = datetime.datetime.strptime(paper["PubDate"], "%Y %b %d").strftime("%Y%m%d")
-            except:
-                try:
-                    paper["ParsedDate"] = datetime.datetime.strptime(paper["PubDate"], "%Y %b").strftime("%Y%m%d")
-                except:
-                    try:
-                        paper["ParsedDate"] = datetime.datetime.strptime(paper["PubDate"], "%Y").strftime("%Y%m%d")
-                    except:
-                        paper["ParsedDate"] = "19000000"
-
-    if request.args.get('order_by', '') == "Publication Date(Ascending)":
-        query_result.papers_array.sort(key=lambda x: x["ParsedDate"])
-
-    if request.args.get('order_by', '') == "Publication Date(Descending)":
-        query_result.papers_array.sort(key=lambda x: x["ParsedDate"], reverse=True)
-
-    logging.debug("Filter by : " + request.args.get('filter_by', ''))
-
-    if request.args.get('filter_by', '')!="Default":
-        return_list = [paper for paper in query_result.papers_array if paper["Abstract"].lower().find(request.args.get('filter_by', '')) != -1]
-    else:
-        return_list = query_result.papers_array
-
-    bag = AbstractProcessor().process_list(return_list)
-    words = [[y, bag[y]] for y in sorted(list(bag.keys()), key=lambda x: bag[x], reverse=True)[:30]]
-
-    return_value = json.dumps(
-        {
-            "success": True,
-            "errors": [],
-            "result": return_list[(page-1)*RESULTS_PER_PAGE:page*RESULTS_PER_PAGE],
-            "result_info": {
-                "page": math.ceil(len(return_list)/RESULTS_PER_PAGE),
-                "count": len(return_list),
-                "id": search.id,
-                "failure_pubmed": query_result.failure_pubmed,
-                "words": words
-            }
-        }
-    )
-    return return_value
+    with app.app_context():
+        return SearchController.search(keyword, request.args)
 
 @app.route('/jump/<int:search_id>/<int:paper_id>')
 def jump(search_id, paper_id):
@@ -318,8 +219,7 @@ def user_loader(id):
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s')
-results = {}
-search_id_to_results = {}
+
 instant = InstantSearch()
 app.secret_key = 'test'
 
