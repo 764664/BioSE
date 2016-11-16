@@ -9,6 +9,9 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router';
 import Subscription from './subscription';
 
+require("./styles/main.scss");
+require("./styles/subscription.scss");
+
 var Controller = function(){
     var keyword = '';
     var page = 1;

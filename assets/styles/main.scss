@@ -211,90 +211,14 @@ ul {
 #span_order_by {
     margin-left: 5px;
 }
-
 .l10 {
     margin-left: 10px;
 }
 .b10 {
     margin-bottom: 10px;
 }
-.subscription-management {
-    background-color: white;
-    padding: 10px;
-}
-input {
-    max-width: 100%;
-}
-.follow-button {
-    /*padding-left: 0;*/
-}
-.one-item:hover {
-    background-color: #F5F8FA;
-}
-.one-item {
-    text-align: left;
-    height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.div-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.div-authors {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    margin-left: -10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 .logincol {
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
-a.title {
-    margin-left: 5px;
-}
-.subscription {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-.btn-follow {
-    width: 70px;
-}
-.meta-info {
-    display: flex;
-    justify-content: space-between;
-}
-.meta-info-first {
-    display: flex;
-    justify-content: flex-start;
-}
-.meta-info-second::before {
-    content: "From";
-    margin-right: 3px;
-}
-.meta-info-second {
-    display: flex;
-}
-.pub-date::before {
-    content: "\00b7";
-    margin-left: 2px;
-    margin-right: 2px;
-    color: black;
-}
-.pub-date {
-    color: #8999A5;
-}
-p.from-subscription {
-    margin-left: 3px;
-}
-.meta-info-second p:not(:first-child)::before {
-    content: ", ";

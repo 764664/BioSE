@@ -84,7 +84,7 @@ export default class Subscription extends React.Component {
     render() {
         if(this.state.papers) {
             return(
-                <div className="container">
+                <div className="container subscription-container">
                     <div className="row">
                         <div className="col-sm-3">
                             <div className="subscription-management">

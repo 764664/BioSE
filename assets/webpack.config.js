@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: './js.jsx',
+  entry: './main.jsx',
   output: { path: __dirname, filename: '../src/static/bundle.min.js' },
   module: {
     loaders: [
@@ -13,8 +13,15 @@ module.exports = {
         query: {
           presets: ['es2015', 'react']
         }
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
       }
     ]
+  },
+  sassLoader: {
+    includePaths: [path.resolve(__dirname, "/Users/Jie/Documents/Dev/BioSE/js/styles/")]
   },
   plugins: [
     new webpack.DefinePlugin({
