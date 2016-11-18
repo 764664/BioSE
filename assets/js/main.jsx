@@ -4,10 +4,10 @@ import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router';
 import Subscription from './subscription';
 import OneItem from './one-item';
 
-require("./styles/main.scss");
-require("./styles/subscription.scss");
-require("./styles/search.scss");
-require("./styles/one-item.scss");
+require("./css/main.scss");
+require("./css/subscription.scss");
+require("./css/search.scss");
+require("./css/one-item.scss");
 
 
 var Controller = function(){

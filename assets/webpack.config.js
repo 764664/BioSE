@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: ['whatwg-fetch', './main.jsx'],
+  entry: ['whatwg-fetch', './js/main.jsx'],
   output: { path: __dirname, filename: '../src/static/bundle.min.js' },
   module: {
     loaders: [
@@ -19,9 +19,6 @@ module.exports = {
         loaders: ["style", "css", "sass"]
       }
     ]
-  },
-  sassLoader: {
-    includePaths: [path.resolve(__dirname, "/Users/Jie/Documents/Dev/BioSE/js/styles/")]
   },
   plugins: [
     new webpack.DefinePlugin({
