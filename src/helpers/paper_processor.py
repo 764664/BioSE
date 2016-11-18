@@ -2,12 +2,11 @@ import math
 import pickle
 import re
 import subprocess
+import logging
 
 from sklearn import gaussian_process
 
-from src.db import *
 from src.helpers.pubmed import PubMedFetcher
-
 
 class PaperProcessor:
     def __init__(self, keyword, num_of_documents=100, postprocessing = True):
@@ -156,6 +155,7 @@ class PaperProcessor:
     def add_missing_info(self):
         self.add_journal_if_self()
 
+    # TODO jounal if
     def add_journal_if_self(self):
         for k,v in self.papers.items():
             if 'Journal' not in v or not v['Journal']:
@@ -228,49 +228,50 @@ class PaperProcessor:
         else:
             pass
 
-    def check_model(self):
-        ALWAYS_CREATE_NEW_MODEL_AND_DONT_SAVE = True
-        if ALWAYS_CREATE_NEW_MODEL_AND_DONT_SAVE:
-            new_model = self.train_model()
-            return new_model
-        try:
-            search_term = SearchTerm.get(SearchTerm.keyword == self.keyword)
-            model = Model.get(Model.search_term == search_term)
-            if datetime.datetime.now() - model.last_modified > datetime.timedelta(days = 1):
-                new_model = self.train_model()
-                if new_model:
-                    model.model = pickle.dumps(new_model)
-                    model.last_modified = datetime.datetime.now()
-                    model.save()
-                return new_model
-            else:
-                return pickle.loads(model.model)
-        except DoesNotExist:
-            new_model = self.train_model()
-            if new_model:
-                Model.create(
-                    search_term = SearchTerm.get(SearchTerm.keyword == self.keyword),
-                    model = pickle.dumps(new_model)
-                )
-            return new_model
+    # TODO: models
+    # def check_model(self):
+    #     ALWAYS_CREATE_NEW_MODEL_AND_DONT_SAVE = True
+    #     if ALWAYS_CREATE_NEW_MODEL_AND_DONT_SAVE:
+    #         new_model = self.train_model()
+    #         return new_model
+    #     try:
+    #         search_term = SearchTerm.get(SearchTerm.keyword == self.keyword)
+    #         model = Model.get(Model.search_term == search_term)
+    #         if datetime.datetime.now() - model.last_modified > datetime.timedelta(days = 1):
+    #             new_model = self.train_model()
+    #             if new_model:
+    #                 model.model = pickle.dumps(new_model)
+    #                 model.last_modified = datetime.datetime.now()
+    #                 model.save()
+    #             return new_model
+    #         else:
+    #             return pickle.loads(model.model)
+    #     except DoesNotExist:
+    #         new_model = self.train_model()
+    #         if new_model:
+    #             Model.create(
+    #                 search_term = SearchTerm.get(SearchTerm.keyword == self.keyword),
+    #                 model = pickle.dumps(new_model)
+    #             )
+    #         return new_model
 
-    def train_model(self):
-        x, y = [], []
-        #clicks = SearchTerm.get(SearchTerm.keyword == self.keyword).clicks
-        clicks = Click.select(Paper, Click).join(Paper).switch(Click).join(SearchTerm).where(SearchTerm.keyword == self.keyword)
-        if clicks.count() == 0:
-            return False
-        for click in clicks:
-            x.append(
-                [
-                    click.paper.year,
-                    click.paper.journal_if
-                ]
-            )
-            y.append(click.click_count)
-        #clf = svm.SVR(kernel="rbf")
-        #clf.fit(x, y)
-        #return [clf, sum(y)]
-        gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
-        gp.fit(x, y)
-        return [gp, sum(y)]
+    # def train_model(self):
+    #     x, y = [], []
+    #     #clicks = SearchTerm.get(SearchTerm.keyword == self.keyword).clicks
+    #     clicks = Click.select(Paper, Click).join(Paper).switch(Click).join(SearchTerm).where(SearchTerm.keyword == self.keyword)
+    #     if clicks.count() == 0:
+    #         return False
+    #     for click in clicks:
+    #         x.append(
+    #             [
+    #                 click.paper.year,
+    #                 click.paper.journal_if
+    #             ]
+    #         )
+    #         y.append(click.click_count)
+    #     #clf = svm.SVR(kernel="rbf")
+    #     #clf.fit(x, y)
+    #     #return [clf, sum(y)]
+    #     gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
+    #     gp.fit(x, y)
+    #     return [gp, sum(y)]
