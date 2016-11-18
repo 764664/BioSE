@@ -1,16 +1,14 @@
-/**
- * Created by Jie on 15/10/19.
- */
-
-//var React = require('react');
-//var ReactDOM = require('react-dom');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router';
 import Subscription from './subscription';
+import OneItem from './one-item';
 
 require("./styles/main.scss");
 require("./styles/subscription.scss");
+require("./styles/search.scss");
+require("./styles/one-item.scss");
+
 
 var Controller = function(){
     var keyword = '';
@@ -71,23 +69,28 @@ var Controller = function(){
     };
 }();
 
-var InstantSearch = React.createClass({
-    render: function() {
-        return(
-            <div>
-                <ul>
-                    {
-                        this.props.terms.map(function(term, index){
-                            return(
-                                <li key={index} onClick={this.props.click}>{term}</li>
-                            );
-                        }, this)
-                    }
-                </ul>
-            </div>
-        )
+class InstantSearch extends React.Component {
+    render() {
+        if(this.props.terms && this.props.terms.length > 0) {
+            return(
+                <div className="instant_search">
+                    <ul className="list-group">
+                        {
+                            this.props.terms.map(function(term, index){
+                                return(
+                                    <li className="list-group-item" key={index} onClick={this.props.click}>{term}</li>
+                                );
+                            }, this)
+                        }
+                    </ul>
+                </div>
+            )
+        }
+        else {
+            return null;
+        }
     }
-});
+}
 
 var Filter = React.createClass({
     handleClick: function(index, e){
@@ -160,126 +163,56 @@ var Alerting = React.createClass({
     }
 });
 
-var Detail = React.createClass({
-    render: function() {
-        return(
-            <div className="detail">
-                <a href={"/jump/" + this.props.searchid + "/" + this.props.paper["ID"]}>
-                    {this.props.paper["Title"]}
-                </a>
-                <div className="abstract" dangerouslySetInnerHTML={{__html: this.props.content.split(this.props.query).join("<span class=\"highlight\">"+this.props.query+"</span>")}} />
-            </div>
-        )
-    }
-});
-
-var Paper = React.createClass({
-    getInitialState: function(){
-        return {
-            selected: '',
-            detail: ''
-        }
-    },
-    showDetails: function(e) {
-        e.preventDefault();
-
-        var searchid = this.props.searchid;
-        var paper = this.props.paper;
-        // var id = paper["PMID"];
-        //
-        // var xmlhttp = new XMLHttpRequest();
-        // var url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=" + id + "&rettype=abstract&retmode=text";
-        //
-        //if(document.getElementById("detail"+id).hasChildNodes()) {
-        //    var detailDOM = document.getElementById("detail"+id).firstChild;
-        //    if (detailDOM.style.display !== 'none') {
-        //        detailDOM.style.display = 'none';
-        //    }
-        //    else{
-        //        detailDOM.style.display = 'block';
-        //    }
-        //
-        //    if(document.getElementById("detail"+id).firstChild.style.display !== 'none'){
-        //        document.getElementById("h"+id).style.fontSize = '20px';
-        //    }
-        //    else{
-        //        document.getElementById("h"+id).style.fontSize = '14px';
-        //    }
-        //}
-        //else{
-        //    xmlhttp.open('GET', url, true);
-        //    xmlhttp.onload = function () {
-        //        ReactDOM.render(<Detail content={xmlhttp.responseText} paper={paper} searchid={searchid} />, document.getElementById("detail"+id));
-        //        document.getElementById("h"+id).style.fontSize = '20px';
-        //    }.bind(this);
-        //    xmlhttp.send();
-        //}
-        this.setState({detail: paper["Abstract"]});
-        // if(!this.state.detail) {
-        //     $('.modal').modal('toggle');
-        //     console.info("Fetching detail.");
-        //     xmlhttp.open('GET', url, true);
-        //     xmlhttp.onload = function () {
-        //         //ReactDOM.render(<Detail content={xmlhttp.responseText} paper={paper} searchid={searchid} />, document.getElementById("detail"+id));
-        //         this.setState({selected: 'selected', detail: xmlhttp.responseText});
-        //         $('.modal').modal('toggle');
-        //     }.bind(this);
-        //     xmlhttp.send();
-        // }
-        // else {
-        //     if (this.state.selected) {
-        //         this.setState({selected: ''});
-        //         console.info("Hide.");
-        //     }
-        //     else {
-        //         this.setState({selected: 'selected'});
-        //         console.info("Show.");
-        //     }
-        // }
-        if (this.state.selected) {
-            this.setState({selected: ''});
-            console.info("Hide.");
-        }
-        else {
-            this.setState({selected: 'selected'});
-            console.info("Show.");
-        }
-    },
-    render: function(){
-        var searchid = this.props.searchid;
-        var paper = this.props.paper;
-        var citation_url;
-        if(paper["Citations"]) {
-            if(paper["Citations_URL"]) {
-                citation_url = (
-                    <a href={paper["Citations_URL"]}>
-                        <span className="label label-blue citations">
-                            Citations: {paper["Citations"]}</span></a>
-                )
-            }
-            else {
-                citation_url = (
-                    <span className="label label-blue citations">
-                        Citations: {paper["Citations"]}</span>
-                )
-            }
-        }
-        else {
-            citation_url = (
-                <span></span>
+class Detail extends React.Component {
+    render() {
+        console.log(this.props.show_detail);
+        if (this.props.show_detail) {
+            return (
+                <div className="detail">
+                    <a href={"/jump/"}>
+                        {this.props.paper["Title"]}
+                    </a>
+                    <div className="abstract"
+                         dangerouslySetInnerHTML={{__html: this.props.paper["Abstract"].split(this.props.query).join("<span class=\"highlight\">" + this.props.query + "</span>")}}
+                    />
+                </div>
             )
         }
+        else {
+            return null;
+        }
+    }
+}
+
+class Paper extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            selected: false
+        };
+        this.showDetails = this.showDetails.bind(this);
+    }
+
+    showDetails() {
+        console.log("showDetails");
+        this.setState({selected: !this.state.selected});
+    }
+
+    render(){
+        let paper = this.props.paper;
+
         return(
-            <li className={"list-group-item "+ this.state.selected}>
+            <li className="list-group-item">
+                <div className="one-item">
                 <div className="div_title">
-                <a href="#" onClick={this.showDetails}>
+                <a href="javascript:void(0)" onClick={this.showDetails}>
                     <span className="label label-dark title" id={"h"+paper["PMID"]}>{paper["Title"]}</span>
                 </a>
                     </div>
                 <div className="div_author">
                 <span>
                     {
-                        paper["Author"].map(function(author, index){
+                        paper["Authors"].map(function(author, index) {
                             var plus_concatenated = author.split(" ").join("+");
                             var url = "https://scholar.google.com/scholar?q=author%3A"+plus_concatenated+"&btnG=&hl=en&as_sdt=0%2C5";
                             return(
@@ -293,44 +226,46 @@ var Paper = React.createClass({
                     </div>
                 <div className="metainfo">
                     <span className="label label-info journal"><a target="_blank" href={"http://google.com/search?btnI=1&q="+paper["Journal"]}>{ paper["Journal"] ? "Journal: " + paper["Journal"] : "Journal: Unknown"}</a></span>
-                    <span className="label label-success pubdate">{ paper["Year"] ? "Year: " + paper["Year"] : "Year: Unknown"}</span>
+                    <span className="label label-success pubdate">{ paper["Date"] ? "Date: " + paper["Date"] : "Year: Unknown"}</span>
                     <span className="label label-warning score">{ paper["Score"] ? "Score: " + paper["Score"].toFixed(2) : ""}</span>
-                    {citation_url}
-                    <Detail {...this.props} content={this.state.detail} paper={paper} searchid={searchid} />
+                </div>
+                <Detail {...this.props} show_detail={this.state.selected} />
                 </div>
             </li>
         );
     }
-});
+}
 
-var PaperList = React.createClass({
-    render: function() {
-        var papers = this.props.papers;
-        var searchid = this.props.searchid;
-        console.info(this.props.searchid);
-        if (papers.length > 0) {
-            return(
-                <div className = "paperlist">
-                <ul className="list-group">
-                    {
-                        papers.map(function (paper, index) {
-                            return (
-                                <Paper {...this.props} paper={paper} searchid={searchid} key={index} />
-                            );
-                        }, this)
-                    }
-                </ul>
-                </div>
-            );
+class PaperList extends React.Component {
+    render() {
+        let papers = this.props.papers;
+        if (papers) {
+            if (papers.length > 0) {
+                return (
+                    <div className="paperlist">
+                        <ul className="list-group">
+                            {
+                                papers.map(function (paper, index) {
+                                    return (
+                                        <OneItem {...this.props} paper={paper} key={index}/>
+                                    );
+                                }, this)
+                            }
+                        </ul>
+                    </div>
+                );
+            }
+            else {
+                return(
+                    <p>No result.</p>
+                );
+            }
         }
         else {
-            return(
-                <p>"No result."</p>
-            );
+            return null;
         }
-
-  }
-});
+    }
+}
 
 var Pagination = React.createClass({
     handleClick: function(event) {
@@ -399,8 +334,8 @@ class OutPut extends React.Component {
         return(
             <div>
                 <Alerting message={this.props.alert} />
-                <PaperList {...this.props} papers={this.props.papers} searchid={this.props.searchid} />
-                <Pagination pages={this.props.pages} current={this.props.current} />
+                <PaperList {...this.props}/>
+                <Pagination pages={this.props.page_count} current={this.props.current_page} />
             </div>
         )
     }
@@ -458,29 +393,44 @@ class Login extends React.Component {
 
 class SearchApp extends React.Component {
     constructor(props) {
-      super(props);
-      this.state = {text: '', result: ''};
-      this.handleSubmit = this.handleSubmit.bind(this);
-      this.handleClick = this.handleClick.bind(this);
-      this.onChange = this.onChange.bind(this);
+        super(props);
+        this.state = {text: '', result: ''};
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.search = this.search.bind(this);
+    }
+
+    search() {
+        fetch(`/search?keyword=${this.state.text}`)
+            .then(response => response.json())
+            .then(json => {
+                let search_history_id = json.response;
+                fetch(`/fetch?search_history_id=${search_history_id}`)
+                    .then(response => response.json())
+                    .then(json => {
+                        this.setState({
+                            papers: json.response,
+                            search_history_id: search_history_id
+                        });
+                    })
+            })
     }
 
     handleSubmit(e) {
-        console.log('123');
         e.preventDefault();
-        //waitingDialog.show();
-        document.getElementById("instant").style.display = "none";
+        this.setState({
+            instant_search: null
+        });
         location.href=`/#/search/${this.state.text}`;
-    }
-
-    go() {
-        // document.getElementById("instant").style.display = "none";
-        Controller.loadInitialData(this.props.params.keyword);
+        this.search();
     }
 
     handleClick(e) {
-        this.setState({text: e.target["innerText"]});
-        document.getElementById("instant").style.display = "none";
+        this.setState({
+            text: e.target["innerText"],
+            instant_search: []
+        });
     }
 
     onChange(e) {
@@ -490,62 +440,54 @@ class SearchApp extends React.Component {
             var url = "/instant/" + e.target.value;
             xmlhttp.open("GET", url, true);
             xmlhttp.onload = function() {
-                var j = JSON.parse(xmlhttp.responseText);
-                if (j.length > 0) {
-                    ReactDOM.render(<InstantSearch terms={j} click={this.handleClick}/>, document.getElementById("instant"));
-                    document.getElementById("instant").style.display = "block";
-                }
-                else {
-                    document.getElementById("instant").style.display = "none";
-                }
+                this.setState({instant_search: JSON.parse(xmlhttp.responseText)});
             }.bind(this);
             xmlhttp.send();
+        }
+        else {
+            this.setState({instant_search: null});
         }
     }
 
     render() {
-        if(this.props.params.keyword){
-            this.go();
-        }
         return (
             <div>
-                                <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
-                                    <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text} placeholder="Search" autoComplete="off" />
-                                    <div id="instant"></div>
-                                    <button className="btn btn-primary" id="search_button">Search</button>
-                                    <span id="span_num_results"></span>
-                                    <span id="span_order_by"></span>
-                                </form>
-
-
-            <div className="container" id="main">
-                <div className="row">
-                    <div className="col-md-3" id="filter_container"></div>
-                    <div className="col-md-9">
-                            <div id="form">
-                            </div>
-                            <div id="result">
-                            </div>
+                <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
+                    <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text}
+                           placeholder="Search" autoComplete="off"/>
+                    <InstantSearch terms={this.state.instant_search} click={this.handleClick}/>
+                    <button className="btn btn-primary" id="search_button">Search</button>
+                    <span id="span_num_results"></span>
+                    <span id="span_order_by"></span>
+                </form>
+                <div className="container" id="main">
+                    <div className="row">
+                        <div className="col-md-3" id="filter_container"></div>
+                        <div className="col-md-9">
+                            <OutPut
+                                search_app={this}
+                                papers={this.state.papers}
+                                pages={this.state.page_count}
+                                current={this.state.current_page}
+                                search_history_id={this.state.search_history_id}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
-
-        );
+        )
     }
 }
 
 class App extends React.Component {
-        render() {
-
+    render() {
         return (
             <div>
             <nav className="navbar navbar-default navbar-fixed-top mynavbar">
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-8">
-
-                            </div>
+                        </div>
                         <div className="col-sm-4">
                             <div className="logincol">
                                 <Login {...this.props} />
