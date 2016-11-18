@@ -42,5 +42,6 @@ class SearchHistory(Document):
 
 class ClickHistory(Document):
     search_item = ReferenceField(SearchItem)
+    search_history = ReferenceField(SearchHistory)
     paper = ReferenceField(Paper)
     count = IntField(default=0)
