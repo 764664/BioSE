@@ -88,7 +88,7 @@ export default class Subscription extends React.Component {
                     <div className="row">
                         <div className="col-sm-3">
                             <div className="subscription-management">
-                            <SubscriptionManager subscription={this} subscriptions={this.state.subscriptions} />
+                                <SubscriptionManager subscription={this} subscriptions={this.state.subscriptions} />
                             </div>
                         </div>
                         <div className="col-sm-9">
@@ -256,7 +256,6 @@ class AddSubscription extends React.Component {
     render() {
         return(
             <form className="form-inline">
-            <div className="subscription-management">
             <div className="row">
             <div className="col-sm-8">
                 <input type="text"
@@ -269,7 +268,6 @@ class AddSubscription extends React.Component {
                 <button onClick={this.handleSubmit} className="btn btn-primary">
                   Follow
                 </button>
-            </div>
             </div>
             </div>
 
