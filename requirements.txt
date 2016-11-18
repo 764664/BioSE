@@ -9,3 +9,4 @@ redis
 flask-bcrypt
 flask-login
 mongoengine
+blinker
