@@ -4,6 +4,7 @@ import flask_login
 
 from src.helpers.pubmed import PubMedFetcher
 from src.models.schema import SubscriptionItem, User, Paper, Author
+from src.helpers.store_paper import store_paper
 
 
 class Subscription:
@@ -33,26 +34,7 @@ class Subscription:
         papers_existing_in_item = [x.id for x in item.papers]
         p = PubMedFetcher(keyword, num_of_documents=10, sort="pub+date")
         for paper in p.papers.values():
-            if Paper.objects(title=paper.get("Title")).count() == 0:
-                authors = []
-                for author in paper.get("Author"):
-                    if Author.objects(name=author).count() == 0:
-                        author = Author(name=author)
-                        author.save()
-                    else:
-                        author = Author.objects(name=author).get()
-                    authors.append(author)
-                paper_mongo = Paper(
-                    title=paper.get("Title"),
-                    abstract=paper.get("Abstract"),
-                    journal=paper.get("Journal"),
-                    authors=authors,
-                    date=paper.get("Date"),
-                    url=paper.get("URL")
-                )
-                paper_mongo.save()
-            else:
-                paper_mongo = Paper.objects(title=paper.get("Title")).get()
+            paper_mongo = store_paper(paper)
             if paper_mongo.id not in papers_existing_in_item:
                 item.update(push__papers=paper_mongo)
                 paper_mongo.update(push__subscriptions=item)
