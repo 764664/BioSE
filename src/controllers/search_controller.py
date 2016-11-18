@@ -4,18 +4,20 @@ import logging
 import math
 
 import flask_login
-from flask import g, abort, jsonify
+from flask import g, abort, jsonify, redirect
 
 from src.helpers.abstract_processor import AbstractProcessor
 from src.helpers.paper_processor import PaperProcessor
-from src.models.schema import User, SearchItem, SearchHistory, Paper
+from src.models.schema import User, SearchItem, SearchHistory, Paper, ClickHistory, ClickCount
 from src.helpers.store_paper import papers_searilizer
 
 RESULTS_PER_PAGE = 10
 
 class SearchController:
     @staticmethod
-    def search(keyword, args):
+    def search(args):
+        keyword = args.get('keyword')
+
         # Store history in database
         if SearchItem.objects(keyword=keyword).count() == 0:
             search_item = SearchItem(keyword=keyword)
@@ -36,6 +38,7 @@ class SearchController:
         #     search_id_to_results = g.search_id_to_results
 
         query_result = PaperProcessor(keyword)
+        papers = query_result.papers_array
 
         if flask_login.current_user.is_authenticated:
             search_history = SearchHistory(item=search_item,
@@ -54,7 +57,10 @@ class SearchController:
 
         # Return result
         return jsonify(
-            response=str(search_history.id)
+            response=str(search_history.id),
+            meta_info={
+                'page_count': math.ceil(len(papers)/RESULTS_PER_PAGE)
+            }
         )
         # return_value = jsonify(
         #     {
@@ -129,11 +135,31 @@ class SearchController:
         )
 
     @staticmethod
-    def jump(search_history_id, paper_id, args):
+    def jump(args):
         try:
+            search_history_id = args.get('search_history_id')
+            paper_id = args.get('paper_id')
             search_history = SearchHistory.objects(id=search_history_id).get()
             search_item = search_history.item
             paper = Paper.objects(id=paper_id).get()
-        except:
+            click_history = ClickHistory(
+                search_item=search_item,
+                search_history=search_history,
+                paper=paper,
+                user=User.objects(id=flask_login.current_user.id).get() if flask_login.current_user.is_authenticated else None
+            )
+            click_history.save()
+            if ClickCount.objects(search_item=search_item, paper=paper).count() > 0:
+                click_count = ClickCount.objects(search_item=search_item, paper=paper).get()
+
+            else:
+                click_count = ClickCount(
+                    search_item=search_item, paper=paper
+                )
+            click_count.count = click_count.count + 1
+            click_count.save()
+            return redirect(paper.url)
+        except Exception as e:
+            logging.warning(e)
             abort(401)
 
