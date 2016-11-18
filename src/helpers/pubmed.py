@@ -4,6 +4,7 @@ from lxml import etree
 import re
 import json
 from datetime import datetime
+from src.helpers.store_paper import store_paper
 
 class PubMedFetcher:
     def __init__(self, keyword, num_of_documents=2, sort='relevance'):
@@ -109,6 +110,11 @@ class PubMedFetcher:
                 "Abstract": abstract
             }
             h["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + h["PMID"]
+            try:
+                paper_mongo = store_paper(h)
+                h["ID"] = str(paper_mongo.id)
+            except:
+                logging.error("Store paper failed: {}".format(paper["PMID"]))
             return h
         else:
             logging.warning("Parse error. #%d", error_count)
