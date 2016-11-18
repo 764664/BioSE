@@ -1,7 +1,6 @@
 body {
     padding-top: 50px;
     background-color: #F5F8FA;
-    /*padding-bottom: 50px;*/
 }
 a {
     text-decoration: none;
@@ -18,10 +17,7 @@ a:hover {
 .detail a {
     font-size: 20px;
 }
-#search_button {
-    margin-left: 10px;
-    /*margin-right: 10px;*/
-}
+
 .modal
 {
     height: 400px;
@@ -101,12 +97,7 @@ a:hover {
 /*#num_results {*/
     /*margin-left: 10px;*/
 /*}*/
-#form_search {
-    /*display: inline-block;*/
-    /*width: 300px;*/
-   /* padding: 0;*/
-    /*float: left;*/
-}
+
 #span_num_results {
     /*display: inline-block;*/
     /*width: 120px;*/
@@ -181,26 +172,8 @@ a:hover {
     background-color:#6cd347;
     color:#fff;
 }
-#instant {
-    display: none;
-    position: absolute;
-    top: 100px;
-    left: 200px;
-    min-width: 500px;
-    border: 5px;
-    border-style: inset;
-    text-align: left;
-    background-color: white;
-}
-#instant li:hover {
-    background-color: #EEEEEE;
-}
-li {
-    list-style-type:none;
-}
-ul {
-    padding: 0;
-}
+
+
 #filter_container li:hover {
     background-color: #EEEEEE;
     cursor: pointer;
