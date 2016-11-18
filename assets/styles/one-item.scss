@@ -7,15 +7,27 @@
     height: 120px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
 
     .div-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        text-overflow: ellipsis;
+        max-height: 2.4em;
+
+        h5 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            line-height: 1.2em;        /* fallback */
+        }
 
         a.title {
             margin-left: 5px;
+
         }
     }
     .div-authors {
