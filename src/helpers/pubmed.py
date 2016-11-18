@@ -112,7 +112,7 @@ class PubMedFetcher:
             h["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + h["PMID"]
             try:
                 paper_mongo = store_paper(h)
-                h["ID"] = str(paper_mongo.id)
+                h["DBID"] = str(paper_mongo.id)
             except:
                 logging.error("Store paper failed: {}".format(paper["PMID"]))
             return h

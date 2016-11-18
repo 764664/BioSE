@@ -20,6 +20,19 @@ class Paper(Document):
     url = StringField()
     subscriptions = ListField(ReferenceField('SubscriptionItem'))
 
+    def serialize(self):
+        return(
+            {
+                'Title': self.title,
+                'Abstract': self.abstract,
+                'URL': self.url,
+                'Date': self.date,
+                'Journal': self.journal,
+                'Authors': [author.name for author in self.authors],
+                'DBID': str(self.id)
+            }
+        )
+
 class SubscriptionItem(Document):
     keyword = StringField()
     papers = ListField(ReferenceField(Paper))
@@ -34,14 +47,15 @@ class SearchItem(Document):
     keyword = StringField()
     count = IntField(default=0)
     model = BinaryField()
+    papers = ListField(ReferenceField(Paper))
 
 class SearchHistory(Document):
     item = ReferenceField(SearchItem)
     user = ReferenceField(User)
+    papers = ListField(ReferenceField(Paper))
     created_at = DateTimeField(default=datetime.datetime.now)
 
 class ClickHistory(Document):
     search_item = ReferenceField(SearchItem)
-    search_history = ReferenceField(SearchHistory)
     paper = ReferenceField(Paper)
     count = IntField(default=0)

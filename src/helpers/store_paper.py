@@ -1,4 +1,6 @@
 from src.models.schema import Paper, Author
+from flask import jsonify
+from IPython import embed
 
 def store_paper(paper):
     if Paper.objects(title=paper.get("Title")).count() == 0:
@@ -22,3 +24,6 @@ def store_paper(paper):
     else:
         paper_mongo = Paper.objects(title=paper.get("Title")).get()
     return paper_mongo
+
+def papers_searilizer(papers):
+    return [paper.serialize() for paper in papers]

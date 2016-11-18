@@ -110,6 +110,12 @@ def search(keyword):
     with app.app_context():
         return SearchController.search(keyword, request.args)
 
+@app.route('/fetch')
+def fetch():
+    with app.app_context():
+        return SearchController.fetch(request.args)
+
+
 @app.route('/jump/<int:search_id>/<int:paper_id>')
 def jump(search_id, paper_id):
     if search_id in search_id_to_results:
