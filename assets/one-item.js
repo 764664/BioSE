@@ -58,7 +58,7 @@ export default class OneItem extends React.Component {
         return(
             <li className="list-group-item one-item">
                 <div className="div-title">
-                    <h4>{this.props.paper.title}</h4>
+                    <h5>{this.props.paper.title}</h5>
                     <a href={this.renderURL()} className="title" target="_blank"><i className="material-icons">open_in_new</i></a>
                 </div>
                 <div className="div-authors">
