@@ -110,10 +110,9 @@ export default class OneItem extends React.Component {
 
     render() {
         return(
-            <li className="list-group-item one-item">
+            <li className="list-group-item one-item" onClick={this.open.bind(this)}>
                 <div className="div-title">
                     <h5>{this.props.paper.title}</h5>
-                    <i onClick={this.open.bind(this)} className="material-icons">add</i>
                     <a href={this.renderURL()} className="title" target="_blank"><i className="material-icons">open_in_new</i></a>
                 </div>
                 <div className="div-authors">
