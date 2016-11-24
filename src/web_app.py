@@ -147,7 +147,7 @@ def subscription_timeline():
 @app.route('/subscription/index')
 def subscription_index():
     subscriptions = Subscription.index()
-    return json.dumps([{'keyword': x.keyword} for x in subscriptions])
+    return json.dumps([{'keyword': x.keyword, 'id': str(x.id)} for x in subscriptions])
 
 @app.route('/subscription/recommendations')
 def subscription_recommendations():
