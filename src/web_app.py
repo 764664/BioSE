@@ -8,6 +8,7 @@ from flask_bcrypt import Bcrypt
 
 from src import app
 from src.controllers.search_controller import SearchController
+from src.controllers.paper_controller import PaperController
 from src.helpers.autocomplete import InstantSearch
 from src.models.schema import User
 from src.models.subscription import Subscription
@@ -153,9 +154,13 @@ def subscription_index():
 def show_subscription(id):
     return Subscription.show(id)
 
-@app.route('/subscription/recommendations')
+@app.route('/subscription/recommend')
 def subscription_recommendations():
-    pass
+    return Subscription.recommend()
+
+@app.route('/paper/<id>')
+def show_paper(id):
+    return PaperController.show(id)
 
 # if __name__ == '__main__':
 logging.basicConfig(

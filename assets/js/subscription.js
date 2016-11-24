@@ -160,7 +160,33 @@ class SubscriptionManager extends React.Component {
                     }
                 </div>
                 <h4>Recommended for you</h4>
+                <RecommendedSubscriptions />
             </div>
+        )
+    }
+}
+
+class RecommendedSubscriptions extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {recommendations: []};
+    }
+
+    componentWillMount() {
+        fetch(`/subscription/recommend`, {credentials: 'same-origin'})
+        .then(response => response.json())
+        .then(json => {
+            this.setState({recommendations: json.response.slice(0, 12)});
+        })
+    }
+
+    render() {
+        return(
+            <ul>
+            {this.state.recommendations.map(item => {
+                return(<li>{item[0]}</li>)
+            })}
+            </ul>
         )
     }
 }

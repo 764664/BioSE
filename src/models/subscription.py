@@ -6,6 +6,7 @@ from flask import g, abort, jsonify, redirect
 from src.helpers.pubmed import PubMedFetcher
 from src.models.schema import SubscriptionItem, User, Paper, Author
 from src.helpers.store_paper import store_paper
+from src.helpers.recommend_keyword import recommend_from_user
 import logging
 from IPython import embed
 
@@ -75,6 +76,10 @@ class Subscription:
         except Exception as e:
             logging.warning(e)
             logging.warning(id)
+
+    @staticmethod
+    def recommend():
+        return jsonify(response=recommend_from_user(current_user))
 
 # item = SubscriptionItem.objects.first()
 # Subscription.update(item)
