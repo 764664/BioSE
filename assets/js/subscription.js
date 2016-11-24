@@ -22,7 +22,6 @@ export default class Subscription extends React.Component {
         fetch(url, {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => {
-            alert(json.status);
             this.loadData();
         })
         .catch(error => {
@@ -40,9 +39,6 @@ export default class Subscription extends React.Component {
         this.setState({subscriptions: this.state.subscriptions.slice(0, _index).concat(this.state.subscriptions.slice(_index+1))});
         fetch(`/subscription/${id}`, {method: "DELETE", credentials: 'same-origin'})
         .then(response => response.json())
-        .then(json => {
-            alert(json.status)
-        })
         .catch(error => {
             console.error(error)
         })
@@ -67,6 +63,7 @@ export default class Subscription extends React.Component {
     }
 
     loadMore() {
+        if(this.state.no_more) {return}
         var length = this.state.papers.length;
         if(length==0) {
             return;
@@ -78,7 +75,7 @@ export default class Subscription extends React.Component {
         xmlhttp.onload = function () {
             if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
             var j = JSON.parse(xmlhttp.responseText);
-            // console.info(j);
+            console.info(j.response);
             this.setState({papers: this.state.papers.concat(j.response)});
             if(!j.more) {
                 this.setState({no_more: true});
@@ -136,7 +133,7 @@ export default class Subscription extends React.Component {
                                         )
                                     })
                                 }
-                            </Infinite>;
+                            </Infinite>
                             </ul>
                         </div>
                     </div>
@@ -250,5 +247,24 @@ class AddSubscription extends React.Component {
 
               </form>
         );
+    }
+}
+
+class ShowOneSubscription extends React.Component {
+    loadData() {
+        var url = `/subscription/${id}`;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onload = function () {
+            if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
+            var j = JSON.parse(xmlhttp.responseText);
+            // console.info(j.response);
+            this.setState({papers: j.response})
+        }.bind(this);
+        xmlhttp.send();
+    }
+
+    render() {
+        return null;
     }
 }
