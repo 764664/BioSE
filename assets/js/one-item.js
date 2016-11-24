@@ -67,7 +67,7 @@ export default class OneItem extends React.Component {
         return(
             <Modal show={this.state.showModal} onHide={this.close.bind(this)} bsSize="large">
               <Modal.Header closeButton>
-                <Modal.Title><a href={`/jump/`}>{this.props.paper.title}</a></Modal.Title>
+                <Modal.Title><a href={this.renderURL()}>{this.props.paper.title}</a></Modal.Title>
               </Modal.Header>
               <Modal.Body>
             <div className="div-authors">
@@ -88,14 +88,8 @@ export default class OneItem extends React.Component {
                 <h6>{this.props.paper.journal}</h6>
                 <h6 className="pub-date">{this.props.paper.date}</h6>
                 </div>
-                    {
-                        this.renderSubscriptions()
-                    }
             </div>
             <div className="detail">
-                <a href={"/jump/"}>
-                    {this.props.paper.title}
-                </a>
                 <div className="abstract"
                      dangerouslySetInnerHTML={{__html: this.props.paper.abstract.split(this.props.query).join("<span class=\"highlight\">" + this.props.query + "</span>")}}
                 />
