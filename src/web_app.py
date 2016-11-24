@@ -11,13 +11,14 @@ from src.controllers.search_controller import SearchController
 from src.helpers.autocomplete import InstantSearch
 from src.models.schema import User
 from src.models.subscription import Subscription
+from IPython import embed
 
 RESULTS_PER_PAGE = 10
 
 bcrypt = Bcrypt(app)
 
-login_manager = flask_login.LoginManager()
-login_manager.init_app(app)
+# login_manager = flask_login.LoginManager()
+# login_manager.init_app(app)
 
 # @app.before_request
 # def before_request():
@@ -43,11 +44,7 @@ def login():
         try:
             user = User.objects(email=email).get()
             if bcrypt.check_password_hash(user.password, request.form['password']):
-                fuser = FlaskUser()
-                fuser.email = email
-                fuser.id = user.id
-                fuser.username = user.username
-                flask_login.login_user(fuser)
+                flask_login.login_user(user)
                 logging.debug('Logged in successfully.')
                 flash('Logged in successfully.')
                 return redirect(url_for('index'))
@@ -126,13 +123,13 @@ def instant_search(keyword):
     with app.app_context():
         return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
 
-@app.route('/subscription/add/<keyword>')
-def subscription_add(keyword):
-    try:
-        Subscription.add(keyword)
-        return 'ok'
-    except:
-        return 'error'
+@app.route('/subscription/add')
+def add_subscription():
+    return Subscription.add(request.args)
+
+@app.route('/subscription/<id>', methods=['DELETE'])
+def delete_subscription(id):
+    return Subscription.delete(id)
 
 @app.route('/subscription/timeline')
 def subscription_timeline():
@@ -155,22 +152,6 @@ def subscription_index():
 @app.route('/subscription/recommendations')
 def subscription_recommendations():
     pass
-
-class FlaskUser(flask_login.UserMixin):
-    pass
-
-@login_manager.user_loader
-def user_loader(id):
-    logging.debug("User loader:{}".format(id));
-    try:
-        user = User.objects(id=id).get()
-    except:
-        return None
-    fuser = FlaskUser()
-    fuser.email = user.email
-    fuser.id = id
-    fuser.username = user.username
-    return fuser
 
 # if __name__ == '__main__':
 logging.basicConfig(
