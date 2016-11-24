@@ -11,20 +11,41 @@ export default class Subscription extends React.Component {
         this.state = {papers: [], subscriptions: [], no_more: false};
         this.loadData = this.loadData.bind(this);
         this.addSubscription = this.addSubscription.bind(this);
+        this.removeSubscription = this.removeSubscription.bind(this);
         this.loadSubscription = this.loadSubscription.bind(this);
     }
 
     addSubscription(keyword) {
         let item = {'keyword': keyword};
         this.setState({subscriptions: this.state.subscriptions.concat([item])});
-        var url = `/subscription/add/${keyword}`;
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", url, true);
-        xmlhttp.onload = function () {
-            if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
+        var url = `/subscription/add?keyword=${keyword}`;
+        fetch(url, {credentials: 'same-origin'})
+        .then(response => response.json())
+        .then(json => {
+            alert(json.status);
             this.loadData();
-        }.bind(this);
-        xmlhttp.send();
+        })
+        .catch(error => {
+            console.error(error)
+        })
+    }
+
+    removeSubscription(id) {
+        let _index;
+        this.state.subscriptions.forEach((value, index) => {
+            if(value.id == id) {
+                _index = index;
+            }
+        })
+        this.setState({subscriptions: this.state.subscriptions.slice(0, _index).concat(this.state.subscriptions.slice(_index+1))});
+        fetch(`/subscription/${id}`, {method: "DELETE", credentials: 'same-origin'})
+        .then(response => response.json())
+        .then(json => {
+            alert(json.status)
+        })
+        .catch(error => {
+            console.error(error)
+        })
     }
 
     componentWillMount() {
@@ -137,7 +158,7 @@ class SubscriptionManager extends React.Component {
                 <div className="subscriptions">
                     {
                         this.props.subscriptions.map( (subscription) => {
-                            return(<OneSubscription name={subscription.keyword} />);
+                            return(<OneSubscription {...this.props} item={subscription} />);
                         })
                     }
                 </div>
@@ -162,18 +183,31 @@ class OneSubscription extends React.Component {
         this.setState({hover: false});
     }
     render() {
+        console.log(this.props.item.id);
+
         if(this.state.hover) {
             return(
                 <div className="subscription">
-                    <h6>{this.props.name}</h6>
-                    <button type="button" className="btn btn-danger btn-sm btn-follow" onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>Unfollow</button>
+                    <h6>{this.props.item.keyword}</h6>
+                    <button
+                        type="button"
+                        className="btn btn-danger btn-sm btn-follow"
+                        onMouseOver={this.mouseOver}
+                        onMouseOut={this.mouseOut}
+                        onClick={this.props.subscription.removeSubscription.bind(this, this.props.item.id)}
+                    >Unfollow</button>
                 </div>
             );
         }
         return(
             <div className="subscription">
-                <h6>{this.props.name}</h6>
-                <button type="button" className="btn btn-primary btn-sm btn-follow" onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>Following</button>
+                <h6>{this.props.item.keyword}</h6>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-sm btn-follow"
+                    onMouseOver={this.mouseOver}
+                    onMouseOut={this.mouseOut}
+                >Following</button>
             </div>
         );
     }

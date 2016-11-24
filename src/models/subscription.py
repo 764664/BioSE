@@ -30,9 +30,9 @@ class Subscription:
 
     @staticmethod
     def delete(id):
-        user = User.objects(id=current_user.id).get()
-        item = SubscriptionItem.objects(id=id).get()
         try:
+            user = User.objects(id=current_user.id).get()
+            item = SubscriptionItem.objects(id=id).get()
             user.update(pull__subscriptions=item)
             return jsonify(status='ok')
         except Exception as e:
