@@ -154,3 +154,6 @@ tmp/
 
 # Bundled js
 bundle.min.js
+
+# Resources
+desc2017.xml
