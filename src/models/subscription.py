@@ -66,6 +66,16 @@ class Subscription:
     def index():
         user = User.objects(id=current_user.id).get()
         return user.subscriptions
+
+    @staticmethod
+    def show(id):
+        try:
+            item = SubscriptionItem.objects(id=id).get()
+            return jsonify(response=[paper.serialize() for paper in Paper.objects(subscriptions=item).limit(100).order_by('-date')])
+        except Exception as e:
+            logging.warning(e)
+            logging.warning(id)
+
 # item = SubscriptionItem.objects.first()
 # Subscription.update(item)
 # print(Subscription.get_timeline())

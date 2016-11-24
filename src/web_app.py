@@ -149,6 +149,10 @@ def subscription_index():
     subscriptions = Subscription.index()
     return json.dumps([{'keyword': x.keyword, 'id': str(x.id)} for x in subscriptions])
 
+@app.route('/subscription/<id>')
+def show_subscription(id):
+    return Subscription.show(id)
+
 @app.route('/subscription/recommendations')
 def subscription_recommendations():
     pass
