@@ -6,7 +6,10 @@ export default class OneItem extends React.Component {
     constructor() {
         super();
         this.popover = this.popover.bind(this);
-        this.state = {showModal: false};
+        this.state = {
+            showModal: false,
+            abstract: ""
+        };
     }
 
     close() {
@@ -14,6 +17,21 @@ export default class OneItem extends React.Component {
       }
 
     open() {
+        if (this.state.abstract=="") {
+            let abstract = this.props.paper.abstract;
+            fetch(`/paper/${this.props.paper.id}`)
+            .then(response => response.json())
+            .then(json => {
+                var terms = json.response;
+                terms.forEach(term => {
+                    if(abstract.indexOf(term) > -1) {
+                        abstract = abstract.replace(term, `<span class="highlight1">${term}</span>`)
+                    }
+                })
+                this.setState({abstract: abstract});
+            abstract = abstract.split(this.props.query).join(`<span class="highlight2">${this.props.query}</span>`)
+            })
+        }
         this.setState({ showModal: true });
     }
 
@@ -91,7 +109,7 @@ export default class OneItem extends React.Component {
             </div>
             <div className="detail">
                 <div className="abstract"
-                     dangerouslySetInnerHTML={{__html: this.props.paper.abstract.split(this.props.query).join("<span class=\"highlight\">" + this.props.query + "</span>")}}
+                     dangerouslySetInnerHTML={{__html: this.state.abstract}}
                 />
             </div>
             </Modal.Body>
