@@ -24,7 +24,10 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def user_loader(id):
     logging.debug("User loader:{}".format(id));
-    return User.objects(id=id).get()
+    try:
+        return User.objects(id=id).get()
+    except:
+        return None
 
 # @app.before_request
 # def before_request():
