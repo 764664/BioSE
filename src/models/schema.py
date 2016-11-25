@@ -24,6 +24,11 @@ class Journal(MyDocument):
     name = StringField()
     impact_factor = FloatField()
     eigenfactor_score = FloatField()
+    meta = {
+        'indexes': [
+            'name'
+        ]
+    }
 
 class Paper(MyDocument):
     title = StringField()
@@ -33,7 +38,11 @@ class Paper(MyDocument):
     date = DateTimeField()
     url = StringField()
     subscriptions = ListField(ReferenceField('SubscriptionItem'))
-
+    meta = {
+        'indexes': [
+            'title'
+        ]
+    }
 
     def serialize(self):
         return(
@@ -89,7 +98,19 @@ class Term(MyDocument):
     name = StringField()
     source = StringField()
     definition = StringField()
+    namespace = StringField()
+    # For GoTerm, it's the oid of ancestor
+    # For MeSH Term, it's the numbers of itself
     tree_number_list = ListField(StringField())
     oid = StringField()
+    ancestors = ReferenceField("self")
+    synonyms = ListField(StringField())
+    meta = {
+        'indexes': [
+            'oid',
+            'tree_number_list',
+            'name'
+        ]
+    }
 
 signals.pre_save.connect(update_modified)
