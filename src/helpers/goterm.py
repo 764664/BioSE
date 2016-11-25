@@ -24,13 +24,13 @@ class GoTermParser:
                     if line.find('id:') == 0:
                         oid = line.strip()[4:]
                     elif line.find('def:') == 0:
-                        definition = line.strip()[5:]
+                        definition = line.split('"')[1]
                     elif line.find('namespace:') == 0:
                         namespace = line.strip()[11:]
                     elif line.find('is_a:') == 0:
                         tree_number_list.append(line.strip()[6:16])
                     elif line.find('synonym:') == 0:
-                        synonyms.append(line.strip()[11:])
+                        synonyms.append(line.split('"')[1])
         print("\nFinished importing GO terms")
         print("Start to fetch ancestor objects")
         count = 0
