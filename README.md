@@ -14,13 +14,13 @@ The ranking of papers is automatically being improved utilizing the users' click
 
 ### Instant Search
 
-When the user types every character, the server will predict the phrases the users is likely to input based on GO terms and NCBI Tax. This is provided using 
+When the user types every character, the server will predict the phrases the users is likely to input based on GO terms and NCBI Tax. This is provided using
 
 ## Implementation
 
 ### Serverside
 
-The server side application is a Python program, located in root directory. The web framework used is [Flask](http://flask.pocoo.org/). 
+The server side application is a Python program, located in root directory. The web framework used is [Flask](http://flask.pocoo.org/).
 
 ### Frontend
 
@@ -42,6 +42,8 @@ You can use the following command to install the dependencies required by Python
 
 ```bash
 pip install -r requirements.txt
+python3 -m src.helpers.mesh_parser
+python3 -m src.helpers.goterm
 ```
 
 ## Demo
