@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {OverlayTrigger, Popover, Button, Modal} from 'react-bootstrap';
+import Term from './term_popover';
+const reactStringReplace = require('react-string-replace');
 
 export default class OneItem extends React.Component {
     constructor() {
@@ -17,21 +19,35 @@ export default class OneItem extends React.Component {
       }
 
     open() {
-        if (this.state.abstract=="") {
             let abstract = this.props.paper.abstract;
             fetch(`/paper/${this.props.paper.id}`)
             .then(response => response.json())
             .then(json => {
                 var terms = json.response;
                 terms.forEach(term => {
-                    if(abstract.indexOf(term.name) > -1) {
-                        abstract = abstract.replace(term.name, `<span class="highlight1">${term.name}</span>`)
-                    }
+                    // if(abstract.indexOf(term.name) > -1) {
+                    //     abstract = abstract.replace(term.name, `<span class="highlight1 term-${term.id}">${term.name}</span>`)
+                    // }
+
+                    // abstract = reactStringReplace(abstract, term.name, (match, i) => (`<span class="highlight1 term-${term.id}">${term.name}</span>`));
+                    abstract = reactStringReplace(abstract, term.name, (match, i) => (<Term term={term} />));
                 })
-                this.setState({abstract: abstract});
-            abstract = abstract.split(this.props.query).join(`<span class="highlight2">${this.props.query}</span>`)
+                // abstract = abstract.split(this.props.query).join(`<span class="highlight2">${this.props.query}</span>`);
+                console.log(abstract);
+                this.setState({abstract:abstract});
+                console.log("Substituded abstract");
+                // let abstract_div = (
+                //     <div>
+                //         {abstract}
+                //     </div>
+                // )
+                // ReactDOM.render(abstract_div, document.getElementById(`abstract-${this.props.paper.id}`));
+
             })
-        }
+            .catch(error => {
+                console.log(error);
+            })
+
         this.setState({ showModal: true });
     }
 
@@ -44,6 +60,9 @@ export default class OneItem extends React.Component {
     //         this.props.subscription.loadMore();
     //     }
     // }
+    componentWillMount() {
+        this.setState({abstract: this.props.paper.abstract});
+    }
 
     popover(author) {
         return(
@@ -108,9 +127,7 @@ export default class OneItem extends React.Component {
                 </div>
             </div>
             <div className="detail">
-                <div className="abstract"
-                     dangerouslySetInnerHTML={{__html: this.state.abstract}}
-                />
+                <div className="abstract" id={`abstract-${this.props.paper.id}`}>{this.state.abstract}</div>
             </div>
             </Modal.Body>
               <Modal.Footer>
@@ -119,6 +136,15 @@ export default class OneItem extends React.Component {
             </Modal>
         )
     }
+
+    // renderAbstract() {
+    //     let abstract = this.props.paper.abstract;
+    //     return(
+    //         <div>
+    //             {this.state.abstract}
+    //         </div>
+    //     )
+    // }
 
     render() {
         return(
