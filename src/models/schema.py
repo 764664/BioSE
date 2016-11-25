@@ -127,7 +127,8 @@ class Term(MyDocument):
                 'definition': self.definition,
                 'namespace': self.namespace,
                 'id': str(self.id),
-                'synonyms': self.synonyms
+                'synonyms': self.synonyms,
+                'oid': self.oid
                 # 'ancestors': [ancestor.serialize() for ancestor in self.ancestors] if self.ancestors else None
             }
         )

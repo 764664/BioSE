@@ -15,6 +15,7 @@ def serialize(term):
                 'namespace': term.namespace,
                 'id': str(term.id),
                 'synonyms': term.synonyms,
+                'oid': term.oid,
                 'ancestors': [serialize(ancestor) for ancestor in term.ancestors] if term.ancestors else None
             }
         )
