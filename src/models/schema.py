@@ -103,8 +103,9 @@ class Term(MyDocument):
     # For MeSH Term, it's the numbers of itself
     tree_number_list = ListField(StringField())
     oid = StringField()
-    ancestors = ReferenceField("self")
+    ancestors = ListField(ReferenceField('self'))
     synonyms = ListField(StringField())
+    cached_json = StringField()
     meta = {
         'indexes': [
             'oid',
@@ -113,5 +114,22 @@ class Term(MyDocument):
             'source'
         ]
     }
+
+    def serialize(self):
+        # ancestors_all = []
+        # ancestors = self.ancestors
+        # while ancestors:
+        #     ancestors_all.append([(ancestor.) for ancestor in ancestors
+        return(
+            {
+                'name': self.name,
+                'source': self.source,
+                'definition': self.definition,
+                'namespace': self.namespace,
+                'id': str(self.id),
+                'synonyms': self.synonyms
+                # 'ancestors': [ancestor.serialize() for ancestor in self.ancestors] if self.ancestors else None
+            }
+        )
 
 signals.pre_save.connect(update_modified)
