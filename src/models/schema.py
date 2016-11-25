@@ -93,4 +93,11 @@ class ClickHistory(MyDocument):
     paper = ReferenceField(Paper)
     user = ReferenceField(User)
 
+class Term(MyDocument):
+    name = StringField()
+    source = StringField()
+    definition = StringField()
+    tree_number_list = ListField(StringField())
+    oid = StringField()
+
 signals.pre_save.connect(update_modified)
