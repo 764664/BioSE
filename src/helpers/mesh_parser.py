@@ -5,8 +5,11 @@ import logging
 class MeshParser:
     @staticmethod
     def parse():
+        print("Start to import MeSH terms")
         file = "resources/desc2017.xml"
+        print("Start to read file")
         tree = ET.parse(file)
+        print("Finished reading file")
         root = tree.getroot()
         count = 0
         for record in root.findall('DescriptorRecord'):
@@ -28,9 +31,23 @@ class MeshParser:
                 term.save()
             except Exception as e:
                 logging.warning(e)
-
+        print("Start to fetch ancestor objects")
+        count = 0
+        for term in Term.objects(source="MeSH"):
+            tree_number_list = term.tree_number_list
+            for number in tree_number_list:
+                if '.' in number:
+                    ancestor_oid = ".".join(number.split('.')[:-1])
+                try:
+                    object = Term.objects(oid=ancestor_oid).get()
+                    term.update(push__ancestors=object)
+                except Exception as e:
+                    logging.warning(e)
+                    logging.warning(number)
+            count += 1
+            if count % 100 == 0:
+                print(".", end='',flush=True)
+        print("\nFinished importing MeSH terms")
 
 if __name__ == "__main__":
-    print("Start to import MeSH terms")
     MeshParser.parse()
-    print("\nFinished importing MeSH terms")
