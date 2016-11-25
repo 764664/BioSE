@@ -1,12 +1,14 @@
-import os, sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import os, sys
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import logging
 import re
+from src.models.schema import Journal
 
 journals = {}
 
-# TODO journal if 2
 def read_if():
+    print("Start to import journals")
+    count = 0
     try:
         f = open("./resources/2014_SCI_IF.csv", "r")
     except Exception as e:
@@ -21,8 +23,12 @@ def read_if():
             pass
 
     for k, v in journals.items():
-        Journal.create(title = k, impact_factor = v[0], eigenfactor_score = v[1])
-
+        journal = Journal(name = k, impact_factor = v[0], eigenfactor_score = v[1])
+        journal.save()
+        count += 1
+        if count % 100 == 0:
+            print('.', end='', flush=True)
+    print("\nFinished importing journals")
 
 if __name__ == '__main__':
     read_if()
