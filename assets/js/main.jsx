@@ -9,7 +9,6 @@ require("../css/subscription.scss");
 require("../css/search.scss");
 require("../css/one-item.scss");
 
-
 var Controller = function(){
     var keyword = '';
     var page = 1;
