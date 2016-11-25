@@ -3,7 +3,7 @@ import logging
 import math
 
 import flask_login
-from flask import current_app, redirect, g, abort, request, url_for, flash
+from flask import current_app, redirect, g, abort, request, url_for, flash, jsonify
 from flask_bcrypt import Bcrypt
 
 from src import app
@@ -123,11 +123,12 @@ def jump():
     with app.app_context():
         return SearchController.jump(request.args)
 
-@app.route('/instant/<keyword>')
-def instant_search(keyword):
-    keyword = keyword.replace("%20", "")
+@app.route('/instant')
+def instant_search():
+    keyword = request.args.get('keyword')
     with app.app_context():
-        return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
+        # return json.dumps(list(map(lambda b: b.decode('utf-8'), instant.search(keyword)))[:20])
+        return jsonify(response=InstantSearch.search(keyword))
 
 @app.route('/subscription/add')
 def add_subscription():
@@ -172,7 +173,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s')
 
-instant = InstantSearch()
 app.secret_key = 'test'
 
 

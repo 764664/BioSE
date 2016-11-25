@@ -78,7 +78,7 @@ class InstantSearch extends React.Component {
                         {
                             this.props.terms.map(function(term, index){
                                 return(
-                                    <li className="list-group-item" key={index} onClick={this.props.click}>{term}</li>
+                                    <li className="list-group-item" key={index} onClick={this.props.click}>{term.name}</li>
                                 );
                             }, this)
                         }
@@ -437,10 +437,10 @@ class SearchApp extends React.Component {
         this.setState({text: e.target.value});
         if(e.target.value.length > 0){
             var xmlhttp = new XMLHttpRequest();
-            var url = "/instant/" + e.target.value;
+            var url = `/instant?keyword=${e.target.value}`;
             xmlhttp.open("GET", url, true);
             xmlhttp.onload = function() {
-                this.setState({instant_search: JSON.parse(xmlhttp.responseText)});
+                this.setState({instant_search: JSON.parse(xmlhttp.responseText).response});
             }.bind(this);
             xmlhttp.send();
         }
