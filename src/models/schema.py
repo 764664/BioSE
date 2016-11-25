@@ -109,7 +109,8 @@ class Term(MyDocument):
         'indexes': [
             'oid',
             'tree_number_list',
-            'name'
+            'name',
+            'source'
         ]
     }
 

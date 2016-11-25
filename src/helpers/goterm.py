@@ -6,7 +6,6 @@ class GoTermParser:
     @staticmethod
     def parse():
         print("Start to import GO terms")
-
         count = 0
         name, definition, oid, namespace, tree_number_list, synonyms = None, None, None, None, [], []
         with open("resources/go.obo", 'r') as f:
