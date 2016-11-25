@@ -18,8 +18,13 @@ RESULTS_PER_PAGE = 10
 
 bcrypt = Bcrypt(app)
 
-# login_manager = flask_login.LoginManager()
-# login_manager.init_app(app)
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def user_loader(id):
+    logging.debug("User loader:{}".format(id));
+    return User.objects(id=id).get()
 
 # @app.before_request
 # def before_request():

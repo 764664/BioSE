@@ -2,12 +2,9 @@ from mongoengine import *
 from mongoengine import signals
 import datetime
 import flask_login
-from src import app
 import logging
 
 connect('biose')
-login_manager = flask_login.LoginManager()
-login_manager.init_app(app)
 
 def update_modified(sender, document):
     document.modified_at = datetime.datetime.utcnow()
@@ -62,11 +59,6 @@ class User(MyDocument, flask_login.UserMixin):
     password = StringField()
     email = StringField()
     subscriptions = ListField(ReferenceField(SubscriptionItem))
-
-@login_manager.user_loader
-def user_loader(id):
-    logging.debug("User loader:{}".format(id));
-    return User.objects(id=id).get()
 
 class SearchItem(MyDocument):
     keyword = StringField()
