@@ -21,13 +21,15 @@ def serialize(term):
 
 print("Start to cache json for terms")
 count = 0
-for term in Term.objects:
+for term in Term.objects.no_cache():
     try:
-        cached_json = json.dumps(serialize(term))
+        h = serialize(term)
+        cached_json = json.dumps(h)
         term.update(set__cached_json=cached_json)
         count += 1
-        if count % 100 == 0:
-            print(".", end="", flush=True)
+        # if count % 100 == 0:
+        #     print(".", end="", flush=True)
+        print("{}: {}".format(count, len(cached_json)))
     except Exception as e:
         embed()
 print("Finished caching json for terms")
