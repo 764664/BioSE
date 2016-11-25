@@ -137,15 +137,6 @@ export default class OneItem extends React.Component {
         )
     }
 
-    // renderAbstract() {
-    //     let abstract = this.props.paper.abstract;
-    //     return(
-    //         <div>
-    //             {this.state.abstract}
-    //         </div>
-    //     )
-    // }
-
     render() {
         return(
             <li className="list-group-item one-item" onClick={this.open.bind(this)}>
