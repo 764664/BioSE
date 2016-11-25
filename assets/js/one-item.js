@@ -24,8 +24,8 @@ export default class OneItem extends React.Component {
             .then(json => {
                 var terms = json.response;
                 terms.forEach(term => {
-                    if(abstract.indexOf(term) > -1) {
-                        abstract = abstract.replace(term, `<span class="highlight1">${term}</span>`)
+                    if(abstract.indexOf(term.name) > -1) {
+                        abstract = abstract.replace(term.name, `<span class="highlight1">${term.name}</span>`)
                     }
                 })
                 this.setState({abstract: abstract});
