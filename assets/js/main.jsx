@@ -412,12 +412,14 @@ class SearchApp extends React.Component {
                             papers: json.response,
                             search_history_id: search_history_id
                         });
+                        $("#loading").modal("hide");
                     })
             })
     }
 
     handleSubmit(e) {
         e.preventDefault();
+        $("#loading").modal("show");
         this.setState({
             instant_search: null
         });
@@ -505,7 +507,7 @@ class App extends React.Component {
 var WaitingDialog = React.createClass({
     render: function(){
         return(
-            <div className="modal fade" data-backdrop="static" data-keyboard="false" tabIndex="-1" role="dialog" aria-hidden="true">
+            <div className="modal fade" id="loading" data-backdrop="static" data-keyboard="false" tabIndex="-1" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-m">
                     <div className="modal-content">
                     <div className="modal-header"><h3>Loading</h3></div>
@@ -590,9 +592,3 @@ ReactDOM.render(<WaitingDialog />, document.getElementById("waitingdialog"));
 //    };
 //
 //})(jQuery);
-
-if(document.getElementById("instant")) {
-    document.addEventListener("click", function(){
-        document.getElementById("instant").style.display = "none";
-    });
-}
