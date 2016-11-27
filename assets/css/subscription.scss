@@ -7,7 +7,8 @@
 
         .subscription-manager-inner {
             overflow-y: auto;
-            height: 100vh;
+            height: unquote("calc(100vh - 60px)");
+            // padding-bottom: 20px;
 
             input {
                 max-width: 100%;
@@ -36,6 +37,7 @@
 
     .recommendations {
         padding: 0;
+
         .btn-follow:hover {
             background-color: #337ab7;
         }
