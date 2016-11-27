@@ -34,12 +34,30 @@ export default class Term extends React.Component {
         var p =
         (
             <Popover id="popover-positioned-top" title={<a href={this.renderURL()} target="_blank">{term.name}</a>}>
-                <div className="definition">
-                    {term.definition}
-                </div>
-                <div className="source">
-                    {term.source}
-                </div>
+                {
+                    term.definition &&
+                    <div className="definition">
+                        Definition: {term.definition}
+                    </div>
+                }
+                {
+                    term.source &&
+                    <div className="source">
+                        Source: {term.source}
+                    </div>
+                }
+                {
+                    term.namespace &&
+                    <div>
+                        Namespace: {term.namespace}
+                    </div>
+                }
+                {
+                    term.synonyms && term.synonyms.length > 0 &&
+                    <div>
+                        Synonyms: {term.synonyms.join(", ")}
+                    </div>
+                }
             </Popover>
         );
         return(
