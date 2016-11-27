@@ -138,36 +138,42 @@ export default class OneItem extends React.Component {
     }
 
     render() {
-        return(
-            <li className="list-group-item one-item" onClick={this.open.bind(this)}>
-                <div className="div-title">
-                    <h5>{this.props.paper.title}</h5>
-                    <a href={this.renderURL()} className="title" target="_blank"><i className="material-icons">open_in_new</i></a>
-                </div>
-                <div className="div-authors">
-                {
-                    this.props.paper.authors.map( (author) => {
-                    return(
-                        <OverlayTrigger trigger={['focus']} placement="bottom" overlay={this.popover(author)}>
-                            <button type="button" className="btn btn-default btn-xs l10">
-                              {author}
-                            </button>
-                        </OverlayTrigger>
-                        )
-                    })
-                }
-                </div>
-                <div className="meta-info">
-                    <div className="meta-info-first">
-                    <h6>{this.props.paper.journal}</h6>
-                    <h6 className="pub-date">{this.props.paper.date}</h6>
+        console.log(this.props.paper);
+        if(this.props.paper.title && this.props.paper.authors && this.props.paper.authors.length > 0) {
+            return(
+                <li className="list-group-item one-item" onClick={this.open.bind(this)}>
+                    <div className="div-title">
+                        <h5>{this.props.paper.title}</h5>
+                        <a href={this.renderURL()} className="title" target="_blank"><i className="material-icons">open_in_new</i></a>
                     </div>
-                        {
-                            this.renderSubscriptions()
-                        }
-                </div>
-                {this.renderModal()}
-            </li>
-        )
+                    <div className="div-authors">
+                    {
+                        this.props.paper.authors.map( (author) => {
+                        return(
+                            <OverlayTrigger trigger={['focus']} placement="bottom" overlay={this.popover(author)}>
+                                <button type="button" className="btn btn-default btn-xs l10">
+                                  {author}
+                                </button>
+                            </OverlayTrigger>
+                            )
+                        })
+                    }
+                    </div>
+                    <div className="meta-info">
+                        <div className="meta-info-first">
+                        <h6>{this.props.paper.journal}</h6>
+                        <h6 className="pub-date">{this.props.paper.date}</h6>
+                        </div>
+                            {
+                                this.renderSubscriptions()
+                            }
+                    </div>
+                    {this.renderModal()}
+                </li>
+            )
+        }
+        else {
+            return null;
+        }
     }
 }
