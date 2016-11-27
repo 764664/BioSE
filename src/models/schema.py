@@ -60,8 +60,9 @@ class Paper(MyDocument):
 
 class SubscriptionItem(MyDocument):
     keyword = StringField()
+    category = StringField()
+    pointer = GenericReferenceField()
     papers = ListField(ReferenceField(Paper))
-
 
 class User(MyDocument, flask_login.UserMixin):
     username = StringField()
@@ -75,18 +76,15 @@ class SearchItem(MyDocument):
     model = BinaryField()
     papers = ListField(ReferenceField(Paper))
 
-
 class SearchHistory(MyDocument):
     item = ReferenceField(SearchItem)
     user = ReferenceField(User)
     papers = ListField(ReferenceField(Paper))
 
-
 class ClickCount(MyDocument):
     search_item = ReferenceField(SearchItem)
     paper = ReferenceField(Paper)
     count = IntField(default=0)
-
 
 class ClickHistory(MyDocument):
     search_item = ReferenceField(SearchItem)
