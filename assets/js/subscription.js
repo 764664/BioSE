@@ -8,7 +8,7 @@ export default class Subscription extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {papers: [], subscriptions: [], no_more: false};
+        this.state = {papers: [], subscriptions: [], no_more: false, isInfiniteLoading: false};
         this.loadData = this.loadData.bind(this);
         this.addSubscription = this.addSubscription.bind(this);
         this.removeSubscription = this.removeSubscription.bind(this);
@@ -50,6 +50,7 @@ export default class Subscription extends React.Component {
     }
 
     loadData() {
+        console.log("loadData");
         var url = "/subscription/timeline";
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", url, true);
@@ -63,7 +64,10 @@ export default class Subscription extends React.Component {
     }
 
     loadMore() {
+        console.log("preloadMore");
         if(this.state.no_more) {return}
+        console.log("loadMore");
+        this.setState({isInfiniteLoading: true});
         var length = this.state.papers.length;
         if(length==0) {
             return;
@@ -80,6 +84,9 @@ export default class Subscription extends React.Component {
             if(!j.more) {
                 this.setState({no_more: true});
             }
+            this.setState({isInfiniteLoading: false});
+            console.log("loadMore finish");
+
         }.bind(this);
         xmlhttp.send();
     }
@@ -111,14 +118,18 @@ export default class Subscription extends React.Component {
                             </div>
                         </div>
                         <div className="col-sm-9">
-                            <ul className="list-group">
+                            <ul className="list-group paper-list">
                             <Infinite
+                                containerHeight={window.innerHeight-60}
                                 elementHeight={120}
-                                infiniteLoadBeginEdgeOffset={100}
-                                useWindowAsScrollContainer={true}
+                                infiniteLoadBeginEdgeOffset={200}
+                                useWindowAsScrollContainer={false}
                                 onInfiniteLoad={() => {
+
+                                    console.log("infi");
                                     this.loadMore();
                                 }}
+                                // isInfiniteLoading={this.state.isInfiniteLoading}
                             >
                                 {
                                     this.state.papers.map( (paper, index) => {
@@ -149,7 +160,8 @@ export default class Subscription extends React.Component {
 class SubscriptionManager extends React.Component {
     render() {
         return(
-            <div>
+            <div className="subscription-manager-outer">
+            <div className="subscription-manager-inner">
                 <AddSubscription {...this.props} subscription_manager={this} />
                 <h4>Your subscriptions</h4>
                 <div className="subscriptions">
@@ -160,7 +172,8 @@ class SubscriptionManager extends React.Component {
                     }
                 </div>
                 <h4>Recommended for you</h4>
-                <RecommendedSubscriptions />
+                <RecommendedSubscriptions {...this.props} />
+            </div>
             </div>
         )
     }
@@ -182,9 +195,21 @@ class RecommendedSubscriptions extends React.Component {
 
     render() {
         return(
-            <ul>
+            <ul className="recommendations">
             {this.state.recommendations.map(item => {
-                return(<li>{item[0]}</li>)
+                let keyword = item[0];
+                return(
+                    <li>
+                        <div className="subscription">
+                            <h6>{keyword}</h6>
+                            <button
+                                type="button"
+                                className="btn btn-sm btn-follow"
+                                onClick={this.props.subscription.addSubscription.bind(this, keyword)}
+                            >Follow</button>
+                        </div>
+                    </li>
+                )
             })}
             </ul>
         )
@@ -206,8 +231,6 @@ class OneSubscription extends React.Component {
         this.setState({hover: false});
     }
     render() {
-        console.log(this.props.item.id);
-
         if(this.state.hover) {
             return(
                 <div className="subscription">

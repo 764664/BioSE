@@ -138,8 +138,7 @@ export default class OneItem extends React.Component {
     }
 
     render() {
-        console.log(this.props.paper);
-        if(this.props.paper.title && this.props.paper.authors && this.props.paper.authors.length > 0) {
+        // if(this.props.paper.title && this.props.paper.authors && this.props.paper.authors.length > 0) {
             return(
                 <li className="list-group-item one-item" onClick={this.open.bind(this)}>
                     <div className="div-title">
@@ -171,9 +170,9 @@ export default class OneItem extends React.Component {
                     {this.renderModal()}
                 </li>
             )
-        }
-        else {
-            return null;
-        }
+        // }
+        // else {
+        //     return null;
+        // }
     }
 }

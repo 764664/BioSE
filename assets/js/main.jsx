@@ -241,7 +241,7 @@ class PaperList extends React.Component {
         if (papers) {
             if (papers.length > 0) {
                 return (
-                    <div className="paperlist">
+                    <div className="paper-list">
                         <ul className="list-group">
                             {
                                 papers.map(function (paper, index) {

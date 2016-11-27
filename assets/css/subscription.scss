@@ -1,28 +1,43 @@
 .subscription-container {
-    .subscription-management {
+    .subscription-manager-outer {
         position: fixed;
         background-color: white;
         padding: 10px;
         margin: 0 -10px;
 
+        .subscription-manager-inner {
+            overflow-y: auto;
+            height: 100vh;
 
-        input {
-            max-width: 100%;
-        }
+            input {
+                max-width: 100%;
+            }
 
-        .btn-follow {
-            width: 70px;
-        }
-
-        .subscription {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
+            .btn-follow {
+                width: 70px;
+            }
         }
     }
 
     li {
         list-style-type: none;
     }
-}
 
+    .list-group {
+        margin: 0;
+    }
+
+    .subscription {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        margin-right: 5px;
+    }
+
+    .recommendations {
+        padding: 0;
+        .btn-follow:hover {
+            background-color: #337ab7;
+        }
+    }
+}
