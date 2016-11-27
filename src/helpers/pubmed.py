@@ -99,6 +99,8 @@ class PubMedFetcher:
             month = int(m.group(3))
             day = int(m.group(4))
             abstract = m.group(8).replace("\n", "").strip()
+            if not m_author:
+                return None
             h = {
                 "Source": "PubMed",
                 "PMID": id,
