@@ -74,6 +74,7 @@
         }
         .meta-info-second {
             display: flex;
+            justify-content: flex-end;
             width: 25%;
             overflow: hidden;
             text-overflow: ellipsis;
