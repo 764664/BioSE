@@ -6,6 +6,7 @@ import logging
 
 from sklearn import gaussian_process
 
+from src.models.schema import Journal
 from src.helpers.pubmed import PubMedFetcher
 
 class PaperProcessor:
@@ -163,21 +164,21 @@ class PaperProcessor:
                 continue
             try:
                 stripped_journal_name = re.sub('[\W_]+', '', v["Journal"].upper())
-                v["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
-            except DoesNotExist:
+                v["Journal_IF"] = Journal.get(name==stripped_journal_name).impact_factor
+            except Exception as e:
                 try:
                     if len(stripped_journal_name) >= 16:
                         v["Journal_IF"] = Journal.get(
-                            Journal.title.startswith(stripped_journal_name[:16])).impact_factor
+                            name.startswith(stripped_journal_name[:16])).impact_factor
                     if len(stripped_journal_name) >= 12:
-                        v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:12])).impact_factor
+                        v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:12])).impact_factor
                     elif len(stripped_journal_name) >= 8:
-                        v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:8])).impact_factor
+                        v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:8])).impact_factor
                     elif len(stripped_journal_name) >= 4:
-                        v["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:4])).impact_factor
+                        v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:4])).impact_factor
                     else:
                         v["Journal_IF"] = 0
-                except DoesNotExist:
+                except Exception as e:
                     v["Journal_IF"] = 0
 
     @staticmethod
