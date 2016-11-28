@@ -1,7 +1,7 @@
 body {
     padding-top: 60px;
     background-color: #F5F8FA;
-    overflow-y: hidden;
+    // overflow-y: hidden;
 }
 a {
     text-decoration: none;
@@ -120,4 +120,10 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+
+#search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

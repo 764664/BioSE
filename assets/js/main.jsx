@@ -452,7 +452,7 @@ class SearchApp extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="container" id="search">
                 <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
                     <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text}
                            placeholder="Search" autoComplete="off"/>
@@ -461,7 +461,7 @@ class SearchApp extends React.Component {
                     <span id="span_num_results"></span>
                     <span id="span_order_by"></span>
                 </form>
-                <div className="container" id="main">
+                <div>
                     <div className="row">
                         <div className="col-md-3" id="filter_container"></div>
                         <div className="col-md-9">
