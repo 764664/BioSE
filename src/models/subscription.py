@@ -1,7 +1,7 @@
 import time
 
 from flask_login import login_required, current_user
-from flask import g, abort, jsonify, redirect
+from flask import g, abort, jsonify, redirect, request
 
 from src.helpers.pubmed import PubMedFetcher
 from src.models.schema import SubscriptionItem, User, Paper, Author
@@ -71,11 +71,18 @@ class Subscription:
     @staticmethod
     def show(id):
         try:
+            count = request.args.get('count', 20)
+            offset = int(request.args.get('offset', 0))
             item = SubscriptionItem.objects(id=id).get()
-            return jsonify(response=[paper.serialize() for paper in Paper.objects(subscriptions=item).limit(100).order_by('-date')])
+            papers = Paper.objects(subscriptions=item).order_by('-date').skip(offset).limit(count)
+            if papers.count() > 0:
+                return jsonify(response=[paper.serialize() for paper in papers])
+            else:
+                return jsonify(response=[], more=False)
         except Exception as e:
             logging.warning(e)
             logging.warning(id)
+            return jsonify(error="error")
 
     @staticmethod
     def recommend():

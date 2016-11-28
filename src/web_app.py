@@ -148,11 +148,11 @@ def subscription_timeline():
 
     papers = Subscription.get_timeline()
     if offset > len(papers):
-        return json.dumps({'response': [], 'more':False})
+        return jsonify(response=[], more=False)
     else:
         more = offset+count < len(papers)
         papers = papers[offset: offset+count]
-        return json.dumps({'response': [paper.serialize() for paper in papers], 'more': more})
+        return jsonify(response=[paper.serialize() for paper in papers], more=more)
 
 @app.route('/subscription/index')
 def subscription_index():

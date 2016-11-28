@@ -8,7 +8,13 @@ export default class Subscription extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {papers: [], subscriptions: [], no_more: false, isInfiniteLoading: false};
+        this.state = {
+            papers: [],
+            subscriptions: [],
+            no_more: false,
+            isInfiniteLoading: false,
+            showing: null
+        };
         this.loadData = this.loadData.bind(this);
         this.addSubscription = this.addSubscription.bind(this);
         this.removeSubscription = this.removeSubscription.bind(this);
@@ -49,15 +55,26 @@ export default class Subscription extends React.Component {
         this.loadSubscription();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.showing != this.state.showing) {
+            this.loadData();
+            this.setState({no_more: false});
+        }
+    }
+
     loadData() {
         console.log("loadData");
-        var url = "/subscription/timeline";
+        if (this.state.showing) {
+            var url = `/subscription/${this.state.showing}`;
+        }
+        else {
+            var url = "/subscription/timeline";
+        }
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", url, true);
         xmlhttp.onload = function () {
             if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
             var j = JSON.parse(xmlhttp.responseText);
-            // console.info(j.response);
             this.setState({papers: j.response})
         }.bind(this);
         xmlhttp.send();
@@ -72,7 +89,12 @@ export default class Subscription extends React.Component {
         if(length==0) {
             return;
         }
-        var url = `/subscription/timeline?offset=${length}`;
+        if (this.state.showing) {
+            var url = `/subscription/${this.state.showing}?offset=${length}`;
+        }
+        else {
+            var url = `/subscription/timeline?offset=${length}`;
+        }
         console.log(`loadMore: ${length}`);
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", url, true);
@@ -164,6 +186,11 @@ class SubscriptionManager extends React.Component {
             <div className="subscription-manager-inner">
                 <AddSubscription {...this.props} subscription_manager={this} />
                 <h4>Your subscriptions</h4>
+                <button
+                    type="button"
+                    className="btn btn-default btn-sm"
+                    onClick={() => {this.props.subscription.setState({showing: null})}}
+                >Show All</button>
                 <div className="subscriptions">
                     {
                         this.props.subscriptions.map( (subscription) => {
@@ -231,10 +258,16 @@ class OneSubscription extends React.Component {
         this.setState({hover: false});
     }
     render() {
-        if(this.state.hover) {
-            return(
-                <div className="subscription">
-                    <h6>{this.props.item.keyword}</h6>
+        return(
+            <div className="subscription">
+                <button
+                    type="button"
+                    className="btn btn-default btn-sm"
+                    onClick={() => {this.props.subscription.setState({showing: this.props.item.id})}}
+                >
+                    {this.props.item.keyword}
+                </button>
+                {this.state.hover?(
                     <button
                         type="button"
                         className="btn btn-danger btn-sm btn-follow"
@@ -242,18 +275,14 @@ class OneSubscription extends React.Component {
                         onMouseOut={this.mouseOut}
                         onClick={this.props.subscription.removeSubscription.bind(this, this.props.item.id)}
                     >Unfollow</button>
-                </div>
-            );
-        }
-        return(
-            <div className="subscription">
-                <h6>{this.props.item.keyword}</h6>
-                <button
-                    type="button"
-                    className="btn btn-primary btn-sm btn-follow"
-                    onMouseOver={this.mouseOver}
-                    onMouseOut={this.mouseOut}
-                >Following</button>
+                ):(
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-sm btn-follow"
+                        onMouseOver={this.mouseOver}
+                        onMouseOut={this.mouseOut}
+                    >Following</button>
+                )}
             </div>
         );
     }
