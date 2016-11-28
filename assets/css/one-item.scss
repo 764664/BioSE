@@ -117,11 +117,12 @@
 .term-popover {
     max-width: 30vw;
 
-    .popover-title {
+    .term-popover-title {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        padding: 0;
     }
 }

@@ -15,7 +15,7 @@ export default class Term extends React.Component {
         var p =
         (
             <Popover id="popover-positioned-top" className="term-popover" title={
-                <div className="popover-title">
+                <div className="term-popover-title">
                     <a href={this.renderURL()} target="_blank"><h5>{term.name}</h5></a>
                     <button type="button" className="btn btn-primary" onClick={() => {this.props.subscription.addSubscription(term.name)}}>Follow</button>
                 </div>
