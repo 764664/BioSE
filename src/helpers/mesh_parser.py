@@ -20,7 +20,7 @@ class MeshParser:
                 oid = record.find('DescriptorUI').text
                 name = record.find('DescriptorName').find('String').text
                 try:
-                    definition = record.iter('ScopeNote').text
+                    definition = list(record.iter('ScopeNote'))[0].text
                 except:
                     definition = None
                 try:
