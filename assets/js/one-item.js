@@ -23,15 +23,24 @@ export default class OneItem extends React.Component {
             fetch(`/paper/${this.props.paper.id}`)
             .then(response => response.json())
             .then(json => {
-                var terms = json.response;
-                terms.forEach(term => {
-                    // if(abstract.indexOf(term.name) > -1) {
-                    //     abstract = abstract.replace(term.name, `<span class="highlight1 term-${term.id}">${term.name}</span>`)
-                    // }
-
-                    // abstract = reactStringReplace(abstract, term.name, (match, i) => (`<span class="highlight1 term-${term.id}">${term.name}</span>`));
-                    abstract = reactStringReplace(abstract, term.name, (match, i) => (<Term term={term} />));
+                let abstract = json.response;
+                abstract = abstract.map((part) => {
+                    if (typeof part === 'string') {
+                        return part
+                    }
+                    else {
+                        return (<Term term={part} />)
+                    }
                 })
+                // var terms = json.response;
+                // terms.forEach(term => {
+                //     // if(abstract.indexOf(term.name) > -1) {
+                //     //     abstract = abstract.replace(term.name, `<span class="highlight1 term-${term.id}">${term.name}</span>`)
+                //     // }
+
+                //     // abstract = reactStringReplace(abstract, term.name, (match, i) => (`<span class="highlight1 term-${term.id}">${term.name}</span>`));
+                //     abstract = reactStringReplace(abstract, term.name, (match, i) => (<Term term={term} />));
+                // })
                 // abstract = abstract.split(this.props.query).join(`<span class="highlight2">${this.props.query}</span>`);
                 console.log(abstract);
                 this.setState({abstract:abstract});

@@ -62,7 +62,7 @@ export default class Term extends React.Component {
         );
         return(
             <OverlayTrigger trigger="focus" placement="top" overlay={p}>
-               <Button>{term.name}</Button>
+               <Button>{term.here}</Button>
             </OverlayTrigger>
         )
     }
