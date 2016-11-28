@@ -29,7 +29,7 @@ export default class OneItem extends React.Component {
                         return part
                     }
                     else {
-                        return (<Term term={part} />)
+                        return (<Term {...this.props} term={part} />)
                     }
                 })
                 // var terms = json.response;
@@ -111,7 +111,7 @@ export default class OneItem extends React.Component {
 
     renderModal() {
         return(
-            <Modal show={this.state.showModal} onHide={this.close.bind(this)} bsSize="large">
+            <Modal show={this.state.showModal} onHide={this.close.bind(this)} bsSize="large" className="modal-item">
               <Modal.Header closeButton>
                 <Modal.Title><a href={this.renderURL()}>{this.props.paper.title}</a></Modal.Title>
               </Modal.Header>
@@ -169,7 +169,7 @@ export default class OneItem extends React.Component {
                     </div>
                     <div className="meta-info">
                         <div className="meta-info-first">
-                        <h6>{this.props.paper.journal}</h6>
+                        <h6 className="journal">{this.props.paper.journal}</h6>
                         <h6 className="pub-date">{this.props.paper.date}</h6>
                         </div>
                             {

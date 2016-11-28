@@ -1,25 +1,6 @@
 import React from 'react';
 import {OverlayTrigger, Popover, Button, Modal} from 'react-bootstrap';
 
-class TermPopover extends React.Component {
-    render() {
-        let term = this.props.term;
-        return(
-            <Popover id="popover-positioned-top" title="Popover top">
-                <div>
-                    {term.name}
-                </div>
-                <div>
-                    {term.definition}
-                </div>
-                <div>
-                    {term.source}
-                </div>
-            </Popover>
-        )
-    }
-}
-
 export default class Term extends React.Component {
     renderURL() {
         if (this.props.term.source == "MeSH") {
@@ -33,7 +14,12 @@ export default class Term extends React.Component {
         let term = this.props.term;
         var p =
         (
-            <Popover id="popover-positioned-top" title={<a href={this.renderURL()} target="_blank">{term.name}</a>}>
+            <Popover id="popover-positioned-top" className="term-popover" title={
+                <div className="popover-title">
+                    <a href={this.renderURL()} target="_blank"><h5>{term.name}</h5></a>
+                    <button type="button" className="btn btn-primary" onClick={() => {this.props.subscription.addSubscription(term.name)}}>Follow</button>
+                </div>
+            }>
                 {
                     term.definition &&
                     <div className="definition">

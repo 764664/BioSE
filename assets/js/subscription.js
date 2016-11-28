@@ -15,7 +15,7 @@ export default class Subscription extends React.Component {
         this.loadSubscription = this.loadSubscription.bind(this);
     }
 
-    addSubscription(keyword) {
+    addSubscription(keyword, category='keyword') {
         let item = {'keyword': keyword};
         this.setState({subscriptions: this.state.subscriptions.concat([item])});
         var url = `/subscription/add?keyword=${keyword}`;
