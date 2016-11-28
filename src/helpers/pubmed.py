@@ -82,7 +82,7 @@ class PubMedFetcher:
                 score = score - 1 / self.num_of_documents
                 ranking += 1
                 count += 1
-        logging.info("Got %d papers from %d entries", count, self.num_of_documents)
+        logging.info("Got %d papers from %d entries", count, len(r.text.split("Pubmed-entry"))-1)
 
     def process_one(self, item):
         if len(item) < 30:
