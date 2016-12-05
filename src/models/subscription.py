@@ -44,7 +44,7 @@ class Subscription:
     def update_all():
         for item in SubscriptionItem.objects():
             Subscription.update(item)
-            time.sleep(2)
+            time.sleep(5)
 
     @staticmethod
     def update(item):
