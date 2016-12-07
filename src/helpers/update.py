@@ -10,7 +10,6 @@ def update_subscription():
     time.sleep(300)
 
 def update():
-    print("123")
     logging.info("Starting threads for updating.")
     t = threading.Thread(target=update_subscription)
     t.start()
