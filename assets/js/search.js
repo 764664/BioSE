@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import OneItem from './one-item';
+import Infinite from 'react-infinite';
 
 class InstantSearch extends React.Component {
     render() {
@@ -87,6 +88,16 @@ class PaperList extends React.Component {
                 return (
                     <div className="paper-list">
                         <ul className="list-group">
+                        <Infinite
+                            containerHeight={window.innerHeight-110}
+                            elementHeight={120}
+                            infiniteLoadBeginEdgeOffset={200}
+                            useWindowAsScrollContainer={false}
+                            onInfiniteLoad={() => {
+                                this.props.loadMore();
+                            }}
+                            // isInfiniteLoading={this.state.isInfiniteLoading}
+                        >
                             {
                                 papers.map(function (paper, index) {
                                     return (
@@ -94,6 +105,7 @@ class PaperList extends React.Component {
                                     );
                                 }, this)
                             }
+                        </Infinite>
                         </ul>
                     </div>
                 );
@@ -110,21 +122,21 @@ class PaperList extends React.Component {
     }
 }
 
-class OutPut extends React.Component {
-    render(){
-        return(
-            <div>
-                <PaperList {...this.props}/>
-                <Pagination pages={this.props.page_count} current={this.props.current_page} />
-            </div>
-        )
-    }
-}
+// class OutPut extends React.Component {
+//     render(){
+//         return(
+//             <div>
+//                 <PaperList {...this.props}/>
+//                 <Pagination pages={this.props.page_count} current={this.props.current_page} />
+//             </div>
+//         )
+//     }
+// }
 
 export default class SearchApp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {text: '', result: ''};
+        this.state = {text: '', result: '', no_more: false};
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -146,6 +158,21 @@ export default class SearchApp extends React.Component {
                         $("#loading").modal("hide");
                     })
             })
+    }
+
+    loadMore() {
+        var length = this.state.papers.length;
+        if(length==0) {
+            return;
+        }
+        fetch(`/fetch?search_history_id=${search_history_id}&offset=${length}`)
+        .then(response => response.json())
+        .then(json => {
+            this.setState({papers: this.state.papers.concat(json.response)});
+            if(!json.more) {
+                this.setState({no_more: true});
+            }
+        })
     }
 
     handleSubmit(e) {
@@ -192,20 +219,14 @@ export default class SearchApp extends React.Component {
                     <span id="span_num_results"></span>
                     <span id="span_order_by"></span>
                 </form>
-                <div>
-                    <div className="row">
-                        <div className="col-md-3" id="filter_container"></div>
-                        <div className="col-md-9">
-                            <PaperList
-                                search_app={this}
-                                papers={this.state.papers}
-                                pages={this.state.page_count}
-                                current={this.state.current_page}
-                                search_history_id={this.state.search_history_id}
-                            />
-                        </div>
-                    </div>
-                </div>
+                <PaperList
+                    search_app={this}
+                    papers={this.state.papers}
+                    pages={this.state.page_count}
+                    current={this.state.current_page}
+                    search_history_id={this.state.search_history_id}
+                    loadMore={this.loadMore}
+                />
             </div>
         )
     }
