@@ -64,6 +64,9 @@ class SubscriptionItem(MyDocument):
     pointer = GenericReferenceField()
     papers = ListField(ReferenceField(Paper))
 
+    def serialize(self):
+        return({'keyword': self.keyword, 'id': str(self.id)})
+
 class User(MyDocument, flask_login.UserMixin):
     username = StringField()
     password = StringField()

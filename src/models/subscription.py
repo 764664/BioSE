@@ -24,7 +24,7 @@ class Subscription:
             else:
                 item = SubscriptionItem.objects(keyword=keyword).first()
             user.update(push__subscriptions=item)
-            return jsonify(status='ok')
+            return jsonify(status='ok', item=item.serialize())
         except Exception as e:
             logging.warning(e)
             return jsonify(status='error')
