@@ -80,11 +80,7 @@ def register():
         except Exception:
             user = User(username=username, password=bcrypt.generate_password_hash(password), email=email)
             user.save()
-            fuser = FlaskUser()
-            fuser.email = email
-            fuser.id = user.id
-            fuser.username = user.username
-            flask_login.login_user(fuser)
+            flask_login.login_user(user)
             return 'Success.'
         else:
             return 'Already exists.'
