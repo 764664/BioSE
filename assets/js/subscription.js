@@ -23,11 +23,11 @@ export default class Subscription extends React.Component {
 
     addSubscription(keyword, category='keyword') {
         let item = {'keyword': keyword};
-        this.setState({subscriptions: this.state.subscriptions.concat([item])});
         var url = `/subscription/add?keyword=${keyword}`;
         fetch(url, {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => {
+            this.setState({subscriptions: this.state.subscriptions.concat([json.item])});
             this.loadData();
         })
         .catch(error => {
@@ -116,17 +116,12 @@ export default class Subscription extends React.Component {
     loadSubscription() {
         let xmlhttp = new XMLHttpRequest();
         const url = "/subscription/index";
-        xmlhttp.open("GET", url);
-        xmlhttp.onload = () => {
-            if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-                console.log(xmlhttp.response);
-                this.setState({subscriptions: JSON.parse(xmlhttp.response)});
-            }
-            else {
-                console.log(xmlhttp.statusText);
-            }
-        }
-        xmlhttp.send();
+        fetch(url, {credentials: 'same-origin'})
+        .then(response => response.json())
+        .then(json => {
+            this.setState({subscriptions: json.response});
+        })
+        .catch(error => {console.error(error)});
     }
 
     render() {
