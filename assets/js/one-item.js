@@ -113,7 +113,7 @@ export default class OneItem extends React.Component {
         return(
             <Modal show={this.state.showModal} onHide={this.close.bind(this)} bsSize="large" className="modal-item">
               <Modal.Header closeButton>
-                <Modal.Title><a href={this.renderURL()}>{this.props.paper.title}</a></Modal.Title>
+                <Modal.Title><a href={this.renderURL()} target="_blank">{this.props.paper.title}</a></Modal.Title>
               </Modal.Header>
               <Modal.Body>
             <div className="div-authors">
