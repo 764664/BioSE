@@ -40,6 +40,9 @@ class SearchController:
         query_result = PaperProcessor(keyword)
         papers = query_result.papers_array
 
+        paper_ids = [x["DBID"] for x in papers]
+        search_item.update(add_to_set__papers=paper_ids)
+
         if flask_login.current_user.is_authenticated:
             search_history = SearchHistory(item=search_item,
                                            user=User.objects(id=flask_login.current_user.id).get(),
