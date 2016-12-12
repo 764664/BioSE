@@ -3,11 +3,14 @@ import {OverlayTrigger, Popover, Button, Modal} from 'react-bootstrap';
 
 export default class Term extends React.Component {
     renderURL() {
-        if (this.props.term.source == "MeSH") {
-            return `https://meshb.nlm.nih.gov/#/record/ui?ui=${this.props.term.oid}`;
+        return this.renderURLForTerm(this.props.term.source);
+    }
+    renderURLForTerm(term) {
+        if (term.source == "MeSH") {
+            return `https://meshb.nlm.nih.gov/#/record/ui?ui=${term.oid}`;
         }
-        else if (this.props.term.source == "GO") {
-            return `http://amigo.geneontology.org/amigo/term/${this.props.term.oid}`;
+        else if (term.source == "GO") {
+            return `http://amigo.geneontology.org/amigo/term/${term.oid}`;
         }
     }
     render() {
@@ -23,25 +26,46 @@ export default class Term extends React.Component {
                 {
                     term.definition &&
                     <div className="definition">
-                        Definition: {term.definition}
+                        <h3>Definition</h3>{term.definition}
+                    </div>
+                }
+                {
+                    term.ancestors &&
+                    <div className="ancestors-div">
+                    <h3>Ancestors</h3>
+                    <p className="self">{term.name}</p>
+                    {
+                        term.ancestors.map((ancestor, index) => {
+                            return(
+                                <div className="ancestors">
+                                    {
+                                        [...Array(index+1)].map(() => {
+                                            return("<");
+                                        })
+                                    }
+                                    <a href={this.renderURLForTerm(ancestor)}>{ancestor.name}</a>
+                                </div>
+                            )
+                        }
+                    )}
                     </div>
                 }
                 {
                     term.source &&
                     <div className="source">
-                        Source: {term.source}
+                        <h3>Source</h3>{term.source}
                     </div>
                 }
                 {
                     term.namespace &&
                     <div>
-                        Namespace: {term.namespace}
+                        <h3>Namespace</h3>{term.namespace}
                     </div>
                 }
                 {
                     term.synonyms && term.synonyms.length > 0 &&
                     <div>
-                        Synonyms: {term.synonyms.join(", ")}
+                        <h3>Synonyms</h3>{term.synonyms.join(", ")}
                     </div>
                 }
             </Popover>
