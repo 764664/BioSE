@@ -24,7 +24,7 @@ def update_all():
     # update_subscription()
     update_model()
     logging.info("Finished updates. Sleep for 5 minutes")
-    time.sleep(300)
+    time.sleep(900)
 
 def update():
     logging.info("Starting threads for updating.")
