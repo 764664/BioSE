@@ -211,6 +211,9 @@ export default class SearchApp extends React.Component {
     render() {
         return (
             <div className="container" id="search">
+                <div className="row">
+                <div className="col-md-12">
+                <div className={this.state.papers?'wrapper':'wrapper-init'}>
                 <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
                     <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text}
                            placeholder="Search" autoComplete="off"/>
@@ -219,6 +222,7 @@ export default class SearchApp extends React.Component {
                     <span id="span_num_results"></span>
                     <span id="span_order_by"></span>
                 </form>
+
                 <PaperList
                     search_app={this}
                     papers={this.state.papers}
@@ -227,6 +231,9 @@ export default class SearchApp extends React.Component {
                     search_history_id={this.state.search_history_id}
                     loadMore={this.loadMore}
                 />
+                </div>
+                </div>
+                </div>
             </div>
         )
     }

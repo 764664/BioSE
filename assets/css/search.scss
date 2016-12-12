@@ -28,9 +28,27 @@
 
 .paper-list {
     width: 100%;
+
+    li {
+        width: 100%;
+    }
+
+    .list-group {
+        margin-bottom: 0;
+    }
 }
-// #main {
-//     width: 90%;
-//     text-align: center;
-//     padding-top: 20px;
-// }
+
+.wrapper {
+    display: flex;
+    height: unquote("calc(100vh - 80px)");
+    align-items: center;
+    flex-direction: column;
+}
+.wrapper-init {
+    overflow: hidden;
+    height: unquote("calc(100vh - 60px)");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 200px;
+}
