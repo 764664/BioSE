@@ -21,7 +21,7 @@ def update_model():
 
 def update_all():
     logging.info("Start updates.")
-    # update_subscription()
+    update_subscription()
     update_model()
     logging.info("Finished updates. Sleep for 5 minutes")
     time.sleep(900)
