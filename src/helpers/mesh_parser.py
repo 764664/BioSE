@@ -31,19 +31,19 @@ class MeshParser:
                 term.save()
             except Exception as e:
                 logging.warning(e)
-        print("Start to fetch ancestor objects")
+        print("\nStart to fetch ancestor objects")
         count = 0
         for term in Term.objects(source="MeSH"):
             tree_number_list = term.tree_number_list
             for number in tree_number_list:
-                if '.' in number:
-                    ancestor_oid = ".".join(number.split('.')[:-1])
-                try:
-                    object = Term.objects(oid=ancestor_oid).get()
-                    term.update(push__ancestors=object)
-                except Exception as e:
-                    logging.warning(e)
-                    logging.warning(number)
+                if '.' in number and len(number.split('.')) > 1:
+                    tree_number = ".".join(number.split('.')[:-1])
+                    try:
+                        object = Term.objects(tree_number_list=tree_number).get()
+                        term.update(push__ancestors=object)
+                    except Exception as e:
+                        logging.warning(e)
+                        logging.warning(number)
             count += 1
             if count % 100 == 0:
                 print(".", end='',flush=True)
