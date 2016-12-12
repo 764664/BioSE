@@ -117,10 +117,17 @@ class Term(MyDocument):
     }
 
     def serialize(self):
-        # ancestors_all = []
-        # ancestors = self.ancestors
-        # while ancestors:
-        #     ancestors_all.append([(ancestor.) for ancestor in ancestors
+        ancestors_all = []
+        if self.ancestors:
+            ancestor = self.ancestors[0]
+            while ancestor:
+                ancestors_all.append({'name': ancestor.name, 'oid': ancestor.oid, 'source': ancestor.source})
+                if ancestor.ancestors:
+                    ancestor = ancestor.ancestors[0]
+                else:
+                    ancestor = None
+            print(ancestors_all)
+
         return(
             {
                 'name': self.name,
@@ -129,7 +136,8 @@ class Term(MyDocument):
                 'namespace': self.namespace,
                 'id': str(self.id),
                 'synonyms': self.synonyms,
-                'oid': self.oid
+                'oid': self.oid,
+                'ancestors': ancestors_all
                 # 'ancestors': [ancestor.serialize() for ancestor in self.ancestors] if self.ancestors else None
             }
         )
