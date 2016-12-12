@@ -8,6 +8,7 @@ from src.models.schema import SubscriptionItem, User, Paper, Author
 from src.helpers.store_paper import store_paper
 from src.helpers.recommend_keyword import recommend_from_user
 import logging
+import random
 from IPython import embed
 
 
@@ -86,7 +87,7 @@ class Subscription:
 
     @staticmethod
     def recommend():
-        return jsonify(response=recommend_from_user(current_user))
+        return jsonify(response=random.sample(recommend_from_user(current_user), 20))
 
 # item = SubscriptionItem.objects.first()
 # Subscription.update(item)
