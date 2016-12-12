@@ -47,6 +47,10 @@
     .recommendations {
         padding: 0;
 
+        h4 {
+            text-align: center;
+        }
+
         .btn-follow:hover {
             background-color: #337ab7;
         }

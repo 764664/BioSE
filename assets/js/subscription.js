@@ -227,7 +227,9 @@ class RecommendedSubscriptions extends React.Component {
             <i className="material-icons" onClick={this.loadRecommendations.bind(this)}>autorenew</i>
             </div>
             <ul className="recommendations">
-            {this.state.recommendations.map(item => {
+            {
+                this.state.recommendations &&
+                this.state.recommendations.map(item => {
                 let keyword = item[0];
                 return(
                     <li>
@@ -241,7 +243,12 @@ class RecommendedSubscriptions extends React.Component {
                         </div>
                     </li>
                 )
-            })}
+                })
+            }
+            {
+                this.state.recommendations.length==0 &&
+                <h4>Loading...</h4>
+            }
             </ul>
             </div>
         )
