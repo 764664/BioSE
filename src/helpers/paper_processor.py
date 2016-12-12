@@ -6,8 +6,10 @@ import logging
 
 from sklearn import gaussian_process
 
-from src.models.schema import Journal
+from src.models.schema import Journal, SearchItem
 from src.helpers.pubmed import PubMedFetcher
+from src.helpers.vectorize_paper import vectorize_paper
+from operator import itemgetter
 
 class PaperProcessor:
     def __init__(self, keyword, num_of_documents=100, postprocessing = True):
@@ -25,9 +27,10 @@ class PaperProcessor:
             # self.words = [[y, self.bag[y]] for y in sorted(list(self.bag.keys()), key=lambda x: self.bag[x], reverse=True)[:30]]
 
             if postprocessing:
+                self.get_scores()
             # self.get_google_scholar()
             # self.truncate_for_display()
-                self.add_missing_info()
+                # self.add_missing_info()
             # self.find_exact_match()
             # self.ranking()
             self.generate_papers_array()
@@ -146,88 +149,108 @@ class PaperProcessor:
                 paper["Title"] = paper["Title"][:100] + "..."
 
     def generate_papers_array(self):
-        self.papers_array = list(self.papers.values())
-        logging.info("Have {} papers in total.".format(len(self.papers_array)))
-        self.papers_array.sort(key=lambda x: x["Score"])
-        self.papers_array.reverse()
-        for index, paper in enumerate(self.papers_array):
-            paper["ID"] = index
+        paper_ids = [paper["DBID"] for title, paper in self.papers.items()]
+        search_item = SearchItem.objects(keyword=self.keyword).get()
+        search_item.update(add_to_set__papers=paper_ids)
+        # self.papers_array = list(self.papers.values())
+        # logging.info("Have {} papers in total.".format(len(self.papers_array)))
+        # self.papers_array.sort(key=lambda x: x["Score"])
+        # self.papers_array.reverse()
+        # for index, paper in enumerate(self.papers_array):
+        #     paper["ID"] = index
+        self.papers_array = self.get_scores()
+        if not self.papers_array:
+            self.papers_array = search_item.papers
 
-    def add_missing_info(self):
-        self.add_journal_if_self()
+    def get_scores(self):
+        try:
+            item = SearchItem.objects(keyword=self.keyword).get()
+            if item.model:
+                regressor = pickle.loads(item.model)
+            papers = item.papers
+            x = [vectorize_paper(paper) for paper in papers]
+            y = regressor.predict(x)
+            # return papers
+            return itemgetter(*[t[0] for t in sorted(enumerate(y), key=lambda i: i[1], reverse=True)])(papers)
+        except Exception as e:
+            logging.debug(e)
+            return None
 
-    # TODO jounal if
-    def add_journal_if_self(self):
-        for k,v in self.papers.items():
-            if 'Journal' not in v or not v['Journal']:
-                v["Journal_IF"] = 0
-                continue
-            try:
-                stripped_journal_name = re.sub('[\W_]+', '', v["Journal"].upper())
-                v["Journal_IF"] = Journal.get(name==stripped_journal_name).impact_factor
-            except Exception as e:
-                try:
-                    if len(stripped_journal_name) >= 16:
-                        v["Journal_IF"] = Journal.get(
-                            name.startswith(stripped_journal_name[:16])).impact_factor
-                    if len(stripped_journal_name) >= 12:
-                        v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:12])).impact_factor
-                    elif len(stripped_journal_name) >= 8:
-                        v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:8])).impact_factor
-                    elif len(stripped_journal_name) >= 4:
-                        v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:4])).impact_factor
-                    else:
-                        v["Journal_IF"] = 0
-                except Exception as e:
-                    v["Journal_IF"] = 0
+    # def add_missing_info(self):
+    #     self.add_journal_if_self()
 
-    @staticmethod
-    def add_journal_if(paper_list):
-        for paper in paper_list:
-            if 'Journal' not in paper or not paper['Journal']:
-                paper["Journal_IF"] = 0
-                continue
-            try:
-                stripped_journal_name = re.sub('[\W_]+', '', paper["Journal"].upper())
-                paper["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
-            except DoesNotExist:
-                try:
-                    if len(stripped_journal_name) >= 16:
-                        paper["Journal_IF"] = Journal.get(
-                            Journal.title.startswith(stripped_journal_name[:16])).impact_factor
-                    if len(stripped_journal_name) >= 12:
-                        paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:12])).impact_factor
-                    elif len(stripped_journal_name) >= 8:
-                        paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:8])).impact_factor
-                    elif len(stripped_journal_name) >= 4:
-                        paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:4])).impact_factor
-                    else:
-                        paper["Journal_IF"] = 0
-                except DoesNotExist:
-                    paper["Journal_IF"] = 0
+    # # TODO jounal if
+    # def add_journal_if_self(self):
+    #     for k,v in self.papers.items():
+    #         if 'Journal' not in v or not v['Journal']:
+    #             v["Journal_IF"] = 0
+    #             continue
+    #         try:
+    #             stripped_journal_name = re.sub('[\W_]+', '', v["Journal"].upper())
+    #             v["Journal_IF"] = Journal.get(name==stripped_journal_name).impact_factor
+    #         except Exception as e:
+    #             try:
+    #                 if len(stripped_journal_name) >= 16:
+    #                     v["Journal_IF"] = Journal.get(
+    #                         name.startswith(stripped_journal_name[:16])).impact_factor
+    #                 if len(stripped_journal_name) >= 12:
+    #                     v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:12])).impact_factor
+    #                 elif len(stripped_journal_name) >= 8:
+    #                     v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:8])).impact_factor
+    #                 elif len(stripped_journal_name) >= 4:
+    #                     v["Journal_IF"] = Journal.get(name.startswith(stripped_journal_name[:4])).impact_factor
+    #                 else:
+    #                     v["Journal_IF"] = 0
+    #             except Exception as e:
+    #                 v["Journal_IF"] = 0
 
-    def ranking(self):
-        model = self.check_model()
-        if model:
-            clf = model[0]
-            number_clicks = model[1]
-            maximum_ml_score = -1
-            for k,v in self.papers.items():
-                if "Journal_IF" in v and "Year" in v:
-                    x = [[v["Year"], v["Journal_IF"]]]
-                    score_ml = clf.predict(x)[0]
-                    v["Score_ML"] = score_ml
-                    if score_ml > maximum_ml_score:
-                        maximum_ml_score = score_ml
-                    weight = 1 - math.pow(0.5, 0.1*number_clicks)
-                    v["Weight"] = weight
-            for k,v in self.papers.items():
-                if "Score_ML" in v:
-                    v["Score_ML"] *= 1 / maximum_ml_score
-                    # logging.debug("{}: {}".format(v["Title"], v["Score_ML"]))
-                    v["Score"] = v["Score"]*(1-v["Weight"]) + v["Score_ML"]*v["Weight"]
-        else:
-            pass
+    # @staticmethod
+    # def add_journal_if(paper_list):
+    #     for paper in paper_list:
+    #         if 'Journal' not in paper or not paper['Journal']:
+    #             paper["Journal_IF"] = 0
+    #             continue
+    #         try:
+    #             stripped_journal_name = re.sub('[\W_]+', '', paper["Journal"].upper())
+    #             paper["Journal_IF"] = Journal.get(Journal.title==stripped_journal_name).impact_factor
+    #         except DoesNotExist:
+    #             try:
+    #                 if len(stripped_journal_name) >= 16:
+    #                     paper["Journal_IF"] = Journal.get(
+    #                         Journal.title.startswith(stripped_journal_name[:16])).impact_factor
+    #                 if len(stripped_journal_name) >= 12:
+    #                     paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:12])).impact_factor
+    #                 elif len(stripped_journal_name) >= 8:
+    #                     paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:8])).impact_factor
+    #                 elif len(stripped_journal_name) >= 4:
+    #                     paper["Journal_IF"] = Journal.get(Journal.title.startswith(stripped_journal_name[:4])).impact_factor
+    #                 else:
+    #                     paper["Journal_IF"] = 0
+    #             except DoesNotExist:
+    #                 paper["Journal_IF"] = 0
+
+    # def ranking(self):
+    #     model = self.check_model()
+    #     if model:
+    #         clf = model[0]
+    #         number_clicks = model[1]
+    #         maximum_ml_score = -1
+    #         for k,v in self.papers.items():
+    #             if "Journal_IF" in v and "Year" in v:
+    #                 x = [[v["Year"], v["Journal_IF"]]]
+    #                 score_ml = clf.predict(x)[0]
+    #                 v["Score_ML"] = score_ml
+    #                 if score_ml > maximum_ml_score:
+    #                     maximum_ml_score = score_ml
+    #                 weight = 1 - math.pow(0.5, 0.1*number_clicks)
+    #                 v["Weight"] = weight
+    #         for k,v in self.papers.items():
+    #             if "Score_ML" in v:
+    #                 v["Score_ML"] *= 1 / maximum_ml_score
+    #                 # logging.debug("{}: {}".format(v["Title"], v["Score_ML"]))
+    #                 v["Score"] = v["Score"]*(1-v["Weight"]) + v["Score_ML"]*v["Weight"]
+    #     else:
+    #         pass
 
     # TODO: models
     # def check_model(self):

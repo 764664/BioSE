@@ -10,6 +10,7 @@ from src.helpers.abstract_processor import AbstractProcessor
 from src.helpers.paper_processor import PaperProcessor
 from src.models.schema import User, SearchItem, SearchHistory, Paper, ClickHistory, ClickCount
 from src.helpers.store_paper import papers_searilizer
+import pickle
 
 RESULTS_PER_PAGE = 10
 
@@ -40,19 +41,17 @@ class SearchController:
         query_result = PaperProcessor(keyword)
         papers = query_result.papers_array
 
-        paper_ids = [x["DBID"] for x in papers]
-        search_item.update(add_to_set__papers=paper_ids)
+        # paper_ids = [x["DBID"] for x in papers]
+        # search_item.update(add_to_set__papers=paper_ids)
 
         if flask_login.current_user.is_authenticated:
             search_history = SearchHistory(item=search_item,
                                            user=User.objects(id=flask_login.current_user.id).get(),
-                                           papers=[x["DBID"] for x in query_result.papers_array])
+                                           papers=[x for x in query_result.papers_array])
         else:
             search_history = SearchHistory(item=search_item,
-                                           papers=[x["DBID"] for x in query_result.papers_array])
+                                           papers=[x for x in query_result.papers_array])
         search_history.save()
-
-
 
         # # Word bag
         # bag = AbstractProcessor().process_list(return_list)
