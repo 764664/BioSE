@@ -34,7 +34,16 @@
         margin-top: 5px;
         margin-right: 5px;
     }
+    .recommendations-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 10px;
 
+        i:hover {
+            color: #62a6df;
+        }
+    }
     .recommendations {
         padding: 0;
 

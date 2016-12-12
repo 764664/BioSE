@@ -193,7 +193,7 @@ class SubscriptionManager extends React.Component {
                         })
                     }
                 </div>
-                <h4>Recommended for you</h4>
+
                 <RecommendedSubscriptions {...this.props} />
             </div>
             </div>
@@ -207,16 +207,25 @@ class RecommendedSubscriptions extends React.Component {
       this.state = {recommendations: []};
     }
 
-    componentWillMount() {
+    loadRecommendations() {
         fetch(`/subscription/recommend`, {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => {
-            this.setState({recommendations: json.response.slice(0, 12)});
+            this.setState({recommendations: json.response});
         })
+    }
+
+    componentWillMount() {
+        this.loadRecommendations();
     }
 
     render() {
         return(
+            <div className="recommendations-div">
+            <div className="recommendations-heading">
+            <h4>Recommended for you</h4>
+            <i className="material-icons" onClick={this.loadRecommendations.bind(this)}>autorenew</i>
+            </div>
             <ul className="recommendations">
             {this.state.recommendations.map(item => {
                 let keyword = item[0];
@@ -234,6 +243,7 @@ class RecommendedSubscriptions extends React.Component {
                 )
             })}
             </ul>
+            </div>
         )
     }
 }
