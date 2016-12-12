@@ -204,14 +204,14 @@ class SubscriptionManager extends React.Component {
 class RecommendedSubscriptions extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {recommendations: []};
+      this.state = {recommendations: [], loaded: false};
     }
 
     loadRecommendations() {
         fetch(`/subscription/recommend`, {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => {
-            this.setState({recommendations: json.response});
+            this.setState({recommendations: json.response, loaded: true});
         })
     }
 
@@ -246,8 +246,12 @@ class RecommendedSubscriptions extends React.Component {
                 })
             }
             {
-                this.state.recommendations.length==0 &&
+                !this.state.loaded &&
                 <h4>Loading...</h4>
+            }
+            {
+                this.state.loaded && this.state.recommendations.length == 0 &&
+                <h4>No data for recommendation yet</h4>
             }
             </ul>
             </div>
