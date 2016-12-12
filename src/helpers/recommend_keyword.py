@@ -41,10 +41,10 @@ def recommend_from_user(user):
 
             tokens = ''.join(c for c in abstract if c.isalnum() or c.isspace()).split()
             tokens.extend([p.plural(token) for token in tokens])
-            two_word = [ " ".join(tokens[i:i+2]) for i in range(len(tokens)-1)]
-            two_word_plural = [ p.plural(w) for w in two_word ]
-            tokens.extend(two_word)
-            tokens.extend(two_word_plural)
+            # two_word = [ " ".join(tokens[i:i+2]) for i in range(len(tokens)-1)]
+            # two_word_plural = [ p.plural(w) for w in two_word ]
+            # tokens.extend(two_word)
+            # tokens.extend(two_word_plural)
             tokens.extend([t[0].upper()+t[1:] if t[0].islower() else t[0].lower()+t[1:] for t in tokens])
             all_tokens.extend(tokens)
         # print(Term.objects(name__in=all_tokens).count())
