@@ -63,4 +63,5 @@ def recommend_from_user(user):
         keyword = history.item.keyword
         bag[keyword] += 100
 
-    return [(x, bag.__getitem__(x)) for x in sorted(bag, key=bag.__getitem__, reverse=True)]
+    return [(x, bag.__getitem__(x)) for x in bag]
+    # return [(x, bag.__getitem__(x)) for x in sorted(bag, key=bag.__getitem__, reverse=True)]
