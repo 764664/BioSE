@@ -87,11 +87,11 @@ class Subscription:
 
     @staticmethod
     def recommend():
-        recommend = recommend_from_user(current_user
-        if len(recommend) > 15:
-            return jsonify(response=random.sample(recommend, 15))
+        recommended = recommend_from_user(current_user)
+        if len(recommended) > 15:
+            return jsonify(response=random.sample(recommended, 15))
         else:
-            return jsonify(response=recommend)
+            return jsonify(response=recommended)
 
 # item = SubscriptionItem.objects.first()
 # Subscription.update(item)
