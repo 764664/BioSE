@@ -208,6 +208,7 @@ class RecommendedSubscriptions extends React.Component {
     }
 
     loadRecommendations() {
+        this.setState({loaded: false});
         fetch(`/subscription/recommend`, {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => {
@@ -224,11 +225,11 @@ class RecommendedSubscriptions extends React.Component {
             <div className="recommendations-div">
             <div className="recommendations-heading">
             <h4>Recommended for you</h4>
-            <i className="material-icons" onClick={this.loadRecommendations.bind(this)}>autorenew</i>
+            <a title="Get new batch of recommendations"><i className="material-icons" onClick={this.loadRecommendations.bind(this)}>autorenew</i></a>
             </div>
             <ul className="recommendations">
             {
-                this.state.recommendations &&
+                this.state.loaded && this.state.recommendations &&
                 this.state.recommendations.map(item => {
                 let keyword = item[0];
                 return(
