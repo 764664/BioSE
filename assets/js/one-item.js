@@ -122,7 +122,7 @@ export default class OneItem extends React.Component {
             {
                 this.props.paper.authors.map( (author) => {
                 return(
-                    <OverlayTrigger trigger={['focus']} placement="bottom" overlay={this.popover(author)}>
+                    <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.popover(author)}>
                         <button type="button" className="btn btn-default btn-xs l10">
                           {author}
                         </button>
