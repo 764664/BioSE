@@ -73,11 +73,16 @@
             margin-right: 3px;
         }
         .meta-info-second {
+            .meta-info-second-inner {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: flex;
+            }
             display: flex;
             justify-content: flex-end;
             width: 25%;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
         }
         .meta-info-second p:not(:first-child)::before {
             content: ", ";
