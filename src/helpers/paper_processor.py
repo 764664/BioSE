@@ -158,6 +158,7 @@ class PaperProcessor:
         # self.papers_array.reverse()
         # for index, paper in enumerate(self.papers_array):
         #     paper["ID"] = index
+        search_item.reload()
         self.papers_array = self.get_scores()
         if not self.papers_array:
             self.papers_array = search_item.papers
