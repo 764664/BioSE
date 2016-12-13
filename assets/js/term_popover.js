@@ -43,7 +43,7 @@ export default class Term extends React.Component {
                                             return("<");
                                         })
                                     }
-                                    <a href={this.renderURLForTerm(ancestor)}>{ancestor.name}</a>
+                                    <a href={this.renderURLForTerm(ancestor)} target="_blank">{ancestor.name}</a>
                                 </div>
                             )
                         }
