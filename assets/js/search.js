@@ -214,13 +214,13 @@ export default class SearchApp extends React.Component {
                 <div className="row">
                 <div className="col-md-12">
                 <div className={this.state.papers?'wrapper':'wrapper-init'}>
-                <form id="form_search" className="navbar-form" onSubmit={this.handleSubmit}>
+                <form className="form-inline" id="form_search" onSubmit={this.handleSubmit}>
+                    <div className="form-group">
                     <input className="form-control" id="main_search" onChange={this.onChange} value={this.state.text}
                            placeholder="Search" autoComplete="off"/>
                     <InstantSearch terms={this.state.instant_search} click={this.handleClick}/>
                     <button className="btn btn-primary" id="search_button">Search</button>
-                    <span id="span_num_results"></span>
-                    <span id="span_order_by"></span>
+                    </div>
                 </form>
 
                 <PaperList
