@@ -94,15 +94,15 @@ export default class OneItem extends React.Component {
         if (this.props.display_subscriptions) {
             return(
                 <div className="meta-info-second">
-                    <div className="meta-info-second-inner">
+                    <ul className="meta-info-second-inner">
                     {
                         this.props.paper.subscriptions.map( (subscription) => {
                             return(
-                                <p className="from-subscription">{subscription}</p>
+                                <li className="from-subscription">{subscription}</li>
                             )
                         })
                     }
-                    </div>
+                    </ul>
                 </div>
             )
         }
@@ -139,6 +139,12 @@ export default class OneItem extends React.Component {
             </div>
             <div className="detail">
                 <div className="abstract" id={`abstract-${this.props.paper.id}`}>{this.state.abstract}</div>
+            </div>
+            <div>
+            <h4>From subscription(s)</h4>
+            {
+                this.renderSubscriptions()
+            }
             </div>
             </Modal.Body>
               <Modal.Footer>
