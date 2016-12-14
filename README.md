@@ -24,13 +24,12 @@ The server side application is a Python program, located in root directory. The 
 
 ### Frontend
 
-The frontend application is mainly a Javascript program, along with some HTML and CSS code. [React.js](https://facebook.github.io/react/) is used to build this application.
+The frontend application is a Javascript program, along with some HTML and CSS code. [React.js](https://facebook.github.io/react/) is used to build this application.
 
 ### Underlying software
 
-[redis](http://redis.io/), to provide instant search using sorted set
-
-Any RDBMS, e.g. [SQLite](https://www.sqlite.org), [MySQL](https://www.mysql.com), [MariaDB](https://mariadb.org/)
+<!-- [redis](http://redis.io/), to provide instant search using sorted set -->
+[MongoDB](https://www.mongodb.com/)
 
 ## Deployment
 
