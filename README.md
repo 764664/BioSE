@@ -44,6 +44,7 @@ You can use the following command to install the dependencies required by Python
 pip install -r requirements.txt
 python3 -m src.helpers.mesh_parser
 python3 -m src.helpers.goterm
+cd assets && webpack
 ```
 
 ## Demo
