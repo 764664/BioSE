@@ -108,7 +108,7 @@ class PubMedFetcher:
                 "Author": m_author,
                 "Journal": journal,
                 "Year": year,
-                "Date": datetime(year, month, day).strftime("%Y %m %d"),
+                "Date": datetime(year, month, day),
                 "Abstract": abstract
             }
             h["URL"] = "http://www.ncbi.nlm.nih.gov/pubmed/" + h["PMID"]
