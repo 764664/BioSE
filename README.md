@@ -49,7 +49,7 @@ cd assets && webpack
 ```
 
 ## Demo
-Demo is currently available at [biose.jie.today](https://biose.jie.today)
+Demo is currently available at [biose.jie.today](http://biose.jie.today)
 
 <!-- ## Screenshot
 
