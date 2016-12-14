@@ -51,6 +51,6 @@ cd assets && webpack
 ## Demo
 Demo is currently available at [biose.jie.today](https://biose.jie.today)
 
-## Screenshot
+<!-- ## Screenshot
 
-![](src/static/screenshot.png)
+![](src/static/screenshot.png) -->
