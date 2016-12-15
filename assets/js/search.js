@@ -141,6 +141,7 @@ export default class SearchApp extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.onChange = this.onChange.bind(this);
         this.search = this.search.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     search() {
@@ -148,6 +149,7 @@ export default class SearchApp extends React.Component {
             .then(response => response.json())
             .then(json => {
                 let search_history_id = json.response;
+                this.setState({search_history_id: search_history_id});
                 fetch(`/fetch?search_history_id=${search_history_id}`)
                     .then(response => response.json())
                     .then(json => {
@@ -161,21 +163,21 @@ export default class SearchApp extends React.Component {
     }
 
     loadMore() {
-        if(!this.state.papers) {
-            return;
-        }
-        var length = this.state.papers.length;
-        if(length==0) {
-            return;
-        }
-        fetch(`/fetch?search_history_id=${search_history_id}&offset=${length}`)
-        .then(response => response.json())
-        .then(json => {
-            this.setState({papers: this.state.papers.concat(json.response)});
-            if(!json.more) {
-                this.setState({no_more: true});
-            }
-        })
+        // var length = this.state.papers.length;
+        // if(length==0) {
+        //     return;
+        // }
+        // if(!this.state.search_history_id) {
+        //     return;
+        // }
+        // fetch(`/fetch?search_history_id=${this.state.search_history_id}&offset=${length}`)
+        // .then(response => response.json())
+        // .then(json => {
+        //     this.setState({papers: this.state.papers.concat(json.response)});
+        //     if(!json.more) {
+        //         this.setState({no_more: true});
+        //     }
+        // })
     }
 
     handleSubmit(e) {
