@@ -42,7 +42,6 @@ def train_model(item):
             for paper in item.papers:
                 if str(paper.id) in h:
                     count = h[str(paper.id)]
-                    print("yes")
                 else:
                     count = 0
                 x.append(vectorize_paper(paper))
