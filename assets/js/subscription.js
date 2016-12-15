@@ -22,6 +22,7 @@ export default class Subscription extends React.Component {
     }
 
     addSubscription(keyword, category='keyword') {
+        $("#loading").modal("show");
         let item = {'keyword': keyword};
         var url = `/subscription/add?keyword=${keyword}`;
         fetch(url, {credentials: 'same-origin'})
@@ -29,6 +30,7 @@ export default class Subscription extends React.Component {
         .then(json => {
             this.setState({subscriptions: this.state.subscriptions.concat([json.item])});
             this.loadData();
+            $("#loading").modal("hide");
         })
         .catch(error => {
             console.error(error)

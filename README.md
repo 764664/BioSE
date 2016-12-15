@@ -24,13 +24,12 @@ The server side application is a Python program, located in root directory. The 
 
 ### Frontend
 
-The frontend application is mainly a Javascript program, along with some HTML and CSS code. [React.js](https://facebook.github.io/react/) is used to build this application.
+The frontend application is a Javascript program, along with some HTML and CSS code. [React.js](https://facebook.github.io/react/) is used to build this application.
 
 ### Underlying software
 
-[redis](http://redis.io/), to provide instant search using sorted set
-
-Any RDBMS, e.g. [SQLite](https://www.sqlite.org), [MySQL](https://www.mysql.com), [MariaDB](https://mariadb.org/)
+<!-- [redis](http://redis.io/), to provide instant search using sorted set -->
+[MongoDB](https://www.mongodb.com/)
 
 ## Deployment
 
@@ -44,11 +43,13 @@ You can use the following command to install the dependencies required by Python
 pip install -r requirements.txt
 python3 -m src.helpers.mesh_parser
 python3 -m src.helpers.goterm
+python3 -m src.helpers.import_journals
+cd assets && webpack
 ```
 
 ## Demo
-Demo is currently available at [biose.jie.today](https://biose.jie.today)
+Demo is currently available at [biose.jie.today](http://biose.jie.today)
 
-## Screenshot
+<!-- ## Screenshot
 
-![](src/static/screenshot.png)
+![](src/static/screenshot.png) -->

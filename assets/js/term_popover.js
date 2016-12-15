@@ -71,7 +71,7 @@ export default class Term extends React.Component {
             </Popover>
         );
         return(
-            <OverlayTrigger trigger="focus" placement="top" overlay={p}>
+            <OverlayTrigger trigger="click" rootClose placement="top" overlay={p}>
                <Button>{term.here}</Button>
             </OverlayTrigger>
         )

@@ -126,8 +126,6 @@ class Term(MyDocument):
                     ancestor = ancestor.ancestors[0]
                 else:
                     ancestor = None
-            print(ancestors_all)
-
         return(
             {
                 'name': self.name,
