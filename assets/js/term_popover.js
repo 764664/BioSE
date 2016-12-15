@@ -19,20 +19,20 @@ export default class Term extends React.Component {
         (
             <Popover id="popover-positioned-top" className="term-popover" title={
                 <div className="term-popover-title">
-                    <a href={this.renderURL()} target="_blank"><h5>{term.name}</h5></a>
+                    <a href={this.renderURL()} target="_blank"><h3>{term.name}</h3></a>
                     <button type="button" className="btn btn-primary term-popover-follow-btn" onClick={() => {this.props.subscription.addSubscription(term.name)}}>Follow</button>
                 </div>
             }>
                 {
                     term.definition &&
                     <div className="definition">
-                        <h3>Definition</h3>{term.definition}
+                        <h4>Definition</h4>{term.definition}
                     </div>
                 }
                 {
                     term.ancestors &&
                     <div className="ancestors-div">
-                    <h3>Ancestors</h3>
+                    <h4>Ancestors</h4>
                     <p className="self">{term.name}</p>
                     {
                         term.ancestors.map((ancestor, index) => {
@@ -53,7 +53,7 @@ export default class Term extends React.Component {
                 {
                     term.source &&
                     <div className="source">
-                        <h3>Source</h3>{term.source}
+                        <h4>Source</h4>{term.source}
                     </div>
                 }
                 {
