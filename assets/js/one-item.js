@@ -42,9 +42,9 @@ export default class OneItem extends React.Component {
                 //     abstract = reactStringReplace(abstract, term.name, (match, i) => (<Term term={term} />));
                 // })
                 // abstract = abstract.split(this.props.query).join(`<span class="highlight2">${this.props.query}</span>`);
-                console.log(abstract);
+                // console.log(abstract);
                 this.setState({abstract:abstract});
-                console.log("Substituded abstract");
+                // console.log("Substituded abstract");
                 // let abstract_div = (
                 //     <div>
                 //         {abstract}
