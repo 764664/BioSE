@@ -161,6 +161,9 @@ export default class SearchApp extends React.Component {
     }
 
     loadMore() {
+        if(!this.state.papers) {
+            return;
+        }
         var length = this.state.papers.length;
         if(length==0) {
             return;
