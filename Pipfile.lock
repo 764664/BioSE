@@ -1,0 +1,41 @@
+{
+    "develop": {},
+    "_meta": {
+        "Pipfile-sha256": "8ea5ed4208058d59e601b24e82d9e3ad97fcd7af61e06cbf5e741feb399d0fd5",
+        "sources": [
+            {
+                "verify_ssl": true,
+                "url": "https://pypi.org/"
+            }
+        ],
+        "requires": {}
+    },
+    "default": {
+        "click": "==6.7",
+        "six": "==1.10.0",
+        "blinker": "==1.4",
+        "Jinja2": "==2.9.4",
+        "lxml": "==3.7.2",
+        "redis": "==2.10.5",
+        "peewee": "==2.8.5",
+        "flask-bcrypt": "*",
+        "pymongo": "==3.4.0",
+        "numpy": "==1.12.0",
+        "pycparser": "==2.17",
+        "flask": "*",
+        "cffi": "==1.9.1",
+        "MarkupSafe": "==0.23",
+        "flask-login": "*",
+        "bcrypt": "==3.1.2",
+        "mongoengine": "==0.11.0",
+        "itsdangerous": "==0.24",
+        "Flask": "==0.12",
+        "Flask-Login": "==0.4.0",
+        "scipy": "==0.18.1",
+        "requests": "==2.12.5",
+        "inflect": "==0.2.5",
+        "Werkzeug": "==0.11.15",
+        "Flask-Bcrypt": "==0.7.1",
+        "scikit-learn": "==0.18.1"
+    }
+}
